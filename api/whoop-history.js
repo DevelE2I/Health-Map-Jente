@@ -23,7 +23,7 @@ async function refreshWhoopTokens(refreshToken) {
     return null;
   }
 
-  const body = new URLSearchParams({
+  const form = new URLSearchParams({
     grant_type: "refresh_token",
     refresh_token: refreshToken,
     client_id: clientId,
@@ -39,12 +39,12 @@ async function refreshWhoopTokens(refreshToken) {
         "Content-Type": "application/x-www-form-urlencoded",
         Accept: "application/json"
       },
-      body
+      body: form
     }
   );
 
   if (!response.ok) {
-    console.error("WHOOP token refresh failed", {
+    console.error("WHOOP refresh failed", {
       status: response.status
     });
 
@@ -54,28 +54,191 @@ async function refreshWhoopTokens(refreshToken) {
   return response.json();
 }
 
-async function fetchRecoveryHistory(accessToken) {
-  const allRecords = [];
+const COLLECTIONS = {
+  recovery: {
+    url: "https://api.prod.whoop.com/developer/v2/recovery",
+
+    compact(record) {
+      if (
+        !record ||
+        record.score_state !== "SCORED" ||
+        !record.score
+      ) {
+        return null;
+      }
+
+      return {
+        cycleId: record.cycle_id,
+        sleepId: record.sleep_id,
+        date: record.created_at,
+        recovery: Number(record.score.recovery_score),
+        hrv: Number(record.score.hrv_rmssd_milli),
+        rhr: Number(record.score.resting_heart_rate),
+        spo2: Number(record.score.spo2_percentage),
+        skinTemp: Number(record.score.skin_temp_celsius)
+      };
+    }
+  },
+
+  sleep: {
+    url: "https://api.prod.whoop.com/developer/v2/activity/sleep",
+
+    compact(record) {
+      if (
+        !record ||
+        record.nap === true ||
+        record.score_state !== "SCORED" ||
+        !record.score
+      ) {
+        return null;
+      }
+
+      const stages = record.score.stage_summary || {};
+      const needed = record.score.sleep_needed || {};
+
+      const asleep =
+        Number(stages.total_light_sleep_time_milli || 0) +
+        Number(stages.total_slow_wave_sleep_time_milli || 0) +
+        Number(stages.total_rem_sleep_time_milli || 0);
+
+      const sleepNeed =
+        Number(needed.baseline_milli || 0) +
+        Number(needed.need_from_sleep_debt_milli || 0) +
+        Number(needed.need_from_recent_strain_milli || 0) +
+        Number(needed.need_from_recent_nap_milli || 0);
+
+      return {
+        id: record.id,
+        cycleId: record.cycle_id,
+        date: record.end || record.created_at,
+        start: record.start,
+        end: record.end,
+        durationMilli: asleep,
+        inBedMilli: Number(stages.total_in_bed_time_milli || 0),
+        awakeMilli: Number(stages.total_awake_time_milli || 0),
+        lightMilli: Number(
+          stages.total_light_sleep_time_milli || 0
+        ),
+        deepMilli: Number(
+          stages.total_slow_wave_sleep_time_milli || 0
+        ),
+        remMilli: Number(
+          stages.total_rem_sleep_time_milli || 0
+        ),
+        sleepNeedMilli: sleepNeed,
+        performance: Number(
+          record.score.sleep_performance_percentage
+        ),
+        consistency: Number(
+          record.score.sleep_consistency_percentage
+        ),
+        efficiency: Number(
+          record.score.sleep_efficiency_percentage
+        ),
+        respiratoryRate: Number(record.score.respiratory_rate),
+        disturbances: Number(stages.disturbance_count || 0),
+        cycles: Number(stages.sleep_cycle_count || 0)
+      };
+    }
+  },
+
+  cycle: {
+    url: "https://api.prod.whoop.com/developer/v2/cycle",
+
+    compact(record) {
+      if (
+        !record ||
+        record.score_state !== "SCORED" ||
+        !record.score
+      ) {
+        return null;
+      }
+
+      return {
+        id: record.id,
+        date: record.start || record.created_at,
+        start: record.start,
+        end: record.end,
+        strain: Number(record.score.strain),
+        kilojoule: Number(record.score.kilojoule),
+        averageHeartRate: Number(
+          record.score.average_heart_rate
+        ),
+        maxHeartRate: Number(record.score.max_heart_rate)
+      };
+    }
+  },
+
+  workout: {
+    url: "https://api.prod.whoop.com/developer/v2/activity/workout",
+
+    compact(record) {
+      if (
+        !record ||
+        record.score_state !== "SCORED" ||
+        !record.score
+      ) {
+        return null;
+      }
+
+      const zones = record.score.zone_durations || {};
+
+      const start = new Date(record.start).getTime();
+      const end = new Date(record.end).getTime();
+
+      return {
+        id: record.id,
+        date: record.start || record.created_at,
+        start: record.start,
+        end: record.end,
+        sportName: record.sport_name || "unknown",
+        sportId: record.sport_id,
+
+        durationMilli:
+          Number.isFinite(start) && Number.isFinite(end)
+            ? Math.max(0, end - start)
+            : 0,
+
+        strain: Number(record.score.strain),
+        averageHeartRate: Number(
+          record.score.average_heart_rate
+        ),
+        maxHeartRate: Number(record.score.max_heart_rate),
+        kilojoule: Number(record.score.kilojoule),
+        distanceMeter: Number(record.score.distance_meter),
+        altitudeGainMeter: Number(
+          record.score.altitude_gain_meter
+        ),
+        zone0Milli: Number(zones.zone_zero_milli || 0),
+        zone1Milli: Number(zones.zone_one_milli || 0),
+        zone2Milli: Number(zones.zone_two_milli || 0),
+        zone3Milli: Number(zones.zone_three_milli || 0),
+        zone4Milli: Number(zones.zone_four_milli || 0),
+        zone5Milli: Number(zones.zone_five_milli || 0)
+      };
+    }
+  }
+};
+
+async function fetchAllPages(accessToken, collection) {
+  const records = [];
+
   let nextToken = null;
   let page = 0;
 
-  /*
-   * WHOOP geeft maximaal 25 recoveries per pagina.
-   * 80 pagina's laten maximaal 2.000 records toe.
-   */
-  const maximumPages = 80;
+  const maximumPages = 100;
 
   do {
-    const parameters = new URLSearchParams({
+    const params = new URLSearchParams({
       limit: "25"
     });
 
     if (nextToken) {
-      parameters.set("nextToken", nextToken);
+      params.set("nextToken", nextToken);
     }
 
     const response = await fetch(
-      `https://api.prod.whoop.com/developer/v2/recovery?${parameters.toString()}`,
+      `${collection.url}?${params.toString()}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -91,53 +254,73 @@ async function fetchRecoveryHistory(accessToken) {
     }
 
     if (!response.ok) {
-      const body = await response.text();
+      const text = await response.text();
 
-      console.error("WHOOP recovery history failed", {
+      console.error("WHOOP history request failed", {
         status: response.status,
-        body: body.slice(0, 500)
+        body: text.slice(0, 300)
       });
 
       throw new Error(
-        `WHOOP recovery request failed with status ${response.status}`
+        `WHOOP request failed with status ${response.status}`
       );
     }
 
     const data = await response.json();
 
     if (Array.isArray(data.records)) {
-      allRecords.push(...data.records);
+      records.push(...data.records);
     }
 
     nextToken = data.next_token || null;
     page += 1;
   } while (nextToken && page < maximumPages);
 
-  return allRecords;
+  return records;
 }
 
-function compactRecoveryRecords(records) {
+function compactAndSort(records, collection) {
   return records
+    .map(collection.compact)
+    .filter(Boolean)
     .filter((record) => {
-      return (
-        record &&
-        record.score_state === "SCORED" &&
-        record.score &&
-        Number.isFinite(Number(record.score.hrv_rmssd_milli)) &&
-        Number.isFinite(Number(record.score.resting_heart_rate))
-      );
+      const timestamp = new Date(record.date).getTime();
+      return Number.isFinite(timestamp);
     })
-    .map((record) => {
-      return {
-        date: record.created_at,
-        hrv: Number(record.score.hrv_rmssd_milli),
-        rhr: Number(record.score.resting_heart_rate),
-        recovery: Number(record.score.recovery_score)
-      };
-    })
-    .sort((a, b) => {
-      return new Date(a.date).getTime() - new Date(b.date).getTime();
-    });
+    .sort(
+      (first, second) =>
+        new Date(first.date) - new Date(second.date)
+    );
+}
+
+function setTokenCookies(
+  res,
+  tokens,
+  previousRefreshToken
+) {
+  const secure = process.env.NODE_ENV === "production";
+
+  res.setHeader("Set-Cookie", [
+    createCookie(
+      "whoop_access_token",
+      tokens.access_token,
+      {
+        httpOnly: true,
+        secure,
+        maxAge: tokens.expires_in || 3600
+      }
+    ),
+
+    createCookie(
+      "whoop_refresh_token",
+      tokens.refresh_token || previousRefreshToken,
+      {
+        httpOnly: true,
+        secure,
+        maxAge: 60 * 60 * 24 * 90
+      }
+    )
+  ]);
 }
 
 export default async function handler(req, res) {
@@ -147,50 +330,50 @@ export default async function handler(req, res) {
     });
   }
 
-  res.setHeader("Cache-Control", "private, no-store");
+  res.setHeader(
+    "Cache-Control",
+    "private, no-store"
+  );
 
-  let accessToken = req.cookies?.whoop_access_token;
-  const refreshToken = req.cookies?.whoop_refresh_token;
+  const type = String(
+    req.query?.type || "recovery"
+  ).toLowerCase();
+
+  const collection = COLLECTIONS[type];
+
+  if (!collection) {
+    return res.status(400).json({
+      error:
+        "Unknown history type. Use recovery, sleep, cycle or workout."
+    });
+  }
+
+  let accessToken =
+    req.cookies?.whoop_access_token;
+
+  const refreshToken =
+    req.cookies?.whoop_refresh_token;
 
   try {
-    /*
-     * Wanneer de access-cookie vervallen is, vernieuwen we eerst
-     * de tokens met de nog geldige refresh-cookie.
-     */
     if (!accessToken && refreshToken) {
-      const newTokens = await refreshWhoopTokens(refreshToken);
+      const tokens =
+        await refreshWhoopTokens(refreshToken);
 
-      if (!newTokens?.access_token) {
+      if (!tokens?.access_token) {
         return res.status(401).json({
           connected: false,
-          error: "WHOOP authorization expired. Connect WHOOP again."
+          error:
+            "WHOOP authorization expired. Connect WHOOP again."
         });
       }
 
-      accessToken = newTokens.access_token;
+      accessToken = tokens.access_token;
 
-      const secure = process.env.NODE_ENV === "production";
-
-      res.setHeader("Set-Cookie", [
-        createCookie(
-          "whoop_access_token",
-          newTokens.access_token,
-          {
-            httpOnly: true,
-            secure,
-            maxAge: newTokens.expires_in || 3600
-          }
-        ),
-        createCookie(
-          "whoop_refresh_token",
-          newTokens.refresh_token || refreshToken,
-          {
-            httpOnly: true,
-            secure,
-            maxAge: 60 * 60 * 24 * 90
-          }
-        )
-      ]);
+      setTokenCookies(
+        res,
+        tokens,
+        refreshToken
+      );
     }
 
     if (!accessToken) {
@@ -200,15 +383,14 @@ export default async function handler(req, res) {
       });
     }
 
-    let records;
+    let rawRecords;
 
     try {
-      records = await fetchRecoveryHistory(accessToken);
+      rawRecords = await fetchAllPages(
+        accessToken,
+        collection
+      );
     } catch (error) {
-      /*
-       * De access token kan ondertussen vervallen zijn.
-       * Probeer dan één keer automatisch te vernieuwen.
-       */
       if (
         error?.code !== "WHOOP_ACCESS_EXPIRED" ||
         !refreshToken
@@ -216,63 +398,61 @@ export default async function handler(req, res) {
         throw error;
       }
 
-      const newTokens = await refreshWhoopTokens(refreshToken);
+      const tokens =
+        await refreshWhoopTokens(refreshToken);
 
-      if (!newTokens?.access_token) {
+      if (!tokens?.access_token) {
         return res.status(401).json({
           connected: false,
-          error: "WHOOP authorization expired. Connect WHOOP again."
+          error:
+            "WHOOP authorization expired. Connect WHOOP again."
         });
       }
 
-      accessToken = newTokens.access_token;
+      accessToken = tokens.access_token;
 
-      const secure = process.env.NODE_ENV === "production";
+      setTokenCookies(
+        res,
+        tokens,
+        refreshToken
+      );
 
-      res.setHeader("Set-Cookie", [
-        createCookie(
-          "whoop_access_token",
-          newTokens.access_token,
-          {
-            httpOnly: true,
-            secure,
-            maxAge: newTokens.expires_in || 3600
-          }
-        ),
-        createCookie(
-          "whoop_refresh_token",
-          newTokens.refresh_token || refreshToken,
-          {
-            httpOnly: true,
-            secure,
-            maxAge: 60 * 60 * 24 * 90
-          }
-        )
-      ]);
-
-      records = await fetchRecoveryHistory(accessToken);
+      rawRecords = await fetchAllPages(
+        accessToken,
+        collection
+      );
     }
 
-    const history = compactRecoveryRecords(records);
+    const records = compactAndSort(
+      rawRecords,
+      collection
+    );
 
     return res.status(200).json({
       connected: true,
-      count: history.length,
-      firstDate: history[0]?.date || null,
-      lastDate: history.at(-1)?.date || null,
-      records: history
+      type,
+      count: records.length,
+      firstDate: records[0]?.date || null,
+      lastDate: records.at(-1)?.date || null,
+      records
     });
   } catch (error) {
-    console.error("WHOOP history endpoint failed", {
-      message:
-        error instanceof Error
-          ? error.message
-          : "Unknown error"
-    });
+    console.error(
+      "WHOOP history endpoint failed",
+      {
+        type,
+        message:
+          error instanceof Error
+            ? error.message
+            : "Unknown error"
+      }
+    );
 
     return res.status(502).json({
       connected: true,
-      error: "WHOOP history could not be retrieved."
+      type,
+      error:
+        `${type} history could not be retrieved.`
     });
   }
 }
