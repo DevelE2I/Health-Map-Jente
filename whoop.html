@@ -871,23 +871,8 @@
     }
     return origFetch(input, init);
   };
-JSPART
-
-# Append the actual WHOOP JS from the dashboard
-sed -n '29197,29593p' "$SRC" >> "$TGT"
-
-cat >> "$TGT" << 'JSEND'
-
 })();
 </script>
 
 </body>
 </html>
-JSEND
-
-# Replace the hardcoded client ID with the configurable one
-sed -i.bak "s|const WHOOP_CLIENT_ID = '2ac01150-60a5-43f5-96be-26f6c5bcea44';|const WHOOP_CLIENT_ID = cfg.clientId || '2ac01150-60a5-43f5-96be-26f6c5bcea44';|" "$TGT"
-rm -f "${TGT}.bak"
-
-wc -l "$TGT"
-ls -la /Users/rowan/Desktop/Dashboard11/whoop.html
