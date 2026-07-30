@@ -3137,59 +3137,151 @@
       return data;
     }
 
-    async function loadHistorySequentially() {
-      setText(
-        "dashboardMessage",
-        "Recoveryhistoriek laden…"
-      );
+  function wait(milliseconds) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, milliseconds);
+  });
+}
 
-      const recovery =
-        await fetchJson(
-          "/api/whoop-history?type=recovery"
-        );
+async function loadHistorySequentially() {
+  setText(
+    "dashboardMessage",
+    "Recoveryhistoriek laden…"
+  );
 
-      recoveryHistory =
-        recovery.records || [];
+  try {
+    const recovery = await fetchJson(
+      "/api/whoop-history?type=recovery"
+    );
 
-      setText(
-        "dashboardMessage",
-        "Slaaphistoriek laden…"
-      );
+    recoveryHistory = recovery.records || [];
 
-      const sleep =
-        await fetchJson(
-          "/api/whoop-history?type=sleep"
-        );
+    renderRecoveryCharts();
+  } catch (error) {
+    console.error(
+      "Recoveryhistoriek mislukt:",
+      error
+    );
 
-      sleepHistory =
-        sleep.records || [];
+    setText(
+      "dashboardMessage",
+      `Recoveryhistoriek mislukt: ${error.message}`
+    );
 
-      setText(
-        "dashboardMessage",
-        "Strainhistoriek laden…"
-      );
+    $("dashboardMessage")
+      .classList
+      .add("error");
+  }
 
-      const cycle =
-        await fetchJson(
-          "/api/whoop-history?type=cycle"
-        );
+  await wait(35000);
 
-      cycleHistory =
-        cycle.records || [];
+  setText(
+    "dashboardMessage",
+    "Slaaphistoriek laden…"
+  );
 
-      setText(
-        "dashboardMessage",
-        "Trainingen laden…"
-      );
+  try {
+    const sleep = await fetchJson(
+      "/api/whoop-history?type=sleep"
+    );
 
-      const workout =
-        await fetchJson(
-          "/api/whoop-history?type=workout"
-        );
+    sleepHistory = sleep.records || [];
 
-      workoutHistory =
-        workout.records || [];
-    }
+    renderSleepCharts();
+  } catch (error) {
+    console.error(
+      "Slaaphistoriek mislukt:",
+      error
+    );
+
+    setText(
+      "dashboardMessage",
+      `Slaaphistoriek mislukt: ${error.message}`
+    );
+
+    $("dashboardMessage")
+      .classList
+      .add("error");
+  }
+
+  await wait(35000);
+
+  setText(
+    "dashboardMessage",
+    "Strainhistoriek laden…"
+  );
+
+  try {
+    const cycle = await fetchJson(
+      "/api/whoop-history?type=cycle"
+    );
+
+    cycleHistory = cycle.records || [];
+
+    renderTrainingCharts();
+    renderCorrelations();
+  } catch (error) {
+    console.error(
+      "Strainhistoriek mislukt:",
+      error
+    );
+
+    setText(
+      "dashboardMessage",
+      `Strainhistoriek mislukt: ${error.message}`
+    );
+
+    $("dashboardMessage")
+      .classList
+      .add("error");
+  }
+
+  await wait(35000);
+
+  setText(
+    "dashboardMessage",
+    "Trainingen laden…"
+  );
+
+  try {
+    const workout = await fetchJson(
+      "/api/whoop-history?type=workout"
+    );
+
+    workoutHistory = workout.records || [];
+
+    renderTrainingCharts();
+    renderCorrelations();
+
+    setText(
+      "dashboardMessage",
+      ""
+    );
+
+    $("dashboardMessage")
+      .classList
+      .remove("error");
+  } catch (error) {
+    console.error(
+      "Workouthistoriek mislukt:",
+      error
+    );
+
+    workoutHistory = [];
+
+    renderTrainingCharts();
+    renderCorrelations();
+
+    setText(
+      "dashboardMessage",
+      "Herstel, slaap en strain zijn geladen. De volledige workouthistoriek kon tijdelijk niet worden geladen."
+    );
+
+    $("dashboardMessage")
+      .classList
+      .remove("error");
+  }
+}
 
     async function loadEverything() {
       const button =
@@ -3221,8 +3313,6 @@
         renderCurrent(current);
 
         await loadHistorySequentially();
-
-        renderAllHistory();
 
         setText(
           "dashboardMessage",
