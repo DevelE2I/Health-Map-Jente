@@ -485,6 +485,60 @@
       display: none !important;
     }
 
+
+    .strava-overview {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .strava-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .strava-status {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .strava-status.success {
+      color: var(--green);
+    }
+
+    .strava-status.error {
+      color: var(--red);
+    }
+
+    .activity-table-wrap {
+      overflow-x: auto;
+    }
+
+    .activity-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .activity-table th,
+    .activity-table td {
+      padding: 11px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    .activity-table th {
+      color: var(--muted-2);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 9px;
+    }
+
     @media (max-width: 900px) {
       .span-6,
       .span-7,
@@ -513,7 +567,8 @@
 
       .metrics,
       .summary-grid,
-      .withings-overview {
+      .withings-overview,
+      .strava-overview {
         grid-template-columns: repeat(2, 1fr);
       }
 
@@ -842,6 +897,117 @@
       </article>
 
       <div class="section-title">
+        Training
+      </div>
+
+      <div class="section-sub">
+        Strava-activiteiten, weekvolume, sportverdeling en loopontwikkeling.
+      </div>
+
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h3>Strava-overzicht</h3>
+            <p>Samenvatting van de geselecteerde periode.</p>
+          </div>
+          <span id="stravaUpdatedAt" class="updated">—</span>
+        </div>
+
+        <div class="strava-overview">
+          <div class="metric">
+            <div class="metric-label">Loopkilometers</div>
+            <div id="stravaRunDistance" class="metric-value">—</div>
+            <div id="stravaRunCount" class="metric-sub">—</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Trainingen</div>
+            <div id="stravaActivityCount" class="metric-value">—</div>
+            <div class="metric-sub">geselecteerde periode</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Trainingsduur</div>
+            <div id="stravaMovingHours" class="metric-value">—</div>
+            <div class="metric-sub">bewegende tijd</div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Hoogtemeters</div>
+            <div id="stravaElevation" class="metric-value">—</div>
+            <div class="metric-sub">totaal</div>
+          </div>
+        </div>
+
+        <div class="strava-actions">
+          <a id="stravaConnectButton" class="button" href="/api/strava-connect">
+            Verbind Strava
+          </a>
+          <button id="stravaRefreshButton" type="button">Strava vernieuwen</button>
+          <span id="stravaStatus" class="strava-status">Strava controleren…</span>
+        </div>
+      </article>
+
+      <article class="card span-7">
+        <div class="card-head">
+          <div>
+            <h3>Loopvolume per week</h3>
+            <p>Kilometers per week met een voortschrijdend gemiddelde over vier weken.</p>
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="stravaWeeklyChart"></canvas></div>
+        <div id="stravaWeeklyMessage" class="chart-message"></div>
+      </article>
+
+      <article class="card span-5">
+        <div class="card-head">
+          <div>
+            <h3>Sportverdeling</h3>
+            <p>Aantal activiteiten per sportcategorie.</p>
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="stravaSportChart"></canvas></div>
+        <div id="stravaSportMessage" class="chart-message"></div>
+      </article>
+
+      <article class="card span-6">
+        <div class="card-head">
+          <div>
+            <h3>Tempo versus hartslag</h3>
+            <p>Elke stip is één loopactiviteit met hartslagmeting.</p>
+          </div>
+        </div>
+        <div class="chart-wrap scatter"><canvas id="stravaPaceHrChart"></canvas></div>
+        <div id="stravaPaceHrMessage" class="chart-message"></div>
+      </article>
+
+      <article class="card span-6">
+        <div class="card-head">
+          <div>
+            <h3>Lange duurlopen</h3>
+            <p>Afstand van loopactiviteiten van minstens acht kilometer.</p>
+          </div>
+        </div>
+        <div class="chart-wrap scatter"><canvas id="stravaLongRunChart"></canvas></div>
+        <div id="stravaLongRunMessage" class="chart-message"></div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h3>Recente activiteiten</h3>
+            <p>De tien meest recente activiteiten binnen de geselecteerde periode.</p>
+          </div>
+        </div>
+        <div class="activity-table-wrap">
+          <table class="activity-table">
+            <thead>
+              <tr><th>Datum</th><th>Activiteit</th><th>Sport</th><th>Afstand</th><th>Duur</th><th>Tempo</th><th>Hartslag</th><th>Hoogte</th></tr>
+            </thead>
+            <tbody id="stravaActivityRows"></tbody>
+          </table>
+        </div>
+        <div id="stravaActivityMessage" class="chart-message"></div>
+      </article>
+
+      <div class="section-title">
         Herstel en gezondheid
       </div>
 
@@ -1055,6 +1221,7 @@
     let sleepHistory = [];
     let cycleHistory = [];
     let withingsHistory = [];
+    let stravaHistory = [];
 
     const charts = {};
 
@@ -2051,6 +2218,224 @@
       }
     }
 
+    function setStravaStatus(message, type = "") {
+      const element = $("stravaStatus");
+      if (!element) return;
+      element.textContent = message;
+      element.classList.remove("success", "error");
+      if (type) element.classList.add(type);
+    }
+
+    function isRunActivity(activity) {
+      return ["run", "trailrun", "virtualrun"].includes(
+        String(activity.sportType || activity.type || "").toLowerCase()
+      );
+    }
+
+    function weekStart(dateValue) {
+      const date = new Date(dateValue);
+      const day = (date.getDay() + 6) % 7;
+      date.setHours(0, 0, 0, 0);
+      date.setDate(date.getDate() - day);
+      return date;
+    }
+
+    function weeklyRunRecords(records) {
+      const weeks = new Map();
+      records.filter(isRunActivity).forEach((activity) => {
+        const start = weekStart(activity.localDate || activity.date);
+        const key = start.toISOString().slice(0, 10);
+        const current = weeks.get(key) || { date: start.toISOString(), distanceKm: 0, count: 0 };
+        current.distanceKm += num(activity.distanceKm) || 0;
+        current.count += 1;
+        weeks.set(key, current);
+      });
+      return [...weeks.values()].sort((a, b) => new Date(a.date) - new Date(b.date));
+    }
+
+    function paceLabel(minutesPerKm) {
+      const value = num(minutesPerKm);
+      if (value === null) return "—";
+      const totalSeconds = Math.round(value * 60);
+      return `${Math.floor(totalSeconds / 60)}:${String(totalSeconds % 60).padStart(2, "0")}/km`;
+    }
+
+    function secondsLabel(seconds) {
+      const value = num(seconds);
+      if (value === null) return "—";
+      const minutes = Math.round(value / 60);
+      return `${Math.floor(minutes / 60)}u ${String(minutes % 60).padStart(2, "0")}m`;
+    }
+
+    function createBarLineChart(id, labels, bars, line) {
+      destroyChart(id);
+      const canvas = $(id);
+      if (!canvas || !labels.length) return;
+      charts[id] = new Chart(canvas, {
+        data: {
+          labels,
+          datasets: [
+            {
+              type: "bar",
+              label: "Loopkilometers",
+              data: bars,
+              backgroundColor: "rgba(234, 88, 12, 0.45)",
+              borderColor: "#ea580c",
+              borderWidth: 1,
+              borderRadius: 7
+            },
+            {
+              type: "line",
+              label: "4-weeks gemiddelde",
+              data: line,
+              borderColor: "#111827",
+              backgroundColor: "#111827",
+              borderWidth: 2.5,
+              pointRadius: 0,
+              tension: 0.25,
+              spanGaps: true
+            }
+          ]
+        },
+        options: {
+          ...commonOptions,
+          scales: {
+            ...commonOptions.scales,
+            y: {
+              ...commonOptions.scales.y,
+              beginAtZero: true,
+              ticks: { color: "#8a919c", callback(value) { return `${value} km`; } }
+            }
+          }
+        }
+      });
+    }
+
+    function createDoughnutChart(id, labels, values) {
+      destroyChart(id);
+      const canvas = $(id);
+      if (!canvas || !values.length) return;
+      charts[id] = new Chart(canvas, {
+        type: "doughnut",
+        data: {
+          labels,
+          datasets: [{
+            data: values,
+            backgroundColor: ["#ea580c", "#2563eb", "#159a68", "#7c3aed", "#d58b12", "#64748b"],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "64%",
+          plugins: commonOptions.plugins
+        }
+      });
+    }
+
+    function renderStravaSummary(records) {
+      const runs = records.filter(isRunActivity);
+      const runDistance = runs.reduce((sum, a) => sum + (num(a.distanceKm) || 0), 0);
+      const movingHours = records.reduce((sum, a) => sum + (num(a.movingTimeHours) || 0), 0);
+      const elevation = records.reduce((sum, a) => sum + (num(a.elevationMeters) || 0), 0);
+      setText("stravaRunDistance", `${runDistance.toFixed(1)} km`);
+      setText("stravaRunCount", `${runs.length} loopactiviteiten`);
+      setText("stravaActivityCount", records.length);
+      setText("stravaMovingHours", `${movingHours.toFixed(1)} u`);
+      setText("stravaElevation", `${Math.round(elevation)} m`);
+      const latest = records.at(-1);
+      setText("stravaUpdatedAt", latest ? `Laatste activiteit ${new Date(latest.localDate || latest.date).toLocaleDateString("nl-BE")}` : "Geen activiteiten");
+    }
+
+    function renderStravaCharts() {
+      const records = filterByRange(stravaHistory);
+      renderStravaSummary(records);
+
+      const weeks = weeklyRunRecords(records);
+      createBarLineChart(
+        "stravaWeeklyChart",
+        weeks.map((w) => new Date(w.date)),
+        weeks.map((w) => Number(w.distanceKm.toFixed(2))),
+        movingAverage(weeks, "distanceKm", 4)
+      );
+      setText("stravaWeeklyMessage", `${weeks.length} trainingsweken weergegeven.`);
+
+      const sportCounts = new Map();
+      records.forEach((activity) => {
+        const sport = String(activity.sportType || activity.type || "Overig");
+        sportCounts.set(sport, (sportCounts.get(sport) || 0) + 1);
+      });
+      const sports = [...sportCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6);
+      createDoughnutChart("stravaSportChart", sports.map(([name]) => name), sports.map(([, count]) => count));
+      setText("stravaSportMessage", `${records.length} activiteiten verdeeld over ${sportCounts.size} sporttypes.`);
+
+      const paceHrPoints = records
+        .filter(isRunActivity)
+        .map((a) => ({ x: num(a.averagePaceMinutesPerKm), y: num(a.averageHeartRate) }))
+        .filter((p) => p.x !== null && p.y !== null && p.x > 0);
+      createScatter("stravaPaceHrChart", paceHrPoints, "Tempo (min/km)", "Gemiddelde hartslag", "rgba(234, 88, 12, 0.58)");
+      setText("stravaPaceHrMessage", `${paceHrPoints.length} loopactiviteiten met tempo en hartslag.`);
+
+      const longRuns = records.filter((a) => isRunActivity(a) && (num(a.distanceKm) || 0) >= 8);
+      destroyChart("stravaLongRunChart");
+      if (longRuns.length) {
+        charts.stravaLongRunChart = new Chart($("stravaLongRunChart"), {
+          type: "line",
+          data: {
+            labels: longRuns.map((a) => new Date(a.localDate || a.date)),
+            datasets: [lineDataset("Afstand", longRuns.map((a) => a.distanceKm), "#159a68", 2.5)]
+          },
+          options: {
+            ...commonOptions,
+            scales: {
+              ...commonOptions.scales,
+              y: { ...commonOptions.scales.y, ticks: { color: "#8a919c", callback(value) { return `${value} km`; } } }
+            }
+          }
+        });
+      }
+      setText("stravaLongRunMessage", `${longRuns.length} duurlopen van minstens 8 km.`);
+
+      const rows = [...records].reverse().slice(0, 10).map((a) => `
+        <tr>
+          <td>${new Date(a.localDate || a.date).toLocaleDateString("nl-BE")}</td>
+          <td>${a.name || "—"}</td>
+          <td>${a.sportType || a.type || "—"}</td>
+          <td>${num(a.distanceKm) !== null ? `${a.distanceKm.toFixed(1)} km` : "—"}</td>
+          <td>${secondsLabel(a.movingTimeSeconds)}</td>
+          <td>${paceLabel(a.averagePaceMinutesPerKm)}</td>
+          <td>${num(a.averageHeartRate) !== null ? `${Math.round(a.averageHeartRate)} bpm` : "—"}</td>
+          <td>${num(a.elevationMeters) !== null ? `${Math.round(a.elevationMeters)} m` : "—"}</td>
+        </tr>`).join("");
+      $("stravaActivityRows").innerHTML = rows;
+      setText("stravaActivityMessage", `${Math.min(records.length, 10)} recente activiteiten weergegeven.`);
+    }
+
+    async function loadStrava() {
+      const button = $("stravaRefreshButton");
+      if (button) button.disabled = true;
+      setStravaStatus("Strava-data laden…");
+      try {
+        const data = await fetchJson("/api/strava-data", "Strava-data kon niet worden geladen.");
+        stravaHistory = Array.isArray(data.records) ? data.records : [];
+        if (!stravaHistory.length) {
+          $("stravaConnectButton")?.classList.add("hidden");
+          setStravaStatus("Verbonden, maar geen activiteiten gevonden.", "error");
+          return;
+        }
+        $("stravaConnectButton")?.classList.add("hidden");
+        renderStravaCharts();
+        setStravaStatus(`Strava verbonden · ${stravaHistory.length} activiteiten`, "success");
+      } catch (error) {
+        stravaHistory = [];
+        $("stravaConnectButton")?.classList.remove("hidden");
+        setStravaStatus(error?.message || "Strava is niet verbonden.", "error");
+      } finally {
+        if (button) button.disabled = false;
+      }
+    }
+
     function renderRecoveryCharts() {
       const records =
         filterByRange(recoveryHistory);
@@ -2684,6 +3069,10 @@
         renderWithingsCharts();
       }
 
+      if (stravaHistory.length) {
+        renderStravaCharts();
+      }
+
       if (
         recoveryHistory.length &&
         sleepHistory.length &&
@@ -2880,6 +3269,7 @@
         renderCurrent(current);
 
         await loadWithings();
+        await loadStrava();
         await loadHistorySequentially();
       } catch (error) {
         console.error(error);
@@ -2965,6 +3355,12 @@
       ?.addEventListener(
         "click",
         loadWithings
+      );
+
+    $("stravaRefreshButton")
+      ?.addEventListener(
+        "click",
+        loadStrava
       );
 
     loadEverything();
