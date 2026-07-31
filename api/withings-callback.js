@@ -80,36 +80,50 @@ export default async function handler(req, res) {
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type":
+            "application/x-www-form-urlencoded",
           Accept: "application/json"
         },
         body
       }
     );
 
+    const responseText = await tokenResponse.text();
+
     let tokenResult;
 
     try {
-      tokenResult = await tokenResponse.json();
+      tokenResult = JSON.parse(responseText);
     } catch {
       return res.status(502).json({
-        error: "Withings returned an invalid token response."
+        error: "Withings returned an invalid token response.",
+        httpStatus: tokenResponse.status,
+        rawResponse: responseText
       });
     }
 
     if (
       !tokenResponse.ok ||
-      tokenResult.status !== 0 ||
-      !tokenResult.body?.access_token
+      tokenResult?.status !== 0 ||
+      !tokenResult?.body?.access_token
     ) {
-      console.error("Withings token exchange failed", {
-        httpStatus: tokenResponse.status,
-        withingsStatus: tokenResult?.status,
-        error: tokenResult?.error
-      });
+      console.error(
+        "Withings token exchange failed",
+        JSON.stringify({
+          httpStatus: tokenResponse.status,
+          response: tokenResult
+        })
+      );
 
       return res.status(502).json({
-        error: "Withings token exchange failed."
+        error: "Withings token exchange failed.",
+        httpStatus: tokenResponse.status,
+        withingsStatus: tokenResult?.status ?? null,
+        withingsError:
+          tokenResult?.error ||
+          tokenResult?.body?.error ||
+          null,
+        details: tokenResult
       });
     }
 
@@ -168,7 +182,11 @@ export default async function handler(req, res) {
     });
 
     return res.status(500).json({
-      error: "Unexpected Withings connection error."
+      error: "Unexpected Withings connection error.",
+      details:
+        error instanceof Error
+          ? error.message
+          : "Unknown error"
     });
   }
 }
