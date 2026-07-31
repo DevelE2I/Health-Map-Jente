@@ -24,34 +24,38 @@ function createCookie(name, value, options = {}) {
 
 export default function handler(req, res) {
   if (req.method !== "GET") {
-    return res.status(405).json({
-      error: "Method not allowed"
-    });
+    return res
+      .status(405)
+      .send("Method not allowed.");
   }
 
   const clientId =
-    process.env.WITHINGS_CLIENT_ID;
+    process.env.WHOOP_CLIENT_ID;
 
   const redirectUri =
-    "https://health-map-jente.vercel.app/api/withings-callback";
+    process.env.WHOOP_REDIRECT_URI;
 
-  if (!clientId) {
-    return res.status(500).json({
-      error:
-        "WITHINGS_CLIENT_ID is missing in Vercel."
-    });
+  if (!clientId || !redirectUri) {
+    return res
+      .status(500)
+      .send(
+        "WHOOP server configuration is incomplete."
+      );
   }
 
   const state =
-    crypto.randomBytes(24).toString("hex");
+    crypto
+      .randomBytes(24)
+      .toString("hex");
 
   const secure =
-    process.env.NODE_ENV === "production";
+    process.env.NODE_ENV ===
+    "production";
 
   res.setHeader(
     "Set-Cookie",
     createCookie(
-      "withings_oauth_state",
+      "whoop_oauth_state",
       state,
       {
         httpOnly: true,
@@ -61,15 +65,20 @@ export default function handler(req, res) {
     )
   );
 
+  const scopes = [
+    "offline",
+    "read:recovery",
+    "read:cycles",
+    "read:sleep",
+    "read:workout",
+    "read:profile",
+    "read:body_measurement"
+  ].join(" ");
+
   const authorizationUrl =
     new URL(
-      "https://account.withings.com/oauth2_user/authorize2"
+      "https://api.prod.whoop.com/oauth/oauth2/auth"
     );
-
-  authorizationUrl.searchParams.set(
-    "response_type",
-    "code"
-  );
 
   authorizationUrl.searchParams.set(
     "client_id",
@@ -77,13 +86,18 @@ export default function handler(req, res) {
   );
 
   authorizationUrl.searchParams.set(
-    "scope",
-    "user.info,user.metrics"
+    "redirect_uri",
+    redirectUri
   );
 
   authorizationUrl.searchParams.set(
-    "redirect_uri",
-    redirectUri
+    "response_type",
+    "code"
+  );
+
+  authorizationUrl.searchParams.set(
+    "scope",
+    scopes
   );
 
   authorizationUrl.searchParams.set(
