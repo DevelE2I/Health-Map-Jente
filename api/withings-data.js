@@ -35,50 +35,47 @@ async function refreshWithingsToken(refreshToken) {
     return null;
   }
 
-  const body =
-    new URLSearchParams({
-      action: "requesttoken",
-      grant_type: "refresh_token",
-      client_id: clientId,
-      client_secret: clientSecret,
-      refresh_token: refreshToken
-    });
+  const body = new URLSearchParams({
+    action: "requesttoken",
+    grant_type: "refresh_token",
+    client_id: clientId,
+    client_secret: clientSecret,
+    refresh_token: refreshToken
+  });
 
-  const response =
-    await fetch(
-      "https://wbsapi.withings.net/v2/oauth2",
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type":
-            "application/x-www-form-urlencoded",
-
-          Accept:
-            "application/json"
-        },
-
-        body
-      }
-    );
+  const response = await fetch(
+    "https://wbsapi.withings.net/v2/oauth2",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type":
+          "application/x-www-form-urlencoded",
+        Accept: "application/json"
+      },
+      body
+    }
+  );
 
   let result;
 
   try {
-    result =
-      await response.json();
+    result = await response.json();
   } catch {
     return null;
   }
 
   if (
     !response.ok ||
-    result.status !== 0 ||
-    !result.body?.access_token
+    result?.status !== 0 ||
+    !result?.body?.access_token
   ) {
     console.error(
-      "Withings token refresh failed:",
-      result
+      "Withings token refresh failed",
+      {
+        httpStatus: response.status,
+        withingsStatus: result?.status,
+        error: result?.error
+      }
     );
 
     return null;
@@ -90,77 +87,69 @@ async function refreshWithingsToken(refreshToken) {
 function setTokenCookies(
   res,
   tokens,
-  previousRefreshToken
+  oldRefreshToken
 ) {
   const secure =
     process.env.NODE_ENV === "production";
 
-  res.setHeader(
-    "Set-Cookie",
-    [
-      createCookie(
-        "withings_access_token",
-        tokens.access_token,
-        {
-          httpOnly: true,
-          secure,
-          maxAge:
-            tokens.expires_in ||
-            10800
-        }
-      ),
+  const newRefreshToken =
+    tokens.refresh_token ||
+    oldRefreshToken;
 
-      createCookie(
-        "withings_refresh_token",
-        tokens.refresh_token ||
-          previousRefreshToken,
-        {
-          httpOnly: true,
-          secure,
-          maxAge:
-            60 * 60 * 24 * 365
-        }
-      )
-    ]
-  );
+  res.setHeader("Set-Cookie", [
+    createCookie(
+      "withings_access_token",
+      tokens.access_token,
+      {
+        httpOnly: true,
+        secure,
+        maxAge:
+          tokens.expires_in ||
+          10800
+      }
+    ),
+
+    createCookie(
+      "withings_refresh_token",
+      newRefreshToken,
+      {
+        httpOnly: true,
+        secure,
+        maxAge:
+          60 * 60 * 24 * 365
+      }
+    )
+  ]);
 }
 
-async function fetchMeasurements(
+async function requestMeasurements(
   accessToken
 ) {
-  const body =
-    new URLSearchParams({
-      action: "getmeas",
-      category: "1",
-      lastupdate: "0"
-    });
+  const body = new URLSearchParams({
+    action: "getmeas",
+    category: "1",
+    lastupdate: "0"
+  });
 
-  const response =
-    await fetch(
-      "https://wbsapi.withings.net/measure",
-      {
-        method: "POST",
-
-        headers: {
-          Authorization:
-            `Bearer ${accessToken}`,
-
-          "Content-Type":
-            "application/x-www-form-urlencoded",
-
-          Accept:
-            "application/json"
-        },
-
-        body
-      }
-    );
+  const response = await fetch(
+    "https://wbsapi.withings.net/measure",
+    {
+      method: "POST",
+      headers: {
+        Authorization:
+          `Bearer ${accessToken}`,
+        "Content-Type":
+          "application/x-www-form-urlencoded",
+        Accept: "application/json"
+      },
+      body
+    }
+  );
 
   let result;
 
   try {
-    result =
-      await response.json();
+    result = await response.json();
   } catch {
     result = null;
   }
@@ -175,86 +164,95 @@ function decodeValue(measure) {
   const value =
     Number(measure.value);
 
-  const exponent =
+  const unit =
     Number(measure.unit);
 
   if (
     !Number.isFinite(value) ||
-    !Number.isFinite(exponent)
+    !Number.isFinite(unit)
   ) {
     return null;
   }
 
   return value *
-    Math.pow(10, exponent);
+    Math.pow(10, unit);
 }
 
-const TYPE_NAMES = {
+const MEASUREMENT_TYPES = {
   1: "weightKg",
   4: "heightMeter",
   5: "fatFreeMassKg",
   6: "fatRatioPercent",
   8: "fatMassKg",
+  11: "heartRateBpm",
   76: "muscleMassKg",
   77: "hydrationKg",
   88: "boneMassKg",
+  91: "pulseWaveVelocity",
+  155: "vascularAge",
   170: "visceralFatIndex",
   226: "basalMetabolicRate"
 };
 
-function compactMeasurementGroups(groups) {
+function formatMeasurementGroups(groups) {
   return groups
     .map((group) => {
-      const values = {};
+      const measurements = {};
 
       for (
         const measure of
           group.measures || []
       ) {
-        const name =
-          TYPE_NAMES[measure.type];
+        const propertyName =
+          MEASUREMENT_TYPES[
+            measure.type
+          ];
 
-        if (!name) {
+        if (!propertyName) {
           continue;
         }
 
-        values[name] =
+        measurements[propertyName] =
           decodeValue(measure);
       }
 
       return {
         id: group.grpid,
 
-        date:
-          new Date(
-            Number(group.date) *
-              1000
-          ).toISOString(),
+        date: new Date(
+          Number(group.date) *
+            1000
+        ).toISOString(),
 
         category:
           group.category,
 
-        attributed:
+        attribute:
           group.attrib,
 
-        ...values
+        comment:
+          group.comment || "",
+
+        deviceId:
+          group.deviceid || null,
+
+        ...measurements
       };
     })
     .filter((record) => {
       return Object.keys(record).some(
         (key) =>
-          key.endsWith("Kg") ||
-          key.endsWith("Percent") ||
-          key.endsWith("Index") ||
-          key === "heightMeter" ||
-          key === "basalMetabolicRate"
+          Object.values(
+            MEASUREMENT_TYPES
+          ).includes(key)
       );
     })
-    .sort(
-      (first, second) =>
+    .sort((first, second) => {
+      return (
         new Date(first.date) -
         new Date(second.date)
-    );
+      );
+    });
 }
 
 export default async function handler(
@@ -269,14 +267,14 @@ export default async function handler(
 
   res.setHeader(
     "Cache-Control",
-    "private, no-store"
+    "private, no-store, max-age=0"
   );
 
   let accessToken =
     req.cookies
       ?.withings_access_token;
 
-  const refreshToken =
+  let refreshToken =
     req.cookies
       ?.withings_refresh_token;
 
@@ -296,75 +294,90 @@ export default async function handler(
       !accessToken &&
       refreshToken
     ) {
-      const tokens =
+      const refreshedTokens =
         await refreshWithingsToken(
           refreshToken
         );
 
       if (
-        !tokens?.access_token
+        !refreshedTokens
+          ?.access_token
       ) {
         return res.status(401).json({
           connected: false,
           error:
-            "Withings authorization expired."
+            "Withings authorization has expired. Connect Withings again."
         });
       }
 
       accessToken =
-        tokens.access_token;
+        refreshedTokens.access_token;
+
+      refreshToken =
+        refreshedTokens.refresh_token ||
+        refreshToken;
 
       setTokenCookies(
         res,
-        tokens,
+        refreshedTokens,
         refreshToken
       );
     }
 
-    let {
-      response,
-      result
-    } =
-      await fetchMeasurements(
+    let measurementRequest =
+      await requestMeasurements(
         accessToken
       );
 
+    const accessWasRejected =
+      measurementRequest
+        .response.status === 401 ||
+      measurementRequest
+        .result?.status === 401;
+
     if (
-      response.status === 401 ||
-      result?.status === 401
+      accessWasRejected &&
+      refreshToken
     ) {
-      const tokens =
+      const refreshedTokens =
         await refreshWithingsToken(
           refreshToken
         );
 
       if (
-        !tokens?.access_token
+        !refreshedTokens
+          ?.access_token
       ) {
         return res.status(401).json({
           connected: false,
           error:
-            "Withings authorization expired."
+            "Withings authorization has expired. Connect Withings again."
         });
       }
 
       accessToken =
-        tokens.access_token;
+        refreshedTokens.access_token;
+
+      refreshToken =
+        refreshedTokens.refresh_token ||
+        refreshToken;
 
       setTokenCookies(
         res,
-        tokens,
+        refreshedTokens,
         refreshToken
       );
 
-      ({
-        response,
-        result
-      } =
-        await fetchMeasurements(
+      measurementRequest =
+        await requestMeasurements(
           accessToken
-        ));
+        );
     }
+
+    const {
+      response,
+      result
+    } = measurementRequest;
 
     if (
       !response.ok ||
@@ -372,8 +385,17 @@ export default async function handler(
       result.status !== 0
     ) {
       console.error(
-        "Withings measurement request failed:",
-        result
+        "Withings measurement request failed",
+        {
+          httpStatus:
+            response.status,
+
+          withingsStatus:
+            result?.status,
+
+          error:
+            result?.error
+        }
       );
 
       return res.status(502).json({
@@ -384,11 +406,18 @@ export default async function handler(
     }
 
     const records =
-      compactMeasurementGroups(
+      formatMeasurementGroups(
         result.body
           ?.measuregrps ||
         []
       );
+
+    const latest =
+      records.length > 0
+        ? records[
+            records.length - 1
+          ]
+        : null;
 
     return res.status(200).json({
       connected: true,
@@ -399,25 +428,28 @@ export default async function handler(
         null,
 
       lastDate:
-        records.at(-1)?.date ||
+        latest?.date ||
         null,
 
-      latest:
-        records.at(-1) ||
-        null,
+      latest,
 
       records
     });
   } catch (error) {
     console.error(
-      "Withings data endpoint failed:",
-      error
+      "Unexpected Withings data error",
+      {
+        message:
+          error instanceof Error
+            ? error.message
+            : "Unknown error"
+      }
     );
 
-    return res.status(502).json({
+    return res.status(500).json({
       connected: true,
       error:
-        "Withings data could not be retrieved."
+        "Unexpected Withings data error."
     });
   }
 }
