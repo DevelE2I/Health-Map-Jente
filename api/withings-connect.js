@@ -33,12 +33,11 @@ export default function handler(req, res) {
     process.env.WITHINGS_CLIENT_ID;
 
   const redirectUri =
-    process.env.WITHINGS_REDIRECT_URI;
+    "https://health-map-jente.vercel.app/api/withings-callback";
 
-  if (!clientId || !redirectUri) {
+  if (!clientId) {
     return res.status(500).json({
-      error:
-        "Withings environment variables are missing."
+      error: "WITHINGS_CLIENT_ID is missing in Vercel."
     });
   }
 
