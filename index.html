@@ -445,6 +445,36 @@
       font-size: 13px;
     }
 
+
+    .withings-overview {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .withings-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .withings-status {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .withings-status.success {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .withings-status.error {
+      color: var(--red);
+      font-weight: 700;
+    }
+
     .loading-card {
       text-align: center;
       padding: 34px;
@@ -482,7 +512,8 @@
       }
 
       .metrics,
-      .summary-grid {
+      .summary-grid,
+      .withings-overview {
         grid-template-columns: repeat(2, 1fr);
       }
 
@@ -508,8 +539,8 @@
         <h1>Health Map</h1>
 
         <div class="subtitle">
-          Dagelijks herstel, slaap en belasting — met je volledige
-          WHOOP-geschiedenis en persoonlijke trends.
+          Dagelijks herstel, slaap, belasting en lichaamssamenstelling —
+          met WHOOP- en Withings-trends in één dashboard.
         </div>
       </div>
 
@@ -686,6 +717,128 @@
             <strong id="maxHrValue">—</strong>
           </div>
         </div>
+      </article>
+
+
+      <div class="section-title">
+        Lichaamssamenstelling
+      </div>
+
+      <div class="section-sub">
+        Withings-metingen met voortschrijdende gemiddelden en veranderingen sinds de start.
+      </div>
+
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h3>Withings-overzicht</h3>
+            <p>
+              Dagelijkse schommelingen zijn normaal. Kijk vooral naar de trend over meerdere weken.
+            </p>
+          </div>
+
+          <span id="withingsUpdatedAt" class="updated">—</span>
+        </div>
+
+        <div class="withings-overview">
+          <div class="metric">
+            <div class="metric-label">Gewicht</div>
+            <div id="withingsWeightValue" class="metric-value">—</div>
+            <div id="withingsWeightChange" class="metric-sub">—</div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-label">Vetpercentage</div>
+            <div id="withingsFatValue" class="metric-value">—</div>
+            <div id="withingsFatChange" class="metric-sub">—</div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-label">Spiermassa</div>
+            <div id="withingsMuscleValue" class="metric-value">—</div>
+            <div id="withingsMuscleChange" class="metric-sub">—</div>
+          </div>
+
+          <div class="metric">
+            <div class="metric-label">Visceraal vet</div>
+            <div id="withingsVisceralValue" class="metric-value">—</div>
+            <div id="withingsVisceralChange" class="metric-sub">—</div>
+          </div>
+        </div>
+
+        <div class="withings-actions">
+          <a id="withingsConnectButton" class="button" href="/api/withings-connect">
+            Verbind Withings
+          </a>
+
+          <button id="withingsRefreshButton" type="button">
+            Withings vernieuwen
+          </button>
+
+          <span id="withingsStatus" class="withings-status">
+            Withings controleren…
+          </span>
+        </div>
+      </article>
+
+      <article class="card span-6">
+        <div class="card-head">
+          <div>
+            <h3>Gewicht</h3>
+            <p>Dagmetingen plus het voortschrijdend gemiddelde over zeven dagen.</p>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="withingsWeightChart"></canvas>
+        </div>
+
+        <div id="withingsWeightMessage" class="chart-message"></div>
+      </article>
+
+      <article class="card span-6">
+        <div class="card-head">
+          <div>
+            <h3>Vetpercentage</h3>
+            <p>Dagmetingen plus een rustiger gemiddelde over veertien dagen.</p>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="withingsFatChart"></canvas>
+        </div>
+
+        <div id="withingsFatMessage" class="chart-message"></div>
+      </article>
+
+      <article class="card span-6">
+        <div class="card-head">
+          <div>
+            <h3>Vetmassa en spiermassa</h3>
+            <p>Lichaamssamenstelling in kilogram, weergegeven over dezelfde periode.</p>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="withingsCompositionChart"></canvas>
+        </div>
+
+        <div id="withingsCompositionMessage" class="chart-message"></div>
+      </article>
+
+      <article class="card span-6">
+        <div class="card-head">
+          <div>
+            <h3>Verandering sinds de start</h3>
+            <p>Gewicht, vetmassa en spiermassa herleid naar nul bij je eerste meting.</p>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="withingsChangeChart"></canvas>
+        </div>
+
+        <div id="withingsChangeMessage" class="chart-message"></div>
       </article>
 
       <div class="section-title">
@@ -901,6 +1054,7 @@
     let recoveryHistory = [];
     let sleepHistory = [];
     let cycleHistory = [];
+    let withingsHistory = [];
 
     const charts = {};
 
@@ -1452,6 +1606,449 @@
           </strong>
         </div>
       `;
+    }
+
+
+    function latestNumeric(records, key) {
+      for (let index = records.length - 1; index >= 0; index -= 1) {
+        const value = num(records[index]?.[key]);
+
+        if (value !== null) {
+          return {
+            value,
+            record: records[index]
+          };
+        }
+      }
+
+      return null;
+    }
+
+    function firstNumeric(records, key) {
+      for (const record of records) {
+        const value = num(record?.[key]);
+
+        if (value !== null) {
+          return {
+            value,
+            record
+          };
+        }
+      }
+
+      return null;
+    }
+
+    function formatSigned(value, decimals, unit) {
+      if (value === null || !Number.isFinite(value)) {
+        return "—";
+      }
+
+      const sign = value > 0 ? "+" : "";
+
+      return `${sign}${value.toFixed(decimals)} ${unit}`;
+    }
+
+    function setWithingsStatus(message, type = "") {
+      const element = $("withingsStatus");
+
+      if (!element) {
+        return;
+      }
+
+      element.textContent = message;
+      element.classList.remove("success", "error");
+
+      if (type) {
+        element.classList.add(type);
+      }
+    }
+
+    function renderWithingsSummary(records) {
+      const latestWeight = latestNumeric(records, "weightKg");
+      const firstWeight = firstNumeric(records, "weightKg");
+      const latestFat = latestNumeric(records, "fatRatioPercent");
+      const firstFat = firstNumeric(records, "fatRatioPercent");
+      const latestMuscle = latestNumeric(records, "muscleMassKg");
+      const firstMuscle = firstNumeric(records, "muscleMassKg");
+      const latestVisceral = latestNumeric(records, "visceralFatIndex");
+      const firstVisceral = firstNumeric(records, "visceralFatIndex");
+
+      setText(
+        "withingsWeightValue",
+        latestWeight ? `${latestWeight.value.toFixed(1)} kg` : "—"
+      );
+
+      setText(
+        "withingsWeightChange",
+        latestWeight && firstWeight
+          ? `${formatSigned(
+              latestWeight.value - firstWeight.value,
+              1,
+              "kg"
+            )} sinds start`
+          : "Geen trend beschikbaar"
+      );
+
+      setText(
+        "withingsFatValue",
+        latestFat ? `${latestFat.value.toFixed(1)}%` : "—"
+      );
+
+      setText(
+        "withingsFatChange",
+        latestFat && firstFat
+          ? `${formatSigned(
+              latestFat.value - firstFat.value,
+              1,
+              "procentpunt"
+            )} sinds start`
+          : "Geen trend beschikbaar"
+      );
+
+      setText(
+        "withingsMuscleValue",
+        latestMuscle ? `${latestMuscle.value.toFixed(1)} kg` : "—"
+      );
+
+      setText(
+        "withingsMuscleChange",
+        latestMuscle && firstMuscle
+          ? `${formatSigned(
+              latestMuscle.value - firstMuscle.value,
+              1,
+              "kg"
+            )} sinds start`
+          : "Geen trend beschikbaar"
+      );
+
+      setText(
+        "withingsVisceralValue",
+        latestVisceral ? latestVisceral.value.toFixed(1) : "—"
+      );
+
+      setText(
+        "withingsVisceralChange",
+        latestVisceral && firstVisceral
+          ? `${formatSigned(
+              latestVisceral.value - firstVisceral.value,
+              1,
+              "punten"
+            )} sinds start`
+          : "Geen trend beschikbaar"
+      );
+
+      const latestRecord =
+        [...records]
+          .reverse()
+          .find((record) =>
+            [
+              "weightKg",
+              "fatRatioPercent",
+              "muscleMassKg",
+              "visceralFatIndex"
+            ].some((key) => num(record[key]) !== null)
+          );
+
+      setText(
+        "withingsUpdatedAt",
+        latestRecord
+          ? `Laatste meting ${new Date(latestRecord.date).toLocaleDateString(
+              "nl-BE",
+              {
+                day: "numeric",
+                month: "short",
+                year: "numeric"
+              }
+            )}`
+          : "Geen metingen"
+      );
+    }
+
+    function renderWithingsCharts() {
+      const records = filterByRange(withingsHistory);
+
+      renderWithingsSummary(withingsHistory);
+
+      const weightRecords =
+        records.filter(
+          (record) => num(record.weightKg) !== null
+        );
+
+      createLineChart(
+        "withingsWeightChart",
+        weightRecords,
+        [
+          lineDataset(
+            "Dagmeting",
+            weightRecords.map((record) => record.weightKg),
+            "rgba(37, 99, 235, 0.35)",
+            1.2
+          ),
+
+          lineDataset(
+            "7-daags gemiddelde",
+            movingAverage(weightRecords, "weightKg", 7),
+            "#2563eb",
+            3
+          )
+        ],
+        {
+          scales: {
+            ...commonOptions.scales,
+            y: {
+              ...commonOptions.scales.y,
+              ticks: {
+                color: "#8a919c",
+                callback(value) {
+                  return `${value} kg`;
+                }
+              }
+            }
+          }
+        }
+      );
+
+      const fatRecords =
+        records.filter(
+          (record) => num(record.fatRatioPercent) !== null
+        );
+
+      createLineChart(
+        "withingsFatChart",
+        fatRecords,
+        [
+          lineDataset(
+            "Dagmeting",
+            fatRecords.map((record) => record.fatRatioPercent),
+            "rgba(234, 88, 12, 0.35)",
+            1.2
+          ),
+
+          lineDataset(
+            "14-daags gemiddelde",
+            movingAverage(fatRecords, "fatRatioPercent", 14),
+            "#ea580c",
+            3
+          )
+        ],
+        {
+          scales: {
+            ...commonOptions.scales,
+            y: {
+              ...commonOptions.scales.y,
+              ticks: {
+                color: "#8a919c",
+                callback(value) {
+                  return `${value}%`;
+                }
+              }
+            }
+          }
+        }
+      );
+
+      const compositionRecords =
+        records.filter(
+          (record) =>
+            num(record.fatMassKg) !== null ||
+            num(record.muscleMassKg) !== null
+        );
+
+      createLineChart(
+        "withingsCompositionChart",
+        compositionRecords,
+        [
+          lineDataset(
+            "Vetmassa",
+            compositionRecords.map((record) => record.fatMassKg),
+            "#ea580c",
+            2.5
+          ),
+
+          lineDataset(
+            "Spiermassa",
+            compositionRecords.map((record) => record.muscleMassKg),
+            "#159a68",
+            2.5
+          )
+        ],
+        {
+          scales: {
+            ...commonOptions.scales,
+            y: {
+              ...commonOptions.scales.y,
+              ticks: {
+                color: "#8a919c",
+                callback(value) {
+                  return `${value} kg`;
+                }
+              }
+            }
+          }
+        }
+      );
+
+      const firstWeight =
+        firstNumeric(withingsHistory, "weightKg")?.value ?? null;
+
+      const firstFatMass =
+        firstNumeric(withingsHistory, "fatMassKg")?.value ?? null;
+
+      const firstMuscle =
+        firstNumeric(withingsHistory, "muscleMassKg")?.value ?? null;
+
+      const changeRecords =
+        records
+          .map((record) => ({
+            ...record,
+
+            weightChange:
+              firstWeight !== null && num(record.weightKg) !== null
+                ? record.weightKg - firstWeight
+                : null,
+
+            fatMassChange:
+              firstFatMass !== null && num(record.fatMassKg) !== null
+                ? record.fatMassKg - firstFatMass
+                : null,
+
+            muscleChange:
+              firstMuscle !== null && num(record.muscleMassKg) !== null
+                ? record.muscleMassKg - firstMuscle
+                : null
+          }))
+          .filter(
+            (record) =>
+              num(record.weightChange) !== null ||
+              num(record.fatMassChange) !== null ||
+              num(record.muscleChange) !== null
+          );
+
+      createLineChart(
+        "withingsChangeChart",
+        changeRecords,
+        [
+          lineDataset(
+            "Gewicht",
+            changeRecords.map((record) => record.weightChange),
+            "#2563eb",
+            2.5
+          ),
+
+          lineDataset(
+            "Vetmassa",
+            changeRecords.map((record) => record.fatMassChange),
+            "#ea580c",
+            2.5
+          ),
+
+          lineDataset(
+            "Spiermassa",
+            changeRecords.map((record) => record.muscleChange),
+            "#159a68",
+            2.5
+          )
+        ],
+        {
+          scales: {
+            ...commonOptions.scales,
+            y: {
+              ...commonOptions.scales.y,
+              ticks: {
+                color: "#8a919c",
+                callback(value) {
+                  return `${value > 0 ? "+" : ""}${value} kg`;
+                }
+              }
+            }
+          }
+        }
+      );
+
+      setText(
+        "withingsWeightMessage",
+        `${weightRecords.length} gewichtsmetingen weergegeven.`
+      );
+
+      setText(
+        "withingsFatMessage",
+        `${fatRecords.length} vetmetingen weergegeven.`
+      );
+
+      setText(
+        "withingsCompositionMessage",
+        `${compositionRecords.length} metingen van lichaamssamenstelling weergegeven.`
+      );
+
+      setText(
+        "withingsChangeMessage",
+        `${changeRecords.length} metingen vergeleken met je eerste beschikbare meting.`
+      );
+    }
+
+    async function loadWithings() {
+      const refreshButton = $("withingsRefreshButton");
+
+      if (refreshButton) {
+        refreshButton.disabled = true;
+      }
+
+      setWithingsStatus("Withings-data laden…");
+
+      try {
+        const data =
+          await fetchJson(
+            "/api/withings-data",
+            "Withings-data kon niet worden geladen."
+          );
+
+        withingsHistory =
+          Array.isArray(data.records)
+            ? data.records
+            : [];
+
+        if (!withingsHistory.length) {
+          setWithingsStatus(
+            "Verbonden, maar nog geen metingen gevonden.",
+            "error"
+          );
+
+          $("withingsConnectButton")
+            ?.classList
+            .add("hidden");
+
+          return;
+        }
+
+        $("withingsConnectButton")
+          ?.classList
+          .add("hidden");
+
+        renderWithingsCharts();
+
+        setWithingsStatus(
+          `Withings verbonden · ${withingsHistory.length} metingen`,
+          "success"
+        );
+      } catch (error) {
+        console.error("Withings laden mislukt:", error);
+
+        withingsHistory = [];
+
+        $("withingsConnectButton")
+          ?.classList
+          .remove("hidden");
+
+        setWithingsStatus(
+          error?.message || "Withings is niet verbonden.",
+          "error"
+        );
+      } finally {
+        if (refreshButton) {
+          refreshButton.disabled = false;
+        }
+      }
     }
 
     function renderRecoveryCharts() {
@@ -2083,6 +2680,10 @@
         renderStrainChart();
       }
 
+      if (withingsHistory.length) {
+        renderWithingsCharts();
+      }
+
       if (
         recoveryHistory.length &&
         sleepHistory.length &&
@@ -2092,7 +2693,10 @@
       }
     }
 
-    async function fetchJson(url) {
+    async function fetchJson(
+      url,
+      fallbackMessage = "WHOOP-data kon niet worden geladen."
+    ) {
       const response =
         await fetch(url, {
           method: "GET",
@@ -2120,7 +2724,7 @@
       ) {
         throw new Error(
           data.error ||
-          "WHOOP-data kon niet worden geladen."
+          fallbackMessage
         );
       }
 
@@ -2275,6 +2879,7 @@
 
         renderCurrent(current);
 
+        await loadWithings();
         await loadHistorySequentially();
       } catch (error) {
         console.error(error);
@@ -2354,6 +2959,12 @@
       .addEventListener(
         "click",
         loadEverything
+      );
+
+    $("withingsRefreshButton")
+      ?.addEventListener(
+        "click",
+        loadWithings
       );
 
     loadEverything();
