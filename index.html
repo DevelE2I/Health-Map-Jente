@@ -2,7 +2,11 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
+
   <title>Health Map Jente</title>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
@@ -21,10 +25,9 @@
       --blue: #2563eb;
       --purple: #7c3aed;
       --orange: #ea580c;
-      --shadow: 0 16px 46px rgba(15, 23, 42, 0.08);
       --radius: 22px;
-
-      font-family:
+      --shadow: 0 16px 46px rgba(15, 23, 42, 0.08);
+      --font:
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
@@ -43,46 +46,30 @@
       min-height: 100%;
       background: var(--bg);
       color: var(--text);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
     }
 
     body {
       padding: 26px 14px 60px;
     }
 
-    a,
-    button {
+    button,
+    a {
       font: inherit;
     }
 
     .app {
       width: min(1180px, 100%);
-      margin: auto;
-    }
-
-    .topbar,
-    .toolbar,
-    .card-head,
-    .actions,
-    .source-status {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .topbar,
-    .toolbar,
-    .card-head {
-      justify-content: space-between;
+      margin: 0 auto;
     }
 
     .topbar {
+      display: flex;
+      justify-content: space-between;
       align-items: flex-end;
+      gap: 18px;
       margin-bottom: 24px;
-    }
-
-    .toolbar {
-      margin-bottom: 16px;
-      flex-wrap: wrap;
     }
 
     h1 {
@@ -94,33 +81,46 @@
 
     .subtitle {
       margin-top: 11px;
-      max-width: 820px;
+      max-width: 780px;
       color: var(--muted);
       font-size: 14px;
       line-height: 1.55;
     }
 
-    .status,
-    .pill {
-      padding: 8px 12px;
+    .status {
+      flex-shrink: 0;
+      padding: 9px 13px;
       border: 1px solid var(--border);
       border-radius: 999px;
-      background: white;
+      background: var(--panel);
       color: var(--muted);
-      font-size: 11px;
+      font-size: 12px;
     }
 
-    .success {
-      color: var(--green) !important;
+    .status.success {
+      color: var(--green);
     }
 
-    .error {
-      color: var(--red) !important;
+    .status.error {
+      color: var(--red);
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar-title {
+      color: var(--muted);
+      font-size: 13px;
     }
 
     .range-buttons,
-    .actions,
-    .source-status {
+    .actions {
       display: flex;
       gap: 7px;
       flex-wrap: wrap;
@@ -153,6 +153,7 @@
     .range-button.active {
       background: var(--text);
       color: #ffffff;
+      border-color: var(--text);
     }
 
     .grid {
@@ -183,7 +184,10 @@
     }
 
     .card-head {
+      display: flex;
+      justify-content: space-between;
       align-items: flex-start;
+      gap: 14px;
       margin-bottom: 16px;
     }
 
@@ -211,6 +215,7 @@
     .updated {
       color: var(--muted2);
       font-size: 11px;
+      white-space: nowrap;
     }
 
     .hero {
@@ -224,7 +229,7 @@
       position: relative;
       width: 225px;
       aspect-ratio: 1;
-      margin: auto;
+      margin: 0 auto;
     }
 
     .ring {
@@ -247,7 +252,9 @@
       stroke-linecap: round;
       stroke-dasharray: 603.19;
       stroke-dashoffset: 603.19;
-      transition: 0.4s;
+      transition:
+        stroke-dashoffset 0.7s ease,
+        stroke 0.3s ease;
     }
 
     .ring-center {
@@ -276,6 +283,7 @@
 
     .recovery-state {
       margin-top: 7px;
+      color: var(--green);
       font-size: 13px;
       font-weight: 700;
     }
@@ -294,9 +302,7 @@
     }
 
     .metrics,
-    .overview,
-    .insight-grid,
-    .summary-grid {
+    .overview {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
@@ -307,7 +313,6 @@
     }
 
     .metric,
-    .insight-item,
     .summary-stat {
       padding: 14px;
       border: 1px solid var(--border);
@@ -316,7 +321,6 @@
     }
 
     .metric-label,
-    .insight-label,
     .summary-label {
       color: var(--muted2);
       text-transform: uppercase;
@@ -332,20 +336,26 @@
       letter-spacing: -0.045em;
     }
 
-    .insight-value,
-    .summary-value {
-      display: block;
-      margin-top: 8px;
-      font-size: 19px;
-      font-weight: 760;
-    }
-
-    .metric-sub,
-    .insight-sub {
+    .metric-sub {
       margin-top: 5px;
       color: var(--muted2);
       font-size: 10px;
       line-height: 1.4;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 9px;
+      margin-bottom: 14px;
+    }
+
+    .summary-value {
+      display: block;
+      margin-top: 7px;
+      font-size: 18px;
+      font-weight: 760;
+      letter-spacing: -0.03em;
     }
 
     .sleep-bar {
@@ -392,34 +402,55 @@
       font-size: 13px;
     }
 
-    .bio-row,
-    .insight-row {
+    .bio-list {
+      display: grid;
+    }
+
+    .bio-row {
       display: flex;
       justify-content: space-between;
       gap: 14px;
-      padding: 12px 0;
+      padding: 13px 0;
       border-bottom: 1px solid var(--border);
     }
 
-    .bio-row:last-child,
-    .insight-row:last-child {
+    .bio-row:last-child {
       border-bottom: 0;
     }
 
-    .bio-row span,
-    .insight-row span {
+    .bio-row span {
       color: var(--muted);
     }
 
-    .bio-row strong,
-    .insight-row strong {
-      text-align: right;
+    .bio-row strong {
+      white-space: nowrap;
+    }
+
+    .chart-wrap {
+      position: relative;
+      height: 315px;
+    }
+
+    .chart-wrap.small {
+      height: 280px;
+    }
+
+    .chart-wrap.scatter {
+      height: 340px;
+    }
+
+    .chart-message {
+      min-height: 18px;
+      margin-top: 9px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.45;
     }
 
     .section-title {
       grid-column: span 12;
-      margin: 20px 0 -3px;
-      font-size: 28px;
+      margin: 18px 0 -3px;
+      font-size: 27px;
       font-weight: 780;
       letter-spacing: -0.04em;
     }
@@ -431,41 +462,29 @@
       font-size: 13px;
     }
 
-    .chart-wrap {
-      position: relative;
-      height: 315px;
+    .source-actions {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      flex-wrap: wrap;
+      margin-top: 17px;
     }
 
-    .chart-wrap.small {
-      height: 270px;
-    }
-
-    .chart-wrap.scatter {
-      height: 330px;
-    }
-
-    .chart-message {
-      min-height: 18px;
-      margin-top: 9px;
+    .source-status {
       color: var(--muted);
       font-size: 11px;
-      line-height: 1.45;
     }
 
-    .score-big {
-      font-size: 56px;
-      font-weight: 800;
-      letter-spacing: -0.06em;
+    .source-status.success {
+      color: var(--green);
     }
 
-    .score-note {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.55;
+    .source-status.error {
+      color: var(--red);
     }
 
     .activity-table-wrap {
-      overflow: auto;
+      overflow-x: auto;
     }
 
     .activity-table {
@@ -499,6 +518,10 @@
       display: none !important;
     }
 
+    .error {
+      color: var(--red) !important;
+    }
+
     @media (max-width: 900px) {
       .span-5,
       .span-6,
@@ -527,7 +550,6 @@
 
       .metrics,
       .overview,
-      .insight-grid,
       .summary-grid {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -539,14 +561,9 @@
       .chart-wrap {
         height: 280px;
       }
-    }
 
-    @media (max-width: 430px) {
-      .metrics,
-      .overview,
-      .insight-grid,
-      .summary-grid {
-        grid-template-columns: 1fr;
+      .chart-wrap.scatter {
+        height: 310px;
       }
     }
   </style>
@@ -554,3332 +571,3375 @@
 
 <body>
 
-<main class="app">
+  <main class="app">
 
-  <header class="topbar">
+    <header class="topbar">
+      <div>
+        <h1>Health Map</h1>
 
-    <div>
-      <h1>Health Map</h1>
-
-      <div class="subtitle">
-        WHOOP, Withings en Strava in één dashboard —
-        met herstel, slaap, lichaamssamenstelling,
-        training en persoonlijke inzichten.
-      </div>
-    </div>
-
-    <div id="connectionStatus" class="status">
-      Data laden…
-    </div>
-
-  </header>
-
-  <div class="toolbar">
-
-    <div class="subtitle" style="margin: 0">
-      Periode voor historische analyses
-    </div>
-
-    <div class="range-buttons" id="globalRanges">
-
-      <button
-        class="range-button"
-        data-range="30"
-        type="button"
-      >
-        30 dagen
-      </button>
-
-      <button
-        class="range-button"
-        data-range="90"
-        type="button"
-      >
-        90 dagen
-      </button>
-
-      <button
-        class="range-button"
-        data-range="365"
-        type="button"
-      >
-        1 jaar
-      </button>
-
-      <button
-        class="range-button active"
-        data-range="all"
-        type="button"
-      >
-        Alles
-      </button>
-
-    </div>
-  </div>
-
-  <section
-    id="loadingView"
-    class="card loading-card"
-  >
-    Health Map laden…
-  </section>
-
-  <section
-    id="dashboardView"
-    class="grid hidden"
-  >
-
-    <!-- ======================================================
-         VANDAAG
-    ======================================================= -->
-
-    <article class="card">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Vandaag</h3>
-          <p>Meest recente WHOOP-metingen.</p>
+        <div class="subtitle">
+          WHOOP, Withings en Strava in één overzicht voor herstel,
+          slaap, belasting, lichaamssamenstelling en training.
         </div>
+      </div>
 
-        <span
-          id="updatedAt"
-          class="updated"
+      <div id="connectionStatus" class="status">
+        Data laden…
+      </div>
+    </header>
+
+    <div class="toolbar">
+
+      <div class="toolbar-title">
+        Periode voor historische grafieken
+      </div>
+
+      <div class="range-buttons" id="globalRanges">
+
+        <button
+          type="button"
+          class="range-button"
+          data-range="30"
         >
-          —
-        </span>
+          30 dagen
+        </button>
+
+        <button
+          type="button"
+          class="range-button"
+          data-range="90"
+        >
+          90 dagen
+        </button>
+
+        <button
+          type="button"
+          class="range-button"
+          data-range="365"
+        >
+          1 jaar
+        </button>
+
+        <button
+          type="button"
+          class="range-button active"
+          data-range="all"
+        >
+          Alles
+        </button>
 
       </div>
+    </div>
 
-      <div class="hero">
+    <section
+      id="loadingView"
+      class="card loading-card"
+    >
+      Health Map laden…
+    </section>
 
-        <div class="ring-wrap">
+    <section
+      id="dashboardView"
+      class="grid hidden"
+    >
 
-          <svg
-            class="ring"
-            viewBox="0 0 220 220"
+      <!-- ==================================================
+           VANDAAG
+      =================================================== -->
+
+      <article class="card">
+
+        <div class="card-head">
+
+          <div>
+            <h3>Vandaag</h3>
+          </div>
+
+          <span
+            id="updatedAt"
+            class="updated"
           >
-            <circle
-              class="ring-track"
-              cx="110"
-              cy="110"
-              r="96"
-            ></circle>
+            —
+          </span>
 
-            <circle
-              id="recoveryRing"
-              class="ring-value"
-              cx="110"
-              cy="110"
-              r="96"
-            ></circle>
-          </svg>
+        </div>
 
-          <div class="ring-center">
+        <div class="hero">
+
+          <div class="ring-wrap">
+
+            <svg
+              class="ring"
+              viewBox="0 0 220 220"
+            >
+              <circle
+                class="ring-track"
+                cx="110"
+                cy="110"
+                r="96"
+              ></circle>
+
+              <circle
+                id="recoveryRing"
+                class="ring-value"
+                cx="110"
+                cy="110"
+                r="96"
+              ></circle>
+            </svg>
+
+            <div class="ring-center">
+
+              <div
+                id="recoveryScore"
+                class="recovery-score"
+              >
+                —
+              </div>
+
+              <div class="eyebrow">
+                Recovery
+              </div>
+
+              <div
+                id="recoveryState"
+                class="recovery-state"
+              >
+                —
+              </div>
+
+            </div>
+          </div>
+
+          <div class="hero-copy">
+
+            <h2 id="dailyHeadline">
+              WHOOP laden…
+            </h2>
+
+            <p id="dailySummary">
+              Je actuele herstel-, slaap- en strainwaarden worden opgehaald.
+            </p>
+
+            <div class="metrics">
+
+              <div class="metric">
+                <div class="metric-label">HRV</div>
+                <div id="hrvValue" class="metric-value">—</div>
+                <div class="metric-sub">ms</div>
+              </div>
+
+              <div class="metric">
+                <div class="metric-label">Rusthartslag</div>
+                <div id="rhrValue" class="metric-value">—</div>
+                <div class="metric-sub">bpm</div>
+              </div>
+
+              <div class="metric">
+                <div class="metric-label">Slaapscore</div>
+                <div id="sleepScore" class="metric-value">—</div>
+                <div class="metric-sub">performance</div>
+              </div>
+
+              <div class="metric">
+                <div class="metric-label">Strain</div>
+                <div id="strainValue" class="metric-value">—</div>
+                <div class="metric-sub">huidige cyclus</div>
+              </div>
+
+            </div>
 
             <div
-              id="recoveryScore"
-              class="recovery-score"
+              class="actions"
+              style="margin-top: 18px"
             >
-              —
-            </div>
 
-            <div class="eyebrow">
-              Recovery
+              <button
+                id="refreshButton"
+                type="button"
+              >
+                Alles vernieuwen
+              </button>
+
+              <a
+                class="button"
+                href="/api/whoop-connect"
+              >
+                WHOOP
+              </a>
+
+              <a
+                class="button"
+                href="/api/withings-connect"
+              >
+                Withings
+              </a>
+
+              <a
+                class="button"
+                href="/api/strava-connect"
+              >
+                Strava
+              </a>
+
             </div>
 
             <div
-              id="recoveryState"
-              class="recovery-state"
-            >
-              —
-            </div>
+              id="dashboardMessage"
+              class="chart-message"
+            ></div>
 
           </div>
         </div>
 
-        <div class="hero-copy">
+      </article>
 
-          <h2 id="dailyHeadline">
-            Data laden…
-          </h2>
+      <!-- ==================================================
+           SLAAP VANDAAG
+      =================================================== -->
 
-          <p id="dailySummary">
-            Je herstel-, slaap- en strainwaarden worden opgehaald.
-          </p>
+      <article class="card span-7">
 
-          <div class="metrics">
+        <div class="card-head">
 
-            <div class="metric">
-              <div class="metric-label">HRV</div>
-              <div
-                id="hrvValue"
-                class="metric-value"
-              >
-                —
-              </div>
-              <div class="metric-sub">ms</div>
-            </div>
+          <h3>Laatste slaap</h3>
 
-            <div class="metric">
-              <div class="metric-label">
-                Rusthartslag
-              </div>
-
-              <div
-                id="rhrValue"
-                class="metric-value"
-              >
-                —
-              </div>
-
-              <div class="metric-sub">
-                bpm
-              </div>
-            </div>
-
-            <div class="metric">
-
-              <div class="metric-label">
-                Slaapscore
-              </div>
-
-              <div
-                id="sleepScore"
-                class="metric-value"
-              >
-                —
-              </div>
-
-              <div class="metric-sub">
-                performance
-              </div>
-            </div>
-
-            <div class="metric">
-
-              <div class="metric-label">
-                Strain
-              </div>
-
-              <div
-                id="strainValue"
-                class="metric-value"
-              >
-                —
-              </div>
-
-              <div class="metric-sub">
-                huidige cyclus
-              </div>
-
-            </div>
-          </div>
-
-          <div
-            class="actions"
-            style="margin-top: 18px"
+          <span
+            id="sleepDuration"
+            class="updated"
           >
+            —
+          </span>
 
-            <button
-              id="refreshButton"
-              type="button"
-            >
-              Alles vernieuwen
-            </button>
+        </div>
 
-            <a
-              class="button"
-              href="/api/whoop-connect"
-            >
-              WHOOP
-            </a>
-
-            <a
-              class="button"
-              href="/api/withings-connect"
-            >
-              Withings
-            </a>
-
-            <a
-              class="button"
-              href="/api/strava-connect"
-            >
-              Strava
-            </a>
-
-          </div>
+        <div class="sleep-bar">
 
           <div
-            id="dashboardMessage"
-            class="chart-message"
+            id="remBar"
+            class="sleep-stage rem"
+            style="width: 0%"
           ></div>
 
-          <div class="source-status">
+          <div
+            id="deepBar"
+            class="sleep-stage deep"
+            style="width: 0%"
+          ></div>
 
-            <span
-              id="whoopStatus"
-              class="pill"
+          <div
+            id="lightBar"
+            class="sleep-stage light"
+            style="width: 0%"
+          ></div>
+
+          <div
+            id="awakeBar"
+            class="sleep-stage awake"
+            style="width: 0%"
+          ></div>
+
+        </div>
+
+        <div class="sleep-legend">
+
+          <div>
+            REM
+            <strong id="remValue">—</strong>
+          </div>
+
+          <div>
+            Diep
+            <strong id="deepValue">—</strong>
+          </div>
+
+          <div>
+            Licht
+            <strong id="lightValue">—</strong>
+          </div>
+
+          <div>
+            Wakker
+            <strong id="awakeValue">—</strong>
+          </div>
+
+        </div>
+
+      </article>
+
+      <!-- ==================================================
+           BIOMARKERS
+      =================================================== -->
+
+      <article class="card span-5">
+
+        <div class="card-head">
+          <h3>Biomarkers</h3>
+        </div>
+
+        <div class="bio-list">
+
+          <div class="bio-row">
+            <span>Ademhaling</span>
+            <strong id="respValue">—</strong>
+          </div>
+
+          <div class="bio-row">
+            <span>Huidtemperatuur</span>
+            <strong id="skinTempValue">—</strong>
+          </div>
+
+          <div class="bio-row">
+            <span>SpO₂</span>
+            <strong id="spo2Value">—</strong>
+          </div>
+
+          <div class="bio-row">
+            <span>Gemiddelde hartslag</span>
+            <strong id="avgHrValue">—</strong>
+          </div>
+
+          <div class="bio-row">
+            <span>Maximale hartslag</span>
+            <strong id="maxHrValue">—</strong>
+          </div>
+
+        </div>
+
+      </article>
+
+      <!-- ==================================================
+           WITHINGS
+      =================================================== -->
+
+      <div class="section-title">
+        Lichaamssamenstelling
+      </div>
+
+      <div class="section-sub">
+        Withings-metingen en trends.
+      </div>
+
+      <article class="card">
+
+        <div class="card-head">
+
+          <div>
+            <h3>Withings-overzicht</h3>
+
+            <p>
+              De waarden hieronder komen rechtstreeks uit je
+              bestaande Withings API-data.
+            </p>
+          </div>
+
+          <span
+            id="withingsUpdatedAt"
+            class="updated"
+          >
+            —
+          </span>
+
+        </div>
+
+        <div class="overview">
+
+          <div class="metric">
+
+            <div class="metric-label">
+              Gewicht
+            </div>
+
+            <div
+              id="withingsWeightValue"
+              class="metric-value"
             >
-              WHOOP…
-            </span>
+              —
+            </div>
 
-            <span
-              id="withingsStatus"
-              class="pill"
+            <div
+              id="withingsWeightChange"
+              class="metric-sub"
             >
-              Withings…
-            </span>
+              —
+            </div>
 
-            <span
-              id="stravaStatus"
-              class="pill"
+          </div>
+
+          <div class="metric">
+
+            <div class="metric-label">
+              Vetpercentage
+            </div>
+
+            <div
+              id="withingsFatValue"
+              class="metric-value"
             >
-              Strava…
-            </span>
+              —
+            </div>
+
+            <div
+              id="withingsFatChange"
+              class="metric-sub"
+            >
+              —
+            </div>
+
+          </div>
+
+          <div class="metric">
+
+            <div class="metric-label">
+              Spiermassa
+            </div>
+
+            <div
+              id="withingsMuscleValue"
+              class="metric-value"
+            >
+              —
+            </div>
+
+            <div
+              id="withingsMuscleChange"
+              class="metric-sub"
+            >
+              —
+            </div>
+
+          </div>
+
+          <div class="metric">
+
+            <div class="metric-label">
+              Visceraal vet
+            </div>
+
+            <div
+              id="withingsVisceralValue"
+              class="metric-value"
+            >
+              —
+            </div>
+
+            <div
+              id="withingsVisceralChange"
+              class="metric-sub"
+            >
+              —
+            </div>
 
           </div>
 
         </div>
-      </div>
-    </article>
 
-    <!-- ======================================================
-         LAATSTE SLAAP
-    ======================================================= -->
+        <div class="source-actions">
 
-    <article class="card span-7">
+          <a
+            id="withingsConnectButton"
+            class="button"
+            href="/api/withings-connect"
+          >
+            Verbind Withings
+          </a>
 
-      <div class="card-head">
+          <button
+            id="withingsRefreshButton"
+            type="button"
+          >
+            Withings vernieuwen
+          </button>
 
-        <h3>Laatste slaap</h3>
+          <span
+            id="withingsStatus"
+            class="source-status"
+          >
+            Withings controleren…
+          </span>
 
-        <span
-          id="sleepDuration"
-          class="updated"
-        >
-          —
-        </span>
+        </div>
 
-      </div>
+      </article>
 
-      <div class="sleep-bar">
+      <article class="card span-6">
+
+        <div class="card-head">
+
+          <div>
+            <h3>Gewicht</h3>
+
+            <p>
+              Dagmetingen en 7-daags gemiddelde.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="withingsWeightChart"></canvas>
+        </div>
 
         <div
-          id="remBar"
-          class="sleep-stage rem"
+          id="withingsWeightMessage"
+          class="chart-message"
         ></div>
+
+      </article>
+
+      <article class="card span-6">
+
+        <div class="card-head">
+
+          <div>
+            <h3>Vetpercentage</h3>
+
+            <p>
+              Dagmetingen en 14-daags gemiddelde.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="withingsFatChart"></canvas>
+        </div>
 
         <div
-          id="deepBar"
-          class="sleep-stage deep"
+          id="withingsFatMessage"
+          class="chart-message"
         ></div>
+
+      </article>
+
+      <article class="card span-6">
+
+        <div class="card-head">
+          <div>
+            <h3>Vetmassa en spiermassa</h3>
+          </div>
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="withingsCompositionChart"></canvas>
+        </div>
 
         <div
-          id="lightBar"
-          class="sleep-stage light"
+          id="withingsCompositionMessage"
+          class="chart-message"
         ></div>
+
+      </article>
+
+      <article class="card span-6">
+
+        <div class="card-head">
+
+          <div>
+            <h3>Verandering sinds de start</h3>
+
+            <p>
+              Verschil ten opzichte van de eerste beschikbare meting.
+            </p>
+          </div>
+
+        </div>
+
+        <div class="chart-wrap">
+          <canvas id="withingsChangeChart"></canvas>
+        </div>
 
         <div
-          id="awakeBar"
-          class="sleep-stage awake"
+          id="withingsChangeMessage"
+          class="chart-message"
         ></div>
 
+      </article>
+
+      <!-- ==================================================
+           STRAVA
+      =================================================== -->
+
+      <div class="section-title">
+        Training
       </div>
 
-      <div class="sleep-legend">
-
-        <div>
-          REM
-          <strong id="remValue">—</strong>
-        </div>
-
-        <div>
-          Diep
-          <strong id="deepValue">—</strong>
-        </div>
-
-        <div>
-          Licht
-          <strong id="lightValue">—</strong>
-        </div>
-
-        <div>
-          Wakker
-          <strong id="awakeValue">—</strong>
-        </div>
-
+      <div class="section-sub">
+        Strava-activiteiten, loopvolume en trainingshistoriek.
       </div>
 
-    </article>
+      <article class="card">
 
-    <!-- ======================================================
-         BIOMARKERS
-    ======================================================= -->
+        <div class="card-head">
 
-    <article class="card span-5">
-
-      <div class="card-head">
-        <h3>Biomarkers</h3>
-      </div>
-
-      <div class="bio-list">
-
-        <div class="bio-row">
-          <span>Ademhaling</span>
-          <strong id="respValue">—</strong>
-        </div>
-
-        <div class="bio-row">
-          <span>Huidtemperatuur</span>
-          <strong id="skinTempValue">—</strong>
-        </div>
-
-        <div class="bio-row">
-          <span>SpO₂</span>
-          <strong id="spo2Value">—</strong>
-        </div>
-
-        <div class="bio-row">
-          <span>Gemiddelde hartslag</span>
-          <strong id="avgHrValue">—</strong>
-        </div>
-
-        <div class="bio-row">
-          <span>Maximale hartslag</span>
-          <strong id="maxHrValue">—</strong>
-        </div>
-
-      </div>
-
-    </article>
-
-    <!-- ======================================================
-         WITHINGS
-    ======================================================= -->
-
-    <div class="section-title">
-      Lichaamssamenstelling
-    </div>
-
-    <div class="section-sub">
-      Withings-trends over gewicht,
-      vetpercentage en spiermassa.
-    </div>
-
-    <article class="card">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Withings-overzicht</h3>
-
-          <p>
-            Dagelijkse schommelingen zijn normaal.
-            Kijk vooral naar de trend.
-          </p>
-        </div>
-
-        <span
-          id="withingsUpdatedAt"
-          class="updated"
-        >
-          —
-        </span>
-
-      </div>
-
-      <div class="overview">
-
-        <div class="metric">
-
-          <div class="metric-label">
-            Gewicht
+          <div>
+            <h3>Strava-overzicht</h3>
+            <p>Samenvatting van de geselecteerde periode.</p>
           </div>
 
-          <div
-            id="withingsWeightValue"
-            class="metric-value"
+          <span
+            id="stravaUpdatedAt"
+            class="updated"
           >
             —
+          </span>
+
+        </div>
+
+        <div class="overview">
+
+          <div class="metric">
+
+            <div class="metric-label">
+              Loopkilometers
+            </div>
+
+            <div
+              id="stravaRunDistance"
+              class="metric-value"
+            >
+              —
+            </div>
+
+            <div
+              id="stravaRunCount"
+              class="metric-sub"
+            >
+              —
+            </div>
+
           </div>
 
-          <div
-            id="withingsWeightChange"
-            class="metric-sub"
+          <div class="metric">
+
+            <div class="metric-label">
+              Trainingen
+            </div>
+
+            <div
+              id="stravaActivityCount"
+              class="metric-value"
+            >
+              —
+            </div>
+
+            <div class="metric-sub">
+              geselecteerde periode
+            </div>
+
+          </div>
+
+          <div class="metric">
+
+            <div class="metric-label">
+              Trainingsduur
+            </div>
+
+            <div
+              id="stravaMovingHours"
+              class="metric-value"
+            >
+              —
+            </div>
+
+            <div class="metric-sub">
+              bewegende tijd
+            </div>
+
+          </div>
+
+          <div class="metric">
+
+            <div class="metric-label">
+              Hoogtemeters
+            </div>
+
+            <div
+              id="stravaElevation"
+              class="metric-value"
+            >
+              —
+            </div>
+
+            <div class="metric-sub">
+              totaal
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="source-actions">
+
+          <a
+            id="stravaConnectButton"
+            class="button"
+            href="/api/strava-connect"
           >
-            —
-          </div>
+            Verbind Strava
+          </a>
 
-        </div>
-
-        <div class="metric">
-
-          <div class="metric-label">
-            Vetpercentage
-          </div>
-
-          <div
-            id="withingsFatValue"
-            class="metric-value"
+          <button
+            id="stravaRefreshButton"
+            type="button"
           >
-            —
-          </div>
+            Strava vernieuwen
+          </button>
 
-          <div
-            id="withingsFatChange"
-            class="metric-sub"
+          <span
+            id="stravaStatus"
+            class="source-status"
           >
-            —
+            Strava controleren…
+          </span>
+
+        </div>
+
+      </article>
+
+      <article class="card span-7">
+
+        <div class="card-head">
+
+          <div>
+            <h3>Loopvolume per week</h3>
+
+            <p>
+              Kilometers per week met een 4-weeks gemiddelde.
+            </p>
           </div>
 
         </div>
 
-        <div class="metric">
-
-          <div class="metric-label">
-            Spiermassa
-          </div>
-
-          <div
-            id="withingsMuscleValue"
-            class="metric-value"
-          >
-            —
-          </div>
-
-          <div
-            id="withingsMuscleChange"
-            class="metric-sub"
-          >
-            —
-          </div>
-
+        <div class="chart-wrap">
+          <canvas id="stravaWeeklyChart"></canvas>
         </div>
 
-        <div class="metric">
+        <div
+          id="stravaWeeklyMessage"
+          class="chart-message"
+        ></div>
 
-          <div class="metric-label">
-            Visceraal vet
-          </div>
+      </article>
 
-          <div
-            id="withingsVisceralValue"
-            class="metric-value"
-          >
-            —
-          </div>
+      <article class="card span-5">
 
-          <div
-            id="withingsVisceralChange"
-            class="metric-sub"
-          >
-            —
+        <div class="card-head">
+
+          <div>
+            <h3>Sportverdeling</h3>
+            <p>Aantal activiteiten per sporttype.</p>
           </div>
 
         </div>
 
-      </div>
-
-    </article>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Gewicht</h3>
-          <p>Dagmetingen + 7-daags gemiddelde.</p>
+        <div class="chart-wrap">
+          <canvas id="stravaSportChart"></canvas>
         </div>
 
-      </div>
+      </article>
 
-      <div class="chart-wrap">
-        <canvas id="withingsWeightChart"></canvas>
-      </div>
+      <article class="card span-6">
 
-    </article>
+        <div class="card-head">
 
-    <article class="card span-6">
+          <div>
+            <h3>Tempo versus hartslag</h3>
 
-      <div class="card-head">
-
-        <div>
-          <h3>Vetpercentage</h3>
-          <p>Dagmetingen + 14-daags gemiddelde.</p>
-        </div>
-
-      </div>
-
-      <div class="chart-wrap">
-        <canvas id="withingsFatChart"></canvas>
-      </div>
-
-    </article>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-        <div>
-          <h3>Vetmassa en spiermassa</h3>
-        </div>
-      </div>
-
-      <div class="chart-wrap">
-        <canvas id="withingsCompositionChart"></canvas>
-      </div>
-
-    </article>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Verandering sinds de start</h3>
-
-          <p>
-            Verschil ten opzichte van je eerste
-            beschikbare meting.
-          </p>
-
-        </div>
-
-      </div>
-
-      <div class="chart-wrap">
-        <canvas id="withingsChangeChart"></canvas>
-      </div>
-
-    </article>
-
-    <!-- ======================================================
-         STRAVA
-    ======================================================= -->
-
-    <div class="section-title">
-      Training
-    </div>
-
-    <div class="section-sub">
-      Strava-volume, sportverdeling,
-      tempo en lange duurlopen.
-    </div>
-
-    <article class="card">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Strava-overzicht</h3>
-          <p>Samenvatting van de geselecteerde periode.</p>
-        </div>
-
-        <span
-          id="stravaUpdatedAt"
-          class="updated"
-        >
-          —
-        </span>
-
-      </div>
-
-      <div class="overview">
-
-        <div class="metric">
-
-          <div class="metric-label">
-            Loopkilometers
-          </div>
-
-          <div
-            id="stravaRunDistance"
-            class="metric-value"
-          >
-            —
-          </div>
-
-          <div
-            id="stravaRunCount"
-            class="metric-sub"
-          >
-            —
+            <p>
+              Alleen lopen met geldige tempo- én hartslaggegevens.
+            </p>
           </div>
 
         </div>
 
-        <div class="metric">
-
-          <div class="metric-label">
-            Trainingen
-          </div>
-
-          <div
-            id="stravaActivityCount"
-            class="metric-value"
-          >
-            —
-          </div>
-
+        <div class="chart-wrap scatter">
+          <canvas id="stravaPaceHrChart"></canvas>
         </div>
 
-        <div class="metric">
+        <div
+          id="stravaPaceHrMessage"
+          class="chart-message"
+        ></div>
 
-          <div class="metric-label">
-            Trainingsduur
-          </div>
+      </article>
 
-          <div
-            id="stravaMovingHours"
-            class="metric-value"
-          >
-            —
+      <article class="card span-6">
+
+        <div class="card-head">
+
+          <div>
+            <h3>Lange duurlopen</h3>
+            <p>Loopactiviteiten van minimaal 8 km.</p>
           </div>
 
         </div>
 
-        <div class="metric">
+        <div class="chart-wrap">
+          <canvas id="stravaLongRunChart"></canvas>
+        </div>
 
-          <div class="metric-label">
-            Hoogtemeters
+      </article>
+
+      <article class="card">
+
+        <div class="card-head">
+          <div>
+            <h3>Recente activiteiten</h3>
+          </div>
+        </div>
+
+        <div class="activity-table-wrap">
+
+          <table class="activity-table">
+
+            <thead>
+
+              <tr>
+                <th>Datum</th>
+                <th>Activiteit</th>
+                <th>Sport</th>
+                <th>Afstand</th>
+                <th>Duur</th>
+                <th>Tempo</th>
+                <th>Hartslag</th>
+                <th>Hoogte</th>
+              </tr>
+
+            </thead>
+
+            <tbody id="stravaActivityRows"></tbody>
+
+          </table>
+
+        </div>
+
+      </article>
+
+      <!-- ==================================================
+           WHOOP HISTORIE
+      =================================================== -->
+
+      <div class="section-title">
+        Herstel en gezondheid
+      </div>
+
+      <div class="section-sub">
+        WHOOP-dagwaarden en voortschrijdende gemiddelden.
+      </div>
+
+      <article class="card span-6">
+
+        <div class="card-head">
+
+          <div>
+            <h3>HRV</h3>
+            <p>Dagwaarden en 7-daags gemiddelde.</p>
           </div>
 
-          <div
-            id="stravaElevation"
-            class="metric-value"
-          >
-            —
+        </div>
+
+        <div
+          id="hrvStats"
+          class="summary-grid"
+        ></div>
+
+        <div class="chart-wrap">
+          <canvas id="hrvChart"></canvas>
+        </div>
+
+      </article>
+
+      <article class="card span-6">
+
+        <div class="card-head">
+
+          <div>
+            <h3>Rusthartslag</h3>
+            <p>Dagwaarden en 7-daags gemiddelde.</p>
           </div>
 
         </div>
 
-      </div>
+        <div
+          id="rhrStats"
+          class="summary-grid"
+        ></div>
 
-    </article>
-
-    <article class="card span-7">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Loopvolume per week</h3>
-          <p>Kilometers per week + 4-weeks gemiddelde.</p>
+        <div class="chart-wrap">
+          <canvas id="rhrChart"></canvas>
         </div>
 
-      </div>
+      </article>
 
-      <div class="chart-wrap">
-        <canvas id="stravaWeeklyChart"></canvas>
-      </div>
+      <article class="card span-6">
 
-    </article>
-
-    <article class="card span-5">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Sportverdeling</h3>
-          <p>Aantal activiteiten per sporttype.</p>
+        <div class="card-head">
+          <div>
+            <h3>Recoveryscore</h3>
+          </div>
         </div>
 
-      </div>
-
-      <div class="chart-wrap">
-        <canvas id="stravaSportChart"></canvas>
-      </div>
-
-    </article>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Tempo versus hartslag</h3>
-          <p>Elke stip is één loopactiviteit.</p>
+        <div class="chart-wrap small">
+          <canvas id="recoveryChart"></canvas>
         </div>
 
-      </div>
+      </article>
 
-      <div class="chart-wrap scatter">
-        <canvas id="stravaPaceHrChart"></canvas>
-      </div>
+      <article class="card span-6">
 
-    </article>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Lange duurlopen</h3>
-          <p>Loopactiviteiten van minstens 8 km.</p>
+        <div class="card-head">
+          <div>
+            <h3>Ademhalingsfrequentie</h3>
+          </div>
         </div>
 
-      </div>
-
-      <div class="chart-wrap">
-        <canvas id="stravaLongRunChart"></canvas>
-      </div>
-
-    </article>
-
-    <article class="card">
-
-      <div class="card-head">
-        <div>
-          <h3>Recente activiteiten</h3>
-        </div>
-      </div>
-
-      <div class="activity-table-wrap">
-
-        <table class="activity-table">
-
-          <thead>
-            <tr>
-              <th>Datum</th>
-              <th>Activiteit</th>
-              <th>Sport</th>
-              <th>Afstand</th>
-              <th>Duur</th>
-              <th>Tempo</th>
-              <th>HR</th>
-              <th>Hoogte</th>
-            </tr>
-          </thead>
-
-          <tbody id="stravaActivityRows"></tbody>
-
-        </table>
-
-      </div>
-
-    </article>
-
-    <!-- ======================================================
-         NIEUWE PERSOONLIJKE INZICHTEN
-    ======================================================= -->
-
-    <div class="section-title">
-      Persoonlijke inzichten
-    </div>
-
-    <div class="section-sub">
-      Automatische analyses die WHOOP,
-      Strava en Withings combineren.
-      Beschrijvend, niet medisch.
-    </div>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Deze week</h3>
-          <p>Versus de vorige 7 dagen.</p>
+        <div class="chart-wrap small">
+          <canvas id="respChart"></canvas>
         </div>
 
-      </div>
+      </article>
 
-      <div
-        id="weeklyReport"
-        class="insight-grid"
-      ></div>
+      <article class="card span-6">
 
-    </article>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Deze maand</h3>
-          <p>
-            Laatste 30 dagen versus
-            de 30 dagen ervoor.
-          </p>
+        <div class="card-head">
+          <div>
+            <h3>Huidtemperatuur</h3>
+          </div>
         </div>
 
+        <div class="chart-wrap small">
+          <canvas id="skinChart"></canvas>
+        </div>
+
+      </article>
+
+      <article class="card span-6">
+
+        <div class="card-head">
+          <div>
+            <h3>SpO₂</h3>
+          </div>
+        </div>
+
+        <div class="chart-wrap small">
+          <canvas id="spo2Chart"></canvas>
+        </div>
+
+      </article>
+
+      <!-- ==================================================
+           SLAAP HISTORIE
+      =================================================== -->
+
+      <div class="section-title">
+        Slaap
       </div>
 
-      <div
-        id="monthlyReport"
-        class="insight-grid"
-      ></div>
+      <div class="section-sub">
+        Slaapduur, slaapbehoefte en slaapkwaliteit.
+      </div>
 
-    </article>
+      <article class="card">
 
-    <article class="card span-6">
+        <div class="card-head">
 
-      <div class="card-head">
-
-        <div>
-          <h3>Persoonlijke baselines</h3>
-
-          <p>
-            Laatste waarde tegenover je
-            30-daagse gemiddelde.
-          </p>
+          <div>
+            <h3>Slaapduur versus slaapbehoefte</h3>
+          </div>
 
         </div>
 
-      </div>
+        <div class="chart-wrap">
+          <canvas id="sleepDurationChart"></canvas>
+        </div>
 
-      <div id="baselineInsights"></div>
+      </article>
 
-    </article>
+      <article class="card">
 
-    <article class="card span-6">
+        <div class="card-head">
 
-      <div class="card-head">
+          <div>
+            <h3>Slaapkwaliteit</h3>
 
-        <div>
-          <h3>Dashboardscore</h3>
-
-          <p>
-            Samengestelde persoonlijke trend,
-            geen medische score.
-          </p>
+            <p>
+              Performance, consistentie en efficiëntie.
+            </p>
+          </div>
 
         </div>
 
-      </div>
-
-      <div
-        id="healthScore"
-        class="score-big"
-      >
-        —
-      </div>
-
-      <div
-        id="healthScoreText"
-        class="score-note"
-      >
-        Wachten op gegevens…
-      </div>
-
-    </article>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Wat hangt samen met herstel?</h3>
-
-          <p>
-            Correlaties in je eigen historiek.
-          </p>
-
+        <div class="chart-wrap">
+          <canvas id="sleepQualityChart"></canvas>
         </div>
 
+      </article>
+
+      <!-- ==================================================
+           BELASTING
+      =================================================== -->
+
+      <div class="section-title">
+        Belasting
       </div>
 
-      <div id="recoveryDrivers"></div>
+      <div class="section-sub">
+        Dagelijkse WHOOP-strain en het 7-daagse gemiddelde.
+      </div>
 
-    </article>
+      <article class="card">
 
-    <article class="card span-6">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Beste omstandigheden</h3>
-
-          <p>
-            Kenmerken van je beste 25%
-            recoverydagen.
-          </p>
-
+        <div class="card-head">
+          <div>
+            <h3>Dagelijkse strain</h3>
+          </div>
         </div>
 
-      </div>
-
-      <div id="bestConditions"></div>
-
-    </article>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Trainingsconsistentie</h3>
-          <p>Loopfrequentie en weekvolume.</p>
+        <div class="chart-wrap">
+          <canvas id="strainChart"></canvas>
         </div>
 
+      </article>
+
+      <!-- ==================================================
+           PERSOONLIJKE VERBANDEN
+      =================================================== -->
+
+      <div class="section-title">
+        Persoonlijke verbanden
       </div>
 
-      <div
-        id="trainingConsistency"
-        class="insight-grid"
-      ></div>
+      <div class="section-sub">
+        Beschrijvende verbanden. Correlatie betekent niet automatisch causaliteit.
+      </div>
 
-    </article>
+      <article class="card span-6">
 
-    <article class="card span-6">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Loopefficiëntie</h3>
-
-          <p>
-            Tempo bij ongeveer dezelfde
-            gemiddelde hartslag.
-          </p>
-
+        <div class="card-head">
+          <div>
+            <h3>Slaapduur versus HRV</h3>
+          </div>
         </div>
 
-      </div>
-
-      <div
-        id="runningEfficiencySummary"
-        class="chart-message"
-      ></div>
-
-      <div class="chart-wrap small">
-        <canvas id="runningEfficiencyChart"></canvas>
-      </div>
-
-    </article>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Herstel na zware trainingen</h3>
-
-          <p>
-            Recovery dag +1 na langere
-            of zwaardere activiteiten.
-          </p>
-
+        <div class="chart-wrap scatter">
+          <canvas id="sleepHrvChart"></canvas>
         </div>
 
-      </div>
+        <div
+          id="sleepHrvMessage"
+          class="chart-message"
+        ></div>
 
-      <div
-        id="heavyRecoverySummary"
-        class="chart-message"
-      ></div>
+      </article>
 
-      <div class="chart-wrap small">
-        <canvas id="heavyRecoveryChart"></canvas>
-      </div>
+      <article class="card span-6">
 
-    </article>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Persoonlijke records</h3>
-          <p>Mijlpalen uit je beschikbare data.</p>
+        <div class="card-head">
+          <div>
+            <h3>Vorige strain versus recovery</h3>
+          </div>
         </div>
 
-      </div>
-
-      <div id="personalRecords"></div>
-
-    </article>
-
-    <!-- ======================================================
-         WHOOP HERSTEL
-    ======================================================= -->
-
-    <div class="section-title">
-      Herstel en gezondheid
-    </div>
-
-    <div class="section-sub">
-      WHOOP-dagwaarden met voortschrijdende gemiddelden.
-    </div>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-
-        <div>
-          <h3>HRV</h3>
-
-          <p>
-            Hoger is meestal gunstig
-            binnen je persoonlijke context.
-          </p>
-
+        <div class="chart-wrap scatter">
+          <canvas id="strainRecoveryChart"></canvas>
         </div>
 
-      </div>
+        <div
+          id="strainRecoveryMessage"
+          class="chart-message"
+        ></div>
 
-      <div
-        id="hrvStats"
-        class="summary-grid"
-      ></div>
+      </article>
 
-      <div class="chart-wrap">
-        <canvas id="hrvChart"></canvas>
-      </div>
+    </section>
 
-    </article>
+  </main>
 
-    <article class="card span-6">
+  <script>
 
-      <div class="card-head">
+    const $ =
+      (id) =>
+        document.getElementById(id);
 
-        <div>
-          <h3>Rusthartslag</h3>
+    const CIRCUMFERENCE =
+      603.19;
 
-          <p>
-            Lager is meestal gunstig
-            binnen je persoonlijke context.
-          </p>
-
-        </div>
-
-      </div>
-
-      <div
-        id="rhrStats"
-        class="summary-grid"
-      ></div>
-
-      <div class="chart-wrap">
-        <canvas id="rhrChart"></canvas>
-      </div>
-
-    </article>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-        <div>
-          <h3>Recoveryscore</h3>
-        </div>
-      </div>
-
-      <div class="chart-wrap small">
-        <canvas id="recoveryChart"></canvas>
-      </div>
-
-    </article>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-        <div>
-          <h3>Ademhalingsfrequentie</h3>
-        </div>
-      </div>
-
-      <div class="chart-wrap small">
-        <canvas id="respChart"></canvas>
-      </div>
-
-    </article>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-        <div>
-          <h3>Huidtemperatuur</h3>
-        </div>
-      </div>
-
-      <div class="chart-wrap small">
-        <canvas id="skinChart"></canvas>
-      </div>
-
-    </article>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-        <div>
-          <h3>SpO₂</h3>
-        </div>
-      </div>
-
-      <div class="chart-wrap small">
-        <canvas id="spo2Chart"></canvas>
-      </div>
-
-    </article>
-
-    <!-- ======================================================
-         SLAAP
-    ======================================================= -->
-
-    <div class="section-title">
-      Slaap
-    </div>
-
-    <div class="section-sub">
-      Duur, behoefte, performance,
-      consistentie en efficiëntie.
-    </div>
-
-    <article class="card">
-
-      <div class="card-head">
-        <div>
-          <h3>Slaapduur versus slaapbehoefte</h3>
-        </div>
-      </div>
-
-      <div class="chart-wrap">
-        <canvas id="sleepDurationChart"></canvas>
-      </div>
-
-    </article>
-
-    <article class="card">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Slaapkwaliteit</h3>
-
-          <p>
-            Performance, consistentie
-            en efficiëntie.
-          </p>
-
-        </div>
-
-      </div>
-
-      <div class="chart-wrap">
-        <canvas id="sleepQualityChart"></canvas>
-      </div>
-
-    </article>
-
-    <!-- ======================================================
-         DIT STOND VORIGE KEER NIET MEER IN JE CHAT:
-         BELASTING
-    ======================================================= -->
-
-    <div class="section-title">
-      Belasting
-    </div>
-
-    <div class="section-sub">
-      Dagelijkse WHOOP-strain
-      en 7-daags gemiddelde.
-    </div>
-
-    <article class="card">
-
-      <div class="card-head">
-
-        <div>
-          <h3>Dagelijkse strain</h3>
-
-          <p>
-            WHOOP-strain loopt van 0 tot 21.
-          </p>
-
-        </div>
-
-      </div>
-
-      <div class="chart-wrap">
-        <canvas id="strainChart"></canvas>
-      </div>
-
-    </article>
-
-    <!-- ======================================================
-         PERSOONLIJKE VERBANDEN
-    ======================================================= -->
-
-    <div class="section-title">
-      Persoonlijke verbanden
-    </div>
-
-    <div class="section-sub">
-      Correlaties tonen samenhang,
-      maar geen oorzaak.
-    </div>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-        <div>
-          <h3>Slaapduur versus HRV</h3>
-        </div>
-      </div>
-
-      <div class="chart-wrap scatter">
-        <canvas id="sleepHrvChart"></canvas>
-      </div>
-
-      <div
-        id="sleepHrvMessage"
-        class="chart-message"
-      ></div>
-
-    </article>
-
-    <article class="card span-6">
-
-      <div class="card-head">
-        <div>
-          <h3>Vorige strain versus recovery</h3>
-        </div>
-      </div>
-
-      <div class="chart-wrap scatter">
-        <canvas id="strainRecoveryChart"></canvas>
-      </div>
-
-      <div
-        id="strainRecoveryMessage"
-        class="chart-message"
-      ></div>
-
-    </article>
-
-  </section>
-
-</main>
-
-<script>
-
-  const $ =
-    (id) =>
-      document.getElementById(id);
-
-  const charts = {};
-
-  let selectedRange =
-    "all";
-
-  let recoveryHistory =
-    [];
-
-  let sleepHistory =
-    [];
-
-  let cycleHistory =
-    [];
-
-  let withingsHistory =
-    [];
-
-  let stravaHistory =
-    [];
-
-  const CIRC =
-    603.19;
-
-
-  function num(value) {
-
-    const parsed =
-      Number(value);
-
-    return Number.isFinite(parsed)
-      ? parsed
-      : null;
-  }
-
-
-  function mean(values) {
-
-    const clean =
-      values
-        .map(num)
-        .filter(
-          (value) =>
-            value !== null
-        );
-
-    if (!clean.length) {
-      return null;
-    }
-
-    return (
-      clean.reduce(
-        (sum, value) =>
-          sum + value,
-        0
-      ) /
-      clean.length
-    );
-  }
-
-
-  function hours(milliseconds) {
-
-    const value =
-      num(milliseconds);
-
-    return value === null
-      ? null
-      : value / 3600000;
-  }
-
-
-  function setText(id, value) {
-
-    const element =
-      $(id);
-
-    if (element) {
-      element.textContent =
-        value;
-    }
-  }
-
-
-  function formatDate(date) {
-
-    return new Date(date)
-      .toLocaleDateString(
-        "nl-BE"
-      );
-  }
-
-
-  function duration(milliseconds) {
-
-    const value =
-      num(milliseconds);
-
-    if (!value) {
-      return "—";
-    }
-
-    const minutes =
-      Math.round(
-        value / 60000
-      );
-
-    return (
-      `${Math.floor(minutes / 60)}u ` +
-      `${String(minutes % 60).padStart(2, "0")}m`
-    );
-  }
-
-
-  function secondsDuration(seconds) {
-
-    const value =
-      num(seconds);
-
-    if (value === null) {
-      return "—";
-    }
-
-    const minutes =
-      Math.round(
-        value / 60
-      );
-
-    return (
-      `${Math.floor(minutes / 60)}u ` +
-      `${String(minutes % 60).padStart(2, "0")}m`
-    );
-  }
-
-
-  function pace(value) {
-
-    const number =
-      num(value);
-
-    if (
-      number === null ||
-      number <= 0
-    ) {
-      return "—";
-    }
-
-    const totalSeconds =
-      Math.round(
-        number * 60
-      );
-
-    return (
-      `${Math.floor(totalSeconds / 60)}:` +
-      `${String(totalSeconds % 60).padStart(2, "0")}/km`
-    );
-  }
-
-
-  function wait(milliseconds) {
-
-    return new Promise(
-      (resolve) =>
-        setTimeout(
-          resolve,
-          milliseconds
-        )
-    );
-  }
-
-
-  function range(
-    records,
-    days,
-    older = 0
-  ) {
-
-    const now =
-      Date.now();
-
-    const oldest =
-      now -
-      days * 86400000;
-
-    const newest =
-      now -
-      older * 86400000;
-
-    return records.filter(
-      (record) => {
-
-        const time =
-          new Date(
-            record.localDate ||
-            record.date
-          ).getTime();
-
-        return (
-          time >= oldest &&
-          time < newest
-        );
-      }
-    );
-  }
-
-
-  function filtered(records) {
-
-    if (
-      selectedRange ===
-      "all"
-    ) {
-      return [
-        ...records
-      ];
-    }
-
-    return range(
-      records,
-      Number(selectedRange)
-    );
-  }
-
-
-  function avg(records, key) {
-
-    return mean(
-      records.map(
-        (record) =>
-          record[key]
-      )
-    );
-  }
-
-
-  function movingAverage(
-    records,
-    key,
-    windowSize = 7
-  ) {
-
-    return records.map(
-      (record, index) => {
-
-        return mean(
-          records
-            .slice(
-              Math.max(
-                0,
-                index -
-                windowSize +
-                1
-              ),
-              index + 1
-            )
-            .map(
-              (item) =>
-                item[key]
-            )
-        );
-      }
-    );
-  }
-
-
-  function dateKey(value) {
-
-    const date =
-      new Date(value);
-
-    return (
-      `${date.getFullYear()}-` +
-      `${String(date.getMonth() + 1).padStart(2, "0")}-` +
-      `${String(date.getDate()).padStart(2, "0")}`
-    );
-  }
-
-
-  function recoveryMeta(score) {
-
-    if (score >= 67) {
-
-      return {
-        color:
-          "#159a68",
-
-        label:
-          "Hoog herstel",
-
-        headline:
-          "Je lichaam lijkt goed hersteld.",
-
-        text:
-          "Je herstel ondersteunt een normale trainingsdag, zolang je je subjectief ook goed voelt."
-      };
-    }
-
-    if (score >= 34) {
-
-      return {
-        color:
-          "#d58b12",
-
-        label:
-          "Gemiddeld herstel",
-
-        headline:
-          "Je herstel is vandaag gemengd.",
-
-        text:
-          "Train gecontroleerd en hou rekening met energie, spierpijn en slaap."
-      };
-    }
-
-    return {
-      color:
-        "#d94b4b",
-
-      label:
-        "Laag herstel",
-
-      headline:
-        "Je herstel is vandaag beperkt.",
-
-      text:
-        "Overweeg minder intensiteit of volume afhankelijk van klachten en je volledige belasting."
-    };
-  }
-
-
-  function renderCurrent(data) {
-
-    const recovery =
-      data?.recovery
-        ?.records?.[0]
-        ?.score || {};
-
-    const sleep =
-      data?.sleep
-        ?.records?.[0]
-        ?.score || {};
-
-    const stages =
-      sleep.stage_summary ||
+    const charts =
       {};
 
-    const cycle =
-      data?.cycle
-        ?.records?.[0]
-        ?.score || {};
+    let selectedRange =
+      "all";
+
+    let recoveryHistory =
+      [];
+
+    let sleepHistory =
+      [];
+
+    let cycleHistory =
+      [];
+
+    let withingsHistory =
+      [];
+
+    let stravaHistory =
+      [];
 
 
-    const recoveryScore =
-      num(
-        recovery
-          .recovery_score
-      );
+    function num(value) {
 
+      const parsed =
+        Number(value);
 
-    if (
-      recoveryScore !==
-      null
-    ) {
-
-      const rounded =
-        Math.round(
-          recoveryScore
-        );
-
-      const meta =
-        recoveryMeta(
-          rounded
-        );
-
-
-      setText(
-        "recoveryScore",
-        rounded
-      );
-
-      setText(
-        "recoveryState",
-        meta.label
-      );
-
-      setText(
-        "dailyHeadline",
-        meta.headline
-      );
-
-      setText(
-        "dailySummary",
-        meta.text
-      );
-
-
-      $("recoveryState")
-        .style.color =
-          meta.color;
-
-
-      $("recoveryRing")
-        .style.stroke =
-          meta.color;
-
-
-      $("recoveryRing")
-        .style.strokeDashoffset =
-          CIRC -
-          CIRC *
-          rounded /
-          100;
+      return Number.isFinite(parsed)
+        ? parsed
+        : null;
     }
 
 
-    setText(
-      "hrvValue",
+    function setText(id, value) {
 
-      num(
-        recovery
-          .hrv_rmssd_milli
-      ) !== null
+      const element =
+        $(id);
 
-        ? Math.round(
-            recovery
-              .hrv_rmssd_milli
+      if (element) {
+        element.textContent =
+          value;
+      }
+    }
+
+
+    function wait(milliseconds) {
+
+      return new Promise(
+        (resolve) =>
+          setTimeout(
+            resolve,
+            milliseconds
           )
+      );
+    }
 
-        : "—"
-    );
 
+    function mean(values) {
 
-    setText(
-      "rhrValue",
+      const clean =
+        values
+          .map(num)
+          .filter(
+            (value) =>
+              value !== null
+          );
 
-      num(
-        recovery
-          .resting_heart_rate
-      ) !== null
+      if (!clean.length) {
+        return null;
+      }
 
-        ? Math.round(
-            recovery
-              .resting_heart_rate
-          )
+      return (
+        clean.reduce(
+          (sum, value) =>
+            sum + value,
+          0
+        ) /
+        clean.length
+      );
+    }
 
-        : "—"
-    );
 
+    function hours(milliseconds) {
+
+      const value =
+        num(milliseconds);
+
+      return value === null
+        ? null
+        : value / 3600000;
+    }
+
 
-    setText(
-      "sleepScore",
+    function durationLabel(milliseconds) {
+
+      const value =
+        num(milliseconds);
 
-      num(
-        sleep
-          .sleep_performance_percentage
-      ) !== null
+      if (
+        value === null ||
+        value <= 0
+      ) {
+        return "—";
+      }
+
+      const minutes =
+        Math.round(
+          value / 60000
+        );
+
+      return (
+        `${Math.floor(minutes / 60)}u ` +
+        `${String(minutes % 60).padStart(2, "0")}m`
+      );
+    }
+
+
+    function secondsLabel(seconds) {
+
+      const value =
+        num(seconds);
 
-        ? `${Math.round(
-            sleep
-              .sleep_performance_percentage
-          )}%`
-
-        : "—"
-    );
-
-
-    setText(
-      "strainValue",
-
-      num(
-        cycle.strain
-      ) !== null
-
-        ? Number(
-            cycle.strain
-          ).toFixed(1)
-
-        : "—"
-    );
-
-
-    setText(
-      "respValue",
-
-      num(
-        sleep
-          .respiratory_rate
-      ) !== null
-
-        ? `${Number(
-            sleep
-              .respiratory_rate
-          ).toFixed(1)} rpm`
-
-        : "—"
-    );
-
-
-    setText(
-      "skinTempValue",
-
-      num(
-        recovery
-          .skin_temp_celsius
-      ) !== null
-
-        ? `${Number(
-            recovery
-              .skin_temp_celsius
-          ).toFixed(1)} °C`
-
-        : "—"
-    );
-
-
-    setText(
-      "spo2Value",
-
-      num(
-        recovery
-          .spo2_percentage
-      ) !== null
-
-        ? `${Number(
-            recovery
-              .spo2_percentage
-          ).toFixed(1)}%`
-
-        : "—"
-    );
-
-
-    setText(
-      "avgHrValue",
-
-      num(
-        cycle
-          .average_heart_rate
-      ) !== null
-
-        ? `${Math.round(
-            cycle
-              .average_heart_rate
-          )} bpm`
-
-        : "—"
-    );
-
-
-    setText(
-      "maxHrValue",
-
-      num(
-        cycle
-          .max_heart_rate
-      ) !== null
-
-        ? `${Math.round(
-            cycle
-              .max_heart_rate
-          )} bpm`
-
-        : "—"
-    );
-
-
-    const rem =
-      num(
-        stages
-          .total_rem_sleep_time_milli
-      ) || 0;
-
-
-    const deep =
-      num(
-        stages
-          .total_slow_wave_sleep_time_milli
-      ) || 0;
-
-
-    const light =
-      num(
-        stages
-          .total_light_sleep_time_milli
-      ) || 0;
-
-
-    const awake =
-      num(
-        stages
-          .total_awake_time_milli
-      ) || 0;
-
-
-    const total =
-      rem +
-      deep +
-      light +
-      awake;
-
-
-    setText(
-      "sleepDuration",
-      duration(
-        rem +
-        deep +
-        light
-      )
-    );
-
-
-    setText(
-      "remValue",
-      duration(rem)
-    );
-
-
-    setText(
-      "deepValue",
-      duration(deep)
-    );
-
-
-    setText(
-      "lightValue",
-      duration(light)
-    );
-
-
-    setText(
-      "awakeValue",
-      duration(awake)
-    );
-
-
-    [
-      [
-        "remBar",
-        rem
-      ],
-
-      [
-        "deepBar",
-        deep
-      ],
-
-      [
-        "lightBar",
-        light
-      ],
-
-      [
-        "awakeBar",
-        awake
-      ]
-
-    ].forEach(
-      ([id, value]) => {
-
-        $(id).style.width =
-          total
-
-            ? `${
+      if (
+        value === null ||
+        value <= 0
+      ) {
+        return "—";
+      }
+
+      const minutes =
+        Math.round(
+          value / 60
+        );
+
+      return (
+        `${Math.floor(minutes / 60)}u ` +
+        `${String(minutes % 60).padStart(2, "0")}m`
+      );
+    }
+
+
+    function paceLabel(minutesPerKm) {
+
+      const value =
+        num(minutesPerKm);
+
+      if (
+        value === null ||
+        value <= 0
+      ) {
+        return "—";
+      }
+
+      const seconds =
+        Math.round(
+          value * 60
+        );
+
+      return (
+        `${Math.floor(seconds / 60)}:` +
+        `${String(seconds % 60).padStart(2, "0")}/km`
+      );
+    }
+
+
+    function dateLabel(value) {
+
+      const date =
+        new Date(value);
+
+      if (
+        Number.isNaN(
+          date.getTime()
+        )
+      ) {
+        return "—";
+      }
+
+      return date
+        .toLocaleDateString(
+          "nl-BE",
+          {
+            day: "2-digit",
+            month: "2-digit",
+            year: "2-digit"
+          }
+        );
+    }
+
+
+    function dateKey(value) {
+
+      const date =
+        new Date(value);
+
+      if (
+        Number.isNaN(
+          date.getTime()
+        )
+      ) {
+        return "";
+      }
+
+      return (
+        `${date.getFullYear()}-` +
+        `${String(date.getMonth() + 1).padStart(2, "0")}-` +
+        `${String(date.getDate()).padStart(2, "0")}`
+      );
+    }
+
+
+    function recordDate(record) {
+
+      return (
+        record?.localDate ||
+        record?.date ||
+        null
+      );
+    }
+
+
+    function filterByRange(records) {
+
+      if (
+        selectedRange ===
+        "all"
+      ) {
+        return [
+          ...records
+        ];
+      }
+
+      const cutoff =
+        Date.now() -
+        Number(selectedRange) *
+        86400000;
+
+      return records.filter(
+        (record) => {
+
+          const time =
+            new Date(
+              recordDate(record)
+            ).getTime();
+
+          return (
+            Number.isFinite(time) &&
+            time >= cutoff
+          );
+        }
+      );
+    }
+
+
+    function movingAverage(
+      records,
+      key,
+      windowSize = 7
+    ) {
+
+      return records.map(
+        (record, index) => {
+
+          const values =
+            records
+              .slice(
+                Math.max(
+                  0,
+                  index -
+                  windowSize +
+                  1
+                ),
+                index + 1
+              )
+              .map(
+                (item) =>
+                  num(
+                    item[key]
+                  )
+              )
+              .filter(
+                (value) =>
+                  value !== null
+              );
+
+          return mean(values);
+        }
+      );
+    }
+
+
+    function recoveryMeta(score) {
+
+      if (score >= 67) {
+
+        return {
+          label:
+            "Hoog herstel",
+
+          color:
+            "#159a68",
+
+          headline:
+            "Je lichaam lijkt goed hersteld.",
+
+          summary:
+            "Je WHOOP-recovery bevindt zich vandaag in de groene zone."
+        };
+      }
+
+      if (score >= 34) {
+
+        return {
+          label:
+            "Gemiddeld herstel",
+
+          color:
+            "#d58b12",
+
+          headline:
+            "Je herstel is vandaag gemiddeld.",
+
+          summary:
+            "Je WHOOP-recovery bevindt zich vandaag in de gele zone."
+        };
+      }
+
+      return {
+        label:
+          "Laag herstel",
+
+        color:
+          "#d94b4b",
+
+        headline:
+          "Je herstel is vandaag beperkt.",
+
+        summary:
+          "Je WHOOP-recovery bevindt zich vandaag in de rode zone."
+      };
+    }
+
+
+    function setSleepBar(
+      id,
+      value,
+      total
+    ) {
+
+      const element =
+        $(id);
+
+      if (!element) {
+        return;
+      }
+
+      element.style.width =
+        total > 0
+          ? `${Math.max(
+              0,
+              Math.min(
+                100,
                 value /
                 total *
                 100
-              }%`
+              )
+            )}%`
+          : "0%";
+    }
 
-            : "0%";
+
+    function renderCurrent(data) {
+
+      const recovery =
+        data?.recovery
+          ?.records?.[0]
+          ?.score || {};
+
+      const sleep =
+        data?.sleep
+          ?.records?.[0]
+          ?.score || {};
+
+      const cycle =
+        data?.cycle
+          ?.records?.[0]
+          ?.score || {};
+
+      const stages =
+        sleep.stage_summary ||
+        {};
+
+      const recoveryScore =
+        num(
+          recovery
+            .recovery_score
+        );
+
+
+      if (
+        recoveryScore !==
+        null
+      ) {
+
+        const rounded =
+          Math.round(
+            recoveryScore
+          );
+
+        const meta =
+          recoveryMeta(
+            rounded
+          );
+
+        setText(
+          "recoveryScore",
+          rounded
+        );
+
+        setText(
+          "recoveryState",
+          meta.label
+        );
+
+        setText(
+          "dailyHeadline",
+          meta.headline
+        );
+
+        setText(
+          "dailySummary",
+          meta.summary
+        );
+
+        $("recoveryState")
+          .style.color =
+            meta.color;
+
+        $("recoveryRing")
+          .style.stroke =
+            meta.color;
+
+        $("recoveryRing")
+          .style.strokeDashoffset =
+            CIRCUMFERENCE -
+            CIRCUMFERENCE *
+            rounded /
+            100;
       }
-    );
 
 
-    setText(
-      "updatedAt",
+      setText(
+        "hrvValue",
 
-      `Bijgewerkt ${
-        new Date()
-          .toLocaleTimeString(
-            "nl-BE",
-            {
-              hour:
-                "2-digit",
+        num(
+          recovery
+            .hrv_rmssd_milli
+        ) !== null
 
-              minute:
-                "2-digit"
+          ? Math.round(
+              recovery
+                .hrv_rmssd_milli
+            )
+
+          : "—"
+      );
+
+
+      setText(
+        "rhrValue",
+
+        num(
+          recovery
+            .resting_heart_rate
+        ) !== null
+
+          ? Math.round(
+              recovery
+                .resting_heart_rate
+            )
+
+          : "—"
+      );
+
+
+      setText(
+        "sleepScore",
+
+        num(
+          sleep
+            .sleep_performance_percentage
+        ) !== null
+
+          ? `${Math.round(
+              sleep
+                .sleep_performance_percentage
+            )}%`
+
+          : "—"
+      );
+
+
+      setText(
+        "strainValue",
+
+        num(
+          cycle.strain
+        ) !== null
+
+          ? Number(
+              cycle.strain
+            ).toFixed(1)
+
+          : "—"
+      );
+
+
+      setText(
+        "respValue",
+
+        num(
+          sleep
+            .respiratory_rate
+        ) !== null
+
+          ? `${Number(
+              sleep
+                .respiratory_rate
+            ).toFixed(1)} rpm`
+
+          : "—"
+      );
+
+
+      setText(
+        "skinTempValue",
+
+        num(
+          recovery
+            .skin_temp_celsius
+        ) !== null
+
+          ? `${Number(
+              recovery
+                .skin_temp_celsius
+            ).toFixed(1)} °C`
+
+          : "—"
+      );
+
+
+      setText(
+        "spo2Value",
+
+        num(
+          recovery
+            .spo2_percentage
+        ) !== null
+
+          ? `${Number(
+              recovery
+                .spo2_percentage
+            ).toFixed(1)}%`
+
+          : "—"
+      );
+
+
+      setText(
+        "avgHrValue",
+
+        num(
+          cycle
+            .average_heart_rate
+        ) !== null
+
+          ? `${Math.round(
+              cycle
+                .average_heart_rate
+            )} bpm`
+
+          : "—"
+      );
+
+
+      setText(
+        "maxHrValue",
+
+        num(
+          cycle
+            .max_heart_rate
+        ) !== null
+
+          ? `${Math.round(
+              cycle
+                .max_heart_rate
+            )} bpm`
+
+          : "—"
+      );
+
+
+      const rem =
+        num(
+          stages
+            .total_rem_sleep_time_milli
+        ) || 0;
+
+      const deep =
+        num(
+          stages
+            .total_slow_wave_sleep_time_milli
+        ) || 0;
+
+      const light =
+        num(
+          stages
+            .total_light_sleep_time_milli
+        ) || 0;
+
+      const awake =
+        num(
+          stages
+            .total_awake_time_milli
+        ) || 0;
+
+      const total =
+        rem +
+        deep +
+        light +
+        awake;
+
+      const asleep =
+        rem +
+        deep +
+        light;
+
+
+      setText(
+        "sleepDuration",
+        durationLabel(
+          asleep
+        )
+      );
+
+      setText(
+        "remValue",
+        durationLabel(rem)
+      );
+
+      setText(
+        "deepValue",
+        durationLabel(deep)
+      );
+
+      setText(
+        "lightValue",
+        durationLabel(light)
+      );
+
+      setText(
+        "awakeValue",
+        durationLabel(awake)
+      );
+
+
+      setSleepBar(
+        "remBar",
+        rem,
+        total
+      );
+
+      setSleepBar(
+        "deepBar",
+        deep,
+        total
+      );
+
+      setSleepBar(
+        "lightBar",
+        light,
+        total
+      );
+
+      setSleepBar(
+        "awakeBar",
+        awake,
+        total
+      );
+
+
+      setText(
+        "updatedAt",
+
+        `Bijgewerkt ${
+          new Date()
+            .toLocaleTimeString(
+              "nl-BE",
+              {
+                hour:
+                  "2-digit",
+                minute:
+                  "2-digit"
+              }
+            )
+        }`
+      );
+    }
+
+
+    function destroyChart(id) {
+
+      if (
+        charts[id]
+      ) {
+
+        charts[id]
+          .destroy();
+
+        charts[id] =
+          null;
+      }
+    }
+
+
+    const commonOptions = {
+
+      responsive:
+        true,
+
+      maintainAspectRatio:
+        false,
+
+      animation: {
+        duration:
+          250
+      },
+
+      interaction: {
+        mode:
+          "index",
+
+        intersect:
+          false
+      },
+
+      plugins: {
+
+        legend: {
+
+          position:
+            "bottom",
+
+          labels: {
+
+            usePointStyle:
+              true,
+
+            padding:
+              16,
+
+            color:
+              "#5f6672",
+
+            font: {
+              size:
+                10
             }
-          )
-      }`
-    );
-  }
-
-
-  const common = {
-
-    responsive:
-      true,
-
-    maintainAspectRatio:
-      false,
-
-    interaction: {
-      mode:
-        "index",
-
-      intersect:
-        false
-    },
-
-    plugins: {
-
-      legend: {
-
-        position:
-          "bottom",
-
-        labels: {
-          usePointStyle:
-            true,
-
-          color:
-            "#5f6672",
-
-          font: {
-            size:
-              10
           }
-        }
-      }
-    },
-
-    scales: {
-
-      x: {
-
-        grid: {
-          display:
-            false
         },
 
-        ticks: {
-          color:
-            "#8a919c",
+        tooltip: {
 
-          maxTicksLimit:
-            7
+          backgroundColor:
+            "rgba(17,24,39,.96)",
+
+          padding:
+            10,
+
+          cornerRadius:
+            9
         }
       },
 
-      y: {
+      scales: {
 
-        grid: {
-          color:
-            "rgba(15,23,42,.07)"
+        x: {
+
+          grid: {
+            display:
+              false
+          },
+
+          border: {
+            display:
+              false
+          },
+
+          ticks: {
+            color:
+              "#8a919c",
+
+            maxTicksLimit:
+              7,
+
+            maxRotation:
+              0,
+
+            minRotation:
+              0
+          }
         },
 
-        ticks: {
-          color:
-            "#8a919c"
+        y: {
+
+          beginAtZero:
+            false,
+
+          grid: {
+            color:
+              "rgba(15,23,42,.07)"
+          },
+
+          border: {
+            display:
+              false
+          },
+
+          ticks: {
+            color:
+              "#8a919c"
+          }
         }
       }
-    }
-  };
+    };
 
 
-  function destroyChart(id) {
-
-    if (
-      charts[id]
-    ) {
-
-      charts[id]
-        .destroy();
-
-      delete charts[id];
-    }
-  }
-
-
-  function dataSet(
-    label,
-    data,
-    color,
-    width = 2.5
-  ) {
-
-    return {
-
+    function lineDataset(
       label,
       data,
-
-      borderColor:
-        color,
-
-      backgroundColor:
-        color,
-
-      borderWidth:
-        width,
-
-      pointRadius:
-        0,
-
-      pointHoverRadius:
-        4,
-
-      tension:
-        0.22,
-
-      spanGaps:
-        true
-    };
-  }
-
-
-  function lineChart(
-    id,
-    records,
-    datasets,
-    options = {}
-  ) {
-
-    destroyChart(id);
-
-    if (
-      !$(id) ||
-      !records.length
+      color,
+      width = 2.5
     ) {
-      return;
+
+      return {
+        label,
+        data,
+
+        borderColor:
+          color,
+
+        backgroundColor:
+          color,
+
+        borderWidth:
+          width,
+
+        pointRadius:
+          0,
+
+        pointHoverRadius:
+          4,
+
+        pointHitRadius:
+          8,
+
+        tension:
+          0.22,
+
+        fill:
+          false,
+
+        spanGaps:
+          true
+      };
     }
 
 
-    charts[id] =
-      new Chart(
-        $(id),
-        {
-
-          type:
-            "line",
-
-          data: {
-
-            labels:
-              records.map(
-                (record) =>
-                  new Date(
-                    record.localDate ||
-                    record.date
-                  )
-              ),
-
-            datasets
-          },
-
-          options: {
-
-            ...common,
-            ...options,
-
-            plugins: {
-
-              ...common.plugins,
-              ...(
-                options.plugins ||
-                {}
-              )
-            },
-
-            scales: {
-
-              ...common.scales,
-              ...(
-                options.scales ||
-                {}
-              )
-            }
-          }
-        }
-      );
-  }
-
-
-  function scatterChart(
-    id,
-    points,
-    xLabel,
-    yLabel,
-    color
-  ) {
-
-    destroyChart(id);
-
-    if (
-      !$(id) ||
-      !points.length
+    function lineChart(
+      id,
+      records,
+      datasets,
+      extraOptions = {}
     ) {
-      return;
-    }
+
+      destroyChart(id);
+
+      const canvas =
+        $(id);
+
+      if (
+        !canvas ||
+        !records.length
+      ) {
+        return;
+      }
 
 
-    charts[id] =
-      new Chart(
-        $(id),
-        {
+      charts[id] =
+        new Chart(
+          canvas,
+          {
 
-          type:
-            "scatter",
+            type:
+              "line",
 
-          data: {
+            data: {
 
-            datasets: [
-              {
+              labels:
+                records.map(
+                  (record) =>
+                    dateLabel(
+                      recordDate(
+                        record
+                      )
+                    )
+                ),
 
-                data:
-                  points,
-
-                backgroundColor:
-                  color,
-
-                pointRadius:
-                  4
-              }
-            ]
-          },
-
-          options: {
-
-            responsive:
-              true,
-
-            maintainAspectRatio:
-              false,
-
-            plugins: {
-
-              legend: {
-                display:
-                  false
-              }
+              datasets
             },
 
-            scales: {
+            options: {
 
-              x: {
+              ...commonOptions,
+              ...extraOptions,
 
-                title: {
-                  display:
-                    true,
-
-                  text:
-                    xLabel
-                }
+              plugins: {
+                ...commonOptions.plugins,
+                ...(
+                  extraOptions.plugins ||
+                  {}
+                )
               },
 
-              y: {
-
-                title: {
-                  display:
-                    true,
-
-                  text:
-                    yLabel
-                }
+              scales: {
+                ...commonOptions.scales,
+                ...(
+                  extraOptions.scales ||
+                  {}
+                )
               }
             }
           }
-        }
-      );
-  }
-
-
-  function insight(
-    label,
-    value,
-    sub = ""
-  ) {
-
-    return `
-      <div class="insight-item">
-
-        <div class="insight-label">
-          ${label}
-        </div>
-
-        <strong class="insight-value">
-          ${value}
-        </strong>
-
-        <div class="insight-sub">
-          ${sub}
-        </div>
-
-      </div>
-    `;
-  }
-
-
-  function insightRow(
-    label,
-    value
-  ) {
-
-    return `
-      <div class="insight-row">
-
-        <span>
-          ${label}
-        </span>
-
-        <strong>
-          ${value}
-        </strong>
-
-      </div>
-    `;
-  }
-
-
-  function delta(
-    current,
-    previous,
-    unit = ""
-  ) {
-
-    if (
-      num(current) ===
-      null
-    ) {
-      return "—";
+        );
     }
 
 
-    let text =
-      `${Number(
-        current
-      ).toFixed(1)}${unit}`;
-
-
-    if (
-      num(previous) !==
-        null &&
-      previous !== 0
+    function statCards(
+      containerId,
+      records,
+      key,
+      unit,
+      decimals = 1
     ) {
 
-      const percent =
-        (
-          current -
-          previous
-        ) /
-        Math.abs(
-          previous
-        ) *
-        100;
+      const container =
+        $(containerId);
+
+      if (!container) {
+        return;
+      }
+
+      const values =
+        records
+          .map(
+            (record) =>
+              num(
+                record[key]
+              )
+          )
+          .filter(
+            (value) =>
+              value !== null
+          );
+
+      if (!values.length) {
+
+        container.innerHTML =
+          "";
+
+        return;
+      }
+
+      const current =
+        values.at(-1);
+
+      const first =
+        values[0];
+
+      const average7 =
+        mean(
+          values.slice(-7)
+        );
+
+      const change =
+        first !== 0
+          ? (
+              current -
+              first
+            ) /
+            Math.abs(first) *
+            100
+          : null;
 
 
-      text +=
-        ` · ${
-          percent >= 0
-            ? "+"
-            : ""
-        }${percent.toFixed(0)}%`;
+      container.innerHTML = `
+
+        <div class="summary-stat">
+
+          <span class="summary-label">
+            Huidig
+          </span>
+
+          <strong class="summary-value">
+            ${current.toFixed(decimals)} ${unit}
+          </strong>
+
+        </div>
+
+        <div class="summary-stat">
+
+          <span class="summary-label">
+            7-daags
+          </span>
+
+          <strong class="summary-value">
+            ${average7.toFixed(decimals)} ${unit}
+          </strong>
+
+        </div>
+
+        <div class="summary-stat">
+
+          <span class="summary-label">
+            Start
+          </span>
+
+          <strong class="summary-value">
+            ${first.toFixed(decimals)} ${unit}
+          </strong>
+
+        </div>
+
+        <div class="summary-stat">
+
+          <span class="summary-label">
+            Verandering
+          </span>
+
+          <strong class="summary-value">
+            ${
+              change === null
+                ? "—"
+                : `${
+                    change >= 0
+                      ? "+"
+                      : ""
+                  }${change.toFixed(1)}%`
+            }
+          </strong>
+
+        </div>
+      `;
     }
 
 
-    return text;
-  }
+    function firstValid(
+      records,
+      key
+    ) {
 
-
-  function firstNumeric(
-    records,
-    key
-  ) {
-
-    return records.find(
-      (record) =>
-        num(
-          record[key]
-        ) !== null
-    );
-  }
-
-
-  function lastNumeric(
-    records,
-    key
-  ) {
-
-    return [
-      ...records
-    ]
-      .reverse()
-      .find(
+      return records.find(
         (record) =>
           num(
             record[key]
           ) !== null
       );
-  }
-
-
-  /* ======================================================
-     WITHINGS
-  ======================================================= */
-
-
-  function renderWithings() {
-
-    const records =
-      filtered(
-        withingsHistory
-      );
-
-
-    if (
-      !records.length
-    ) {
-      return;
     }
 
 
-    const latest =
-      records.at(-1);
+    function lastValid(
+      records,
+      key
+    ) {
 
-
-    setText(
-      "withingsWeightValue",
-
-      num(
-        latest.weightKg
-      ) !== null
-
-        ? `${latest.weightKg.toFixed(1)} kg`
-
-        : "—"
-    );
-
-
-    setText(
-      "withingsFatValue",
-
-      num(
-        latest
-          .fatRatioPercent
-      ) !== null
-
-        ? `${latest.fatRatioPercent.toFixed(1)}%`
-
-        : "—"
-    );
-
-
-    setText(
-      "withingsMuscleValue",
-
-      num(
-        latest
-          .muscleMassKg
-      ) !== null
-
-        ? `${latest.muscleMassKg.toFixed(1)} kg`
-
-        : "—"
-    );
-
-
-    setText(
-      "withingsVisceralValue",
-
-      num(
-        latest
-          .visceralFatIndex
-      ) !== null
-
-        ? latest
-            .visceralFatIndex
-            .toFixed(1)
-
-        : "—"
-    );
-
-
-    const changeItems = [
-
-      [
-        "withingsWeightChange",
-        "weightKg",
-        "kg"
-      ],
-
-      [
-        "withingsFatChange",
-        "fatRatioPercent",
-        "pp"
-      ],
-
-      [
-        "withingsMuscleChange",
-        "muscleMassKg",
-        "kg"
-      ],
-
-      [
-        "withingsVisceralChange",
-        "visceralFatIndex",
-        ""
+      return [
+        ...records
       ]
-    ];
+        .reverse()
+        .find(
+          (record) =>
+            num(
+              record[key]
+            ) !== null
+        );
+    }
 
 
-    changeItems.forEach(
-      (
+    /* ==================================================
+       WITHINGS
+    =================================================== */
+
+
+    function setWithingsStatus(
+      text,
+      type = ""
+    ) {
+
+      const element =
+        $("withingsStatus");
+
+      if (!element) {
+        return;
+      }
+
+      element.textContent =
+        text;
+
+      element.classList.remove(
+        "success",
+        "error"
+      );
+
+      if (type) {
+        element.classList.add(
+          type
+        );
+      }
+    }
+
+
+    function renderWithings() {
+
+      if (
+        !withingsHistory.length
+      ) {
+        return;
+      }
+
+      const records =
+        filterByRange(
+          withingsHistory
+        );
+
+
+      const weight =
+        lastValid(
+          withingsHistory,
+          "weightKg"
+        );
+
+      const firstWeight =
+        firstValid(
+          withingsHistory,
+          "weightKg"
+        );
+
+
+      const fat =
+        lastValid(
+          withingsHistory,
+          "fatRatioPercent"
+        );
+
+      const firstFat =
+        firstValid(
+          withingsHistory,
+          "fatRatioPercent"
+        );
+
+
+      const muscle =
+        lastValid(
+          withingsHistory,
+          "muscleMassKg"
+        );
+
+      const firstMuscle =
+        firstValid(
+          withingsHistory,
+          "muscleMassKg"
+        );
+
+
+      const visceral =
+        lastValid(
+          withingsHistory,
+          "visceralFatIndex"
+        );
+
+      const firstVisceral =
+        firstValid(
+          withingsHistory,
+          "visceralFatIndex"
+        );
+
+
+      setText(
+        "withingsWeightValue",
+
+        weight
+
+          ? `${Number(
+              weight.weightKg
+            ).toFixed(1)} kg`
+
+          : "—"
+      );
+
+
+      setText(
+        "withingsWeightChange",
+
+        weight &&
+        firstWeight
+
+          ? `${
+              weight.weightKg -
+              firstWeight.weightKg >=
+              0
+                ? "+"
+                : ""
+            }${(
+              weight.weightKg -
+              firstWeight.weightKg
+            ).toFixed(1)} kg sinds start`
+
+          : "—"
+      );
+
+
+      setText(
+        "withingsFatValue",
+
+        fat
+
+          ? `${Number(
+              fat.fatRatioPercent
+            ).toFixed(1)}%`
+
+          : "—"
+      );
+
+
+      setText(
+        "withingsFatChange",
+
+        fat &&
+        firstFat
+
+          ? `${
+              fat.fatRatioPercent -
+              firstFat.fatRatioPercent >=
+              0
+                ? "+"
+                : ""
+            }${(
+              fat.fatRatioPercent -
+              firstFat.fatRatioPercent
+            ).toFixed(1)} pp sinds start`
+
+          : "—"
+      );
+
+
+      setText(
+        "withingsMuscleValue",
+
+        muscle
+
+          ? `${Number(
+              muscle.muscleMassKg
+            ).toFixed(1)} kg`
+
+          : "—"
+      );
+
+
+      setText(
+        "withingsMuscleChange",
+
+        muscle &&
+        firstMuscle
+
+          ? `${
+              muscle.muscleMassKg -
+              firstMuscle.muscleMassKg >=
+              0
+                ? "+"
+                : ""
+            }${(
+              muscle.muscleMassKg -
+              firstMuscle.muscleMassKg
+            ).toFixed(1)} kg sinds start`
+
+          : "—"
+      );
+
+
+      setText(
+        "withingsVisceralValue",
+
+        visceral
+
+          ? Number(
+              visceral.visceralFatIndex
+            ).toFixed(1)
+
+          : "—"
+      );
+
+
+      setText(
+        "withingsVisceralChange",
+
+        visceral &&
+        firstVisceral
+
+          ? `${
+              visceral.visceralFatIndex -
+              firstVisceral.visceralFatIndex >=
+              0
+                ? "+"
+                : ""
+            }${(
+              visceral.visceralFatIndex -
+              firstVisceral.visceralFatIndex
+            ).toFixed(1)} sinds start`
+
+          : "—"
+      );
+
+
+      const latest =
+        withingsHistory.at(-1);
+
+
+      setText(
+        "withingsUpdatedAt",
+
+        latest
+          ? `Laatste meting ${
+              dateLabel(
+                latest.date
+              )
+            }`
+
+          : "—"
+      );
+
+
+      const weightRecords =
+        records.filter(
+          (record) =>
+            num(
+              record.weightKg
+            ) !== null
+        );
+
+
+      lineChart(
+        "withingsWeightChart",
+
+        weightRecords,
+
         [
-          id,
-          key,
-          unit
+          lineDataset(
+            "Gewicht",
+
+            weightRecords.map(
+              (record) =>
+                record.weightKg
+            ),
+
+            "rgba(37,99,235,.3)",
+
+            1.2
+          ),
+
+          lineDataset(
+            "7-daags gemiddelde",
+
+            movingAverage(
+              weightRecords,
+              "weightKg",
+              7
+            ),
+
+            "#2563eb",
+
+            3
+          )
         ]
-      ) => {
+      );
 
-        const first =
-          firstNumeric(
-            records,
-            key
+
+      setText(
+        "withingsWeightMessage",
+
+        `${weightRecords.length} metingen weergegeven.`
+      );
+
+
+      const fatRecords =
+        records.filter(
+          (record) =>
+            num(
+              record.fatRatioPercent
+            ) !== null
+        );
+
+
+      lineChart(
+        "withingsFatChart",
+
+        fatRecords,
+
+        [
+          lineDataset(
+            "Vetpercentage",
+
+            fatRecords.map(
+              (record) =>
+                record.fatRatioPercent
+            ),
+
+            "rgba(234,88,12,.3)",
+
+            1.2
+          ),
+
+          lineDataset(
+            "14-daags gemiddelde",
+
+            movingAverage(
+              fatRecords,
+              "fatRatioPercent",
+              14
+            ),
+
+            "#ea580c",
+
+            3
+          )
+        ]
+      );
+
+
+      setText(
+        "withingsFatMessage",
+
+        `${fatRecords.length} metingen weergegeven.`
+      );
+
+
+      const composition =
+        records.filter(
+          (record) =>
+            num(
+              record.fatMassKg
+            ) !== null ||
+            num(
+              record.muscleMassKg
+            ) !== null
+        );
+
+
+      lineChart(
+        "withingsCompositionChart",
+
+        composition,
+
+        [
+          lineDataset(
+            "Vetmassa",
+
+            composition.map(
+              (record) =>
+                record.fatMassKg
+            ),
+
+            "#ea580c"
+          ),
+
+          lineDataset(
+            "Spiermassa",
+
+            composition.map(
+              (record) =>
+                record.muscleMassKg
+            ),
+
+            "#159a68"
+          )
+        ]
+      );
+
+
+      setText(
+        "withingsCompositionMessage",
+
+        `${composition.length} metingen weergegeven.`
+      );
+
+
+      const baseWeight =
+        firstValid(
+          withingsHistory,
+          "weightKg"
+        )?.weightKg ?? null;
+
+
+      const baseFat =
+        firstValid(
+          withingsHistory,
+          "fatMassKg"
+        )?.fatMassKg ?? null;
+
+
+      const baseMuscle =
+        firstValid(
+          withingsHistory,
+          "muscleMassKg"
+        )?.muscleMassKg ?? null;
+
+
+      const changes =
+        records.map(
+          (record) => ({
+
+            ...record,
+
+            weightChange:
+              baseWeight !== null &&
+              num(
+                record.weightKg
+              ) !== null
+
+                ? record.weightKg -
+                  baseWeight
+
+                : null,
+
+            fatChange:
+              baseFat !== null &&
+              num(
+                record.fatMassKg
+              ) !== null
+
+                ? record.fatMassKg -
+                  baseFat
+
+                : null,
+
+            muscleChange:
+              baseMuscle !== null &&
+              num(
+                record.muscleMassKg
+              ) !== null
+
+                ? record.muscleMassKg -
+                  baseMuscle
+
+                : null
+          })
+        );
+
+
+      lineChart(
+        "withingsChangeChart",
+
+        changes,
+
+        [
+          lineDataset(
+            "Gewicht",
+
+            changes.map(
+              (record) =>
+                record.weightChange
+            ),
+
+            "#2563eb"
+          ),
+
+          lineDataset(
+            "Vetmassa",
+
+            changes.map(
+              (record) =>
+                record.fatChange
+            ),
+
+            "#ea580c"
+          ),
+
+          lineDataset(
+            "Spiermassa",
+
+            changes.map(
+              (record) =>
+                record.muscleChange
+            ),
+
+            "#159a68"
+          )
+        ]
+      );
+
+
+      setText(
+        "withingsChangeMessage",
+
+        `${changes.length} metingen weergegeven.`
+      );
+    }
+
+
+    async function loadWithings() {
+
+      const button =
+        $("withingsRefreshButton");
+
+      if (button) {
+        button.disabled =
+          true;
+      }
+
+      setWithingsStatus(
+        "Withings laden…"
+      );
+
+
+      try {
+
+        const data =
+          await fetchJson(
+            "/api/withings-data",
+            "Withings kon niet worden geladen."
           );
 
-        const last =
-          lastNumeric(
-            records,
-            key
-          );
+
+        withingsHistory =
+          Array.isArray(
+            data.records
+          )
+            ? data.records
+            : [];
 
 
         if (
-          !first ||
-          !last
+          !withingsHistory.length
         ) {
 
-          setText(
-            id,
-            "—"
+          setWithingsStatus(
+            "Verbonden, maar geen metingen gevonden.",
+            "error"
           );
 
           return;
         }
 
 
-        const difference =
-          last[key] -
-          first[key];
+        $("withingsConnectButton")
+          ?.classList
+          .add(
+            "hidden"
+          );
 
 
-        setText(
-          id,
+        renderWithings();
 
-          `${
-            difference >= 0
-              ? "+"
-              : ""
-          }${difference.toFixed(1)} ${unit} sinds start`
+
+        setWithingsStatus(
+          `Withings verbonden · ${withingsHistory.length} metingen`,
+          "success"
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Withings:",
+          error
+        );
+
+
+        withingsHistory =
+          [];
+
+
+        $("withingsConnectButton")
+          ?.classList
+          .remove(
+            "hidden"
+          );
+
+
+        setWithingsStatus(
+          error.message ||
+          "Withings niet verbonden.",
+          "error"
+        );
+
+      } finally {
+
+        if (button) {
+          button.disabled =
+            false;
+        }
+      }
+    }
+
+
+    /* ==================================================
+       STRAVA
+    =================================================== */
+
+
+    function setStravaStatus(
+      text,
+      type = ""
+    ) {
+
+      const element =
+        $("stravaStatus");
+
+      if (!element) {
+        return;
+      }
+
+      element.textContent =
+        text;
+
+      element.classList.remove(
+        "success",
+        "error"
+      );
+
+      if (type) {
+        element.classList.add(
+          type
         );
       }
-    );
+    }
 
 
-    setText(
-      "withingsUpdatedAt",
+    function isRun(activity) {
 
-      latest.date
-
-        ? `Laatste meting ${
-            formatDate(
-              latest.date
-            )
-          }`
-
-        : "—"
-    );
-
-
-    const weightRecords =
-      records.filter(
-        (record) =>
-          num(
-            record.weightKg
-          ) !== null
-      );
-
-
-    lineChart(
-      "withingsWeightChart",
-
-      weightRecords,
-
-      [
-        dataSet(
-          "Gewicht",
-
-          weightRecords.map(
-            (record) =>
-              record.weightKg
-          ),
-
-          "rgba(37,99,235,.3)",
-
-          1.2
-        ),
-
-        dataSet(
-          "7-daags",
-
-          movingAverage(
-            weightRecords,
-            "weightKg",
-            7
-          ),
-
-          "#2563eb",
-
-          3
-        )
-      ]
-    );
-
-
-    const fatRecords =
-      records.filter(
-        (record) =>
-          num(
-            record
-              .fatRatioPercent
-          ) !== null
-      );
-
-
-    lineChart(
-      "withingsFatChart",
-
-      fatRecords,
-
-      [
-        dataSet(
-          "Vetpercentage",
-
-          fatRecords.map(
-            (record) =>
-              record
-                .fatRatioPercent
-          ),
-
-          "rgba(234,88,12,.3)",
-
-          1.2
-        ),
-
-        dataSet(
-          "14-daags",
-
-          movingAverage(
-            fatRecords,
-            "fatRatioPercent",
-            14
-          ),
-
-          "#ea580c",
-
-          3
-        )
-      ]
-    );
-
-
-    const compositionRecords =
-      records.filter(
-        (record) =>
-          num(
-            record.fatMassKg
-          ) !== null ||
-          num(
-            record.muscleMassKg
-          ) !== null
-      );
-
-
-    lineChart(
-      "withingsCompositionChart",
-
-      compositionRecords,
-
-      [
-        dataSet(
-          "Vetmassa",
-
-          compositionRecords.map(
-            (record) =>
-              record.fatMassKg
-          ),
-
-          "#ea580c"
-        ),
-
-        dataSet(
-          "Spiermassa",
-
-          compositionRecords.map(
-            (record) =>
-              record.muscleMassKg
-          ),
-
-          "#159a68"
-        )
-      ]
-    );
-
-
-    const firstWeight =
-      firstNumeric(
-        withingsHistory,
-        "weightKg"
-      )?.weightKg ?? null;
-
-
-    const firstFatMass =
-      firstNumeric(
-        withingsHistory,
-        "fatMassKg"
-      )?.fatMassKg ?? null;
-
-
-    const firstMuscle =
-      firstNumeric(
-        withingsHistory,
-        "muscleMassKg"
-      )?.muscleMassKg ?? null;
-
-
-    const changeRecords =
-      records.map(
-        (record) => ({
-
-          ...record,
-
-          weightChange:
-            firstWeight !== null &&
-            num(
-              record.weightKg
-            ) !== null
-
-              ? record.weightKg -
-                firstWeight
-
-              : null,
-
-
-          fatChange:
-            firstFatMass !== null &&
-            num(
-              record.fatMassKg
-            ) !== null
-
-              ? record.fatMassKg -
-                firstFatMass
-
-              : null,
-
-
-          muscleChange:
-            firstMuscle !== null &&
-            num(
-              record.muscleMassKg
-            ) !== null
-
-              ? record.muscleMassKg -
-                firstMuscle
-
-              : null
-        })
-      );
-
-
-    lineChart(
-      "withingsChangeChart",
-
-      changeRecords,
-
-      [
-        dataSet(
-          "Gewicht",
-
-          changeRecords.map(
-            (record) =>
-              record.weightChange
-          ),
-
-          "#2563eb"
-        ),
-
-        dataSet(
-          "Vetmassa",
-
-          changeRecords.map(
-            (record) =>
-              record.fatChange
-          ),
-
-          "#ea580c"
-        ),
-
-        dataSet(
-          "Spiermassa",
-
-          changeRecords.map(
-            (record) =>
-              record.muscleChange
-          ),
-
-          "#159a68"
-        )
-      ]
-    );
-  }
-
-
-  /* ======================================================
-     STRAVA
-  ======================================================= */
-
-
-  function isRun(activity) {
-
-    return [
-      "run",
-      "trailrun",
-      "virtualrun"
-    ]
-      .includes(
+      const type =
         String(
           activity.sportType ||
           activity.type ||
           ""
         )
-          .toLowerCase()
+          .toLowerCase();
+
+      return [
+        "run",
+        "trailrun",
+        "virtualrun"
+      ].includes(type);
+    }
+
+
+    function weekStart(value) {
+
+      const date =
+        new Date(value);
+
+      const day =
+        (
+          date.getDay() +
+          6
+        ) % 7;
+
+      date.setHours(
+        0,
+        0,
+        0,
+        0
       );
-  }
+
+      date.setDate(
+        date.getDate() -
+        day
+      );
+
+      return date;
+    }
 
 
-  function weekStart(value) {
+    function weeklyRuns(records) {
 
-    const date =
-      new Date(value);
-
-
-    const day =
-      (
-        date.getDay() +
-        6
-      ) % 7;
+      const map =
+        new Map();
 
 
-    date.setHours(
-      0,
-      0,
-      0,
-      0
-    );
+      records
+        .filter(isRun)
+        .forEach(
+          (activity) => {
+
+            const start =
+              weekStart(
+                recordDate(
+                  activity
+                )
+              );
+
+            const key =
+              dateKey(start);
+
+            const item =
+              map.get(key) ||
+              {
+                date:
+                  start.toISOString(),
+
+                distanceKm:
+                  0,
+
+                count:
+                  0
+              };
 
 
-    date.setDate(
-      date.getDate() -
-      day
-    );
+            item.distanceKm +=
+              num(
+                activity.distanceKm
+              ) || 0;
+
+            item.count +=
+              1;
 
 
-    return date;
-  }
+            map.set(
+              key,
+              item
+            );
+          }
+        );
 
 
-  function weekly(records) {
+      return [
+        ...map.values()
+      ]
+        .sort(
+          (a, b) =>
+            new Date(a.date) -
+            new Date(b.date)
+        );
+    }
 
-    const weeks =
-      new Map();
+
+    function renderStrava() {
+
+      if (
+        !stravaHistory.length
+      ) {
+        return;
+      }
+
+      const records =
+        filterByRange(
+          stravaHistory
+        );
 
 
-    records
-      .filter(isRun)
-      .forEach(
+      const runs =
+        records.filter(
+          isRun
+        );
+
+
+      const runDistance =
+        runs.reduce(
+          (sum, activity) =>
+            sum +
+            (
+              num(
+                activity.distanceKm
+              ) || 0
+            ),
+          0
+        );
+
+
+      const movingHours =
+        records.reduce(
+          (sum, activity) => {
+
+            const hoursValue =
+              num(
+                activity.movingTimeHours
+              );
+
+            if (
+              hoursValue !== null
+            ) {
+              return (
+                sum +
+                hoursValue
+              );
+            }
+
+            const seconds =
+              num(
+                activity.movingTimeSeconds
+              ) || 0;
+
+            return (
+              sum +
+              seconds /
+              3600
+            );
+          },
+          0
+        );
+
+
+      const elevation =
+        records.reduce(
+          (sum, activity) =>
+            sum +
+            (
+              num(
+                activity.elevationMeters
+              ) || 0
+            ),
+          0
+        );
+
+
+      setText(
+        "stravaRunDistance",
+        `${runDistance.toFixed(1)} km`
+      );
+
+
+      setText(
+        "stravaRunCount",
+        `${runs.length} loopactiviteiten`
+      );
+
+
+      setText(
+        "stravaActivityCount",
+        records.length
+      );
+
+
+      setText(
+        "stravaMovingHours",
+        `${movingHours.toFixed(1)} u`
+      );
+
+
+      setText(
+        "stravaElevation",
+        `${Math.round(elevation)} m`
+      );
+
+
+      const latest =
+        records.at(-1);
+
+
+      setText(
+        "stravaUpdatedAt",
+
+        latest
+
+          ? `Laatste activiteit ${
+              dateLabel(
+                recordDate(
+                  latest
+                )
+              )
+            }`
+
+          : "—"
+      );
+
+
+      const weeks =
+        weeklyRuns(
+          records
+        );
+
+
+      destroyChart(
+        "stravaWeeklyChart"
+      );
+
+
+      if (
+        weeks.length &&
+        $("stravaWeeklyChart")
+      ) {
+
+        charts
+          .stravaWeeklyChart =
+            new Chart(
+              $("stravaWeeklyChart"),
+              {
+
+                data: {
+
+                  labels:
+                    weeks.map(
+                      (week) =>
+                        dateLabel(
+                          week.date
+                        )
+                    ),
+
+                  datasets: [
+
+                    {
+                      type:
+                        "bar",
+
+                      label:
+                        "Loopkilometers",
+
+                      data:
+                        weeks.map(
+                          (week) =>
+                            Number(
+                              week.distanceKm.toFixed(2)
+                            )
+                        ),
+
+                      backgroundColor:
+                        "rgba(234,88,12,.38)",
+
+                      borderRadius:
+                        6
+                    },
+
+                    {
+                      type:
+                        "line",
+
+                      label:
+                        "4-weeks gemiddelde",
+
+                      data:
+                        movingAverage(
+                          weeks,
+                          "distanceKm",
+                          4
+                        ),
+
+                      borderColor:
+                        "#111827",
+
+                      backgroundColor:
+                        "#111827",
+
+                      borderWidth:
+                        2.5,
+
+                      pointRadius:
+                        0,
+
+                      tension:
+                        0.25
+                    }
+                  ]
+                },
+
+                options:
+                  commonOptions
+              }
+            );
+      }
+
+
+      setText(
+        "stravaWeeklyMessage",
+
+        `${weeks.length} trainingsweken weergegeven.`
+      );
+
+
+      const sports =
+        new Map();
+
+
+      records.forEach(
         (activity) => {
 
-          const date =
-            weekStart(
-              activity.localDate ||
-              activity.date
+          const sport =
+            String(
+              activity.sportType ||
+              activity.type ||
+              "Overig"
             );
 
 
-          const key =
-            dateKey(date);
+          sports.set(
+            sport,
 
-
-          const current =
-            weeks.get(key) ||
-            {
-              date:
-                date.toISOString(),
-
-              distanceKm:
-                0,
-
-              count:
-                0
-            };
-
-
-          current.distanceKm +=
-            num(
-              activity.distanceKm
-            ) || 0;
-
-
-          current.count +=
-            1;
-
-
-          weeks.set(
-            key,
-            current
+            (
+              sports.get(sport) ||
+              0
+            ) +
+            1
           );
         }
       );
 
 
-    return [
-      ...weeks.values()
-    ]
-      .sort(
-        (a, b) =>
-          new Date(a.date) -
-          new Date(b.date)
-      );
-  }
+      const sportEntries =
+        [
+          ...sports.entries()
+        ]
+          .sort(
+            (a, b) =>
+              b[1] -
+              a[1]
+          )
+          .slice(
+            0,
+            6
+          );
 
 
-  function renderStrava() {
-
-    const records =
-      filtered(
-        stravaHistory
-      );
-
-
-    if (
-      !records.length
-    ) {
-      return;
-    }
-
-
-    const runs =
-      records.filter(
-        isRun
+      destroyChart(
+        "stravaSportChart"
       );
 
 
-    const runDistance =
-      runs.reduce(
-        (sum, activity) =>
-          sum +
-          (
-            num(
-              activity.distanceKm
-            ) || 0
-          ),
-        0
+      if (
+        sportEntries.length &&
+        $("stravaSportChart")
+      ) {
+
+        charts
+          .stravaSportChart =
+            new Chart(
+              $("stravaSportChart"),
+              {
+
+                type:
+                  "doughnut",
+
+                data: {
+
+                  labels:
+                    sportEntries.map(
+                      ([name]) =>
+                        name
+                    ),
+
+                  datasets: [
+                    {
+                      data:
+                        sportEntries.map(
+                          ([, value]) =>
+                            value
+                        ),
+
+                      backgroundColor: [
+                        "#ea580c",
+                        "#2563eb",
+                        "#159a68",
+                        "#7c3aed",
+                        "#d58b12",
+                        "#64748b"
+                      ],
+
+                      borderWidth:
+                        0
+                    }
+                  ]
+                },
+
+                options: {
+
+                  responsive:
+                    true,
+
+                  maintainAspectRatio:
+                    false,
+
+                  cutout:
+                    "64%",
+
+                  plugins:
+                    commonOptions.plugins
+                }
+              }
+            );
+      }
+
+
+      const paceHr =
+        runs
+          .map(
+            (activity) => ({
+
+              x:
+                num(
+                  activity
+                    .averagePaceMinutesPerKm
+                ),
+
+              y:
+                num(
+                  activity
+                    .averageHeartRate
+                )
+            })
+          )
+          .filter(
+            (point) =>
+              point.x !== null &&
+              point.x > 0 &&
+              point.x < 20 &&
+              point.y !== null &&
+              point.y > 40 &&
+              point.y < 230
+          );
+
+
+      scatterChart(
+        "stravaPaceHrChart",
+        paceHr,
+        "Tempo (min/km)",
+        "Gemiddelde hartslag",
+        "rgba(234,88,12,.58)"
       );
 
 
-    const movingHours =
-      records.reduce(
-        (sum, activity) =>
+      setText(
+        "stravaPaceHrMessage",
 
-          sum +
-          (
-            num(
-              activity.movingTimeHours
-            ) ||
+        `${paceHr.length} loopactiviteiten met geldige tempo- en hartslagdata.`
+      );
 
+
+      const longRuns =
+        runs.filter(
+          (activity) =>
             (
               num(
-                activity
-                  .movingTimeSeconds
+                activity.distanceKm
               ) || 0
-            ) /
-            3600
-          ),
-
-        0
-      );
-
-
-    const elevation =
-      records.reduce(
-        (sum, activity) =>
-          sum +
-          (
-            num(
-              activity
-                .elevationMeters
-            ) || 0
-          ),
-
-        0
-      );
-
-
-    setText(
-      "stravaRunDistance",
-      `${runDistance.toFixed(1)} km`
-    );
-
-
-    setText(
-      "stravaRunCount",
-      `${runs.length} loopactiviteiten`
-    );
-
-
-    setText(
-      "stravaActivityCount",
-      records.length
-    );
-
-
-    setText(
-      "stravaMovingHours",
-      `${movingHours.toFixed(1)} u`
-    );
-
-
-    setText(
-      "stravaElevation",
-      `${Math.round(elevation)} m`
-    );
-
-
-    const latest =
-      records.at(-1);
-
-
-    setText(
-      "stravaUpdatedAt",
-
-      latest
-
-        ? `Laatste activiteit ${
-            formatDate(
-              latest.localDate ||
-              latest.date
-            )
-          }`
-
-        : "—"
-    );
-
-
-    const weeks =
-      weekly(records);
-
-
-    destroyChart(
-      "stravaWeeklyChart"
-    );
-
-
-    if (
-      weeks.length
-    ) {
-
-      charts
-        .stravaWeeklyChart =
-          new Chart(
-            $("stravaWeeklyChart"),
-            {
-
-              data: {
-
-                labels:
-                  weeks.map(
-                    (week) =>
-                      new Date(
-                        week.date
-                      )
-                  ),
-
-                datasets: [
-
-                  {
-                    type:
-                      "bar",
-
-                    label:
-                      "Loopkm",
-
-                    data:
-                      weeks.map(
-                        (week) =>
-                          week.distanceKm
-                      ),
-
-                    backgroundColor:
-                      "rgba(234,88,12,.45)",
-
-                    borderRadius:
-                      7
-                  },
-
-
-                  {
-                    type:
-                      "line",
-
-                    ...dataSet(
-                      "4-weeks gemiddelde",
-
-                      movingAverage(
-                        weeks,
-                        "distanceKm",
-                        4
-                      ),
-
-                      "#111827"
-                    )
-                  }
-                ]
-              },
-
-              options:
-                common
-            }
-          );
-    }
-
-
-    const sportCounts =
-      new Map();
-
-
-    records.forEach(
-      (activity) => {
-
-        const sport =
-          String(
-            activity.sportType ||
-            activity.type ||
-            "Overig"
-          );
-
-
-        sportCounts.set(
-          sport,
-
-          (
-            sportCounts.get(sport) ||
-            0
-          ) +
-          1
-        );
-      }
-    );
-
-
-    const sports =
-      [
-        ...sportCounts.entries()
-      ]
-        .sort(
-          (a, b) =>
-            b[1] -
-            a[1]
-        )
-        .slice(
-          0,
-          6
+            ) >= 8
         );
 
 
-    destroyChart(
-      "stravaSportChart"
-    );
+      lineChart(
+        "stravaLongRunChart",
 
+        longRuns,
 
-    if (
-      sports.length
-    ) {
+        [
+          lineDataset(
+            "Afstand",
 
-      charts
-        .stravaSportChart =
-          new Chart(
-            $("stravaSportChart"),
-            {
+            longRuns.map(
+              (activity) =>
+                activity.distanceKm
+            ),
 
-              type:
-                "doughnut",
-
-              data: {
-
-                labels:
-                  sports.map(
-                    (item) =>
-                      item[0]
-                  ),
-
-                datasets: [
-                  {
-
-                    data:
-                      sports.map(
-                        (item) =>
-                          item[1]
-                      ),
-
-                    backgroundColor: [
-                      "#ea580c",
-                      "#2563eb",
-                      "#159a68",
-                      "#7c3aed",
-                      "#d58b12",
-                      "#64748b"
-                    ],
-
-                    borderWidth:
-                      0
-                  }
-                ]
-              },
-
-              options: {
-
-                responsive:
-                  true,
-
-                maintainAspectRatio:
-                  false,
-
-                cutout:
-                  "64%",
-
-                plugins:
-                  common.plugins
-              }
-            }
-          );
-    }
-
-
-    const paceHeartRate =
-      runs
-        .map(
-          (activity) => ({
-
-            x:
-              num(
-                activity
-                  .averagePaceMinutesPerKm
-              ),
-
-            y:
-              num(
-                activity
-                  .averageHeartRate
-              )
-          })
-        )
-        .filter(
-          (point) =>
-            point.x !== null &&
-            point.y !== null
-        );
-
-
-    scatterChart(
-      "stravaPaceHrChart",
-
-      paceHeartRate,
-
-      "Tempo (min/km)",
-
-      "Gemiddelde hartslag",
-
-      "rgba(234,88,12,.58)"
-    );
-
-
-    const longRuns =
-      runs.filter(
-        (activity) =>
-          (
-            num(
-              activity.distanceKm
-            ) || 0
-          ) >= 8
+            "#159a68"
+          )
+        ]
       );
 
 
-    lineChart(
-      "stravaLongRunChart",
-
-      longRuns,
-
-      [
-        dataSet(
-          "Afstand",
-
-          longRuns.map(
-            (activity) =>
-              activity.distanceKm
-          ),
-
-          "#159a68"
-        )
-      ]
-    );
-
-
-    $("stravaActivityRows")
-      .innerHTML =
-
+      const rows =
         [
           ...records
         ]
@@ -3895,9 +3955,10 @@
 
                 <td>
                   ${
-                    formatDate(
-                      activity.localDate ||
-                      activity.date
+                    dateLabel(
+                      recordDate(
+                        activity
+                      )
                     )
                   }
                 </td>
@@ -3928,32 +3989,31 @@
 
                 <td>
                   ${
-                    secondsDuration(
-                      activity
-                        .movingTimeSeconds
+                    secondsLabel(
+                      activity.movingTimeSeconds
                     )
                   }
                 </td>
 
                 <td>
                   ${
-                    pace(
-                      activity
-                        .averagePaceMinutesPerKm
-                    )
+                    isRun(activity)
+                      ? paceLabel(
+                          activity.averagePaceMinutesPerKm
+                        )
+                      : "—"
                   }
                 </td>
 
                 <td>
                   ${
                     num(
-                      activity
-                        .averageHeartRate
-                    ) !== null
+                      activity.averageHeartRate
+                    ) !== null &&
+                    activity.averageHeartRate > 40
 
                       ? `${Math.round(
-                          activity
-                            .averageHeartRate
+                          activity.averageHeartRate
                         )} bpm`
 
                       : "—"
@@ -3963,13 +4023,11 @@
                 <td>
                   ${
                     num(
-                      activity
-                        .elevationMeters
+                      activity.elevationMeters
                     ) !== null
 
                       ? `${Math.round(
-                          activity
-                            .elevationMeters
+                          activity.elevationMeters
                         )} m`
 
                       : "—"
@@ -3980,172 +4038,158 @@
             `
           )
           .join("");
-  }
 
 
-  /* ======================================================
-     WHOOP GRAFIEKEN
-  ======================================================= */
-
-
-  function statCards(
-    id,
-    records,
-    key,
-    unit,
-    lowerBetter = false
-  ) {
-
-    const values =
-      records
-        .map(
-          (record) =>
-            num(
-              record[key]
-            )
-        )
-        .filter(
-          (value) =>
-            value !== null
-        );
-
-
-    if (
-      !$(id) ||
-      !values.length
-    ) {
-      return;
+      $("stravaActivityRows")
+        .innerHTML =
+          rows;
     }
 
 
-    const current =
-      values.at(-1);
+    async function loadStrava() {
+
+      const button =
+        $("stravaRefreshButton");
+
+      if (button) {
+        button.disabled =
+          true;
+      }
 
 
-    const start =
-      values[0];
-
-
-    const seven =
-      mean(
-        values.slice(-7)
+      setStravaStatus(
+        "Strava laden…"
       );
 
 
-    const change =
-      start
+      try {
 
-        ? (
-            current -
-            start
-          ) /
-          start *
-          100
-
-        : null;
+        const data =
+          await fetchJson(
+            "/api/strava-data",
+            "Strava kon niet worden geladen."
+          );
 
 
-    $(id).innerHTML =
-
-      insight(
-        "Huidig",
-
-        `${current.toFixed(
-          key === "hrv"
-            ? 1
-            : 0
-        )} ${unit}`
-      ) +
-
-      insight(
-        "7-daags",
-
-        `${seven.toFixed(1)} ${unit}`
-      ) +
-
-      insight(
-        "Start",
-
-        `${start.toFixed(
-          key === "hrv"
-            ? 1
-            : 0
-        )} ${unit}`
-      ) +
-
-      insight(
-        "Verandering",
-
-        change === null
-
-          ? "—"
-
-          : `${
-              change >= 0
-                ? "+"
-                : ""
-            }${change.toFixed(1)}%`,
-
-        lowerBetter
-
-          ? "lager kan gunstiger zijn"
-
-          : "hoger kan gunstiger zijn"
-      );
-  }
+        stravaHistory =
+          Array.isArray(
+            data.records
+          )
+            ? data.records
+            : [];
 
 
-  function renderWhoop() {
+        if (
+          !stravaHistory.length
+        ) {
 
-    const recovery =
-      filtered(
-        recoveryHistory
-      );
+          setStravaStatus(
+            "Verbonden, maar geen activiteiten gevonden.",
+            "error"
+          );
 
-
-    const sleep =
-      filtered(
-        sleepHistory
-      );
-
-
-    const cycles =
-      filtered(
-        cycleHistory
-      );
+          return;
+        }
 
 
-    if (
-      recovery.length
-    ) {
+        $("stravaConnectButton")
+          ?.classList
+          .add(
+            "hidden"
+          );
+
+
+        renderStrava();
+
+
+        setStravaStatus(
+          `Strava verbonden · ${stravaHistory.length} activiteiten`,
+          "success"
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Strava:",
+          error
+        );
+
+
+        stravaHistory =
+          [];
+
+
+        $("stravaConnectButton")
+          ?.classList
+          .remove(
+            "hidden"
+          );
+
+
+        setStravaStatus(
+          error.message ||
+          "Strava niet verbonden.",
+          "error"
+        );
+
+      } finally {
+
+        if (button) {
+          button.disabled =
+            false;
+        }
+      }
+    }
+
+
+    /* ==================================================
+       WHOOP HISTORIE
+    =================================================== */
+
+
+    function renderRecoveryCharts() {
+
+      const records =
+        filterByRange(
+          recoveryHistory
+        );
+
+
+      if (
+        !records.length
+      ) {
+        return;
+      }
+
 
       statCards(
         "hrvStats",
-        recovery,
+        records,
         "hrv",
-        "ms"
+        "ms",
+        1
       );
 
 
       statCards(
         "rhrStats",
-        recovery,
+        records,
         "rhr",
         "bpm",
-        true
+        0
       );
 
 
       lineChart(
         "hrvChart",
 
-        recovery,
+        records,
 
         [
-          dataSet(
-            "HRV",
+          lineDataset(
+            "Dagwaarde",
 
-            recovery.map(
+            records.map(
               (record) =>
                 record.hrv
             ),
@@ -4155,16 +4199,16 @@
             1.2
           ),
 
-          dataSet(
-            "7-daags",
+          lineDataset(
+            "7-daags gemiddelde",
 
             movingAverage(
-              recovery,
+              records,
               "hrv",
               7
             ),
 
-            "#2563eb",
+            "#159a68",
 
             3
           )
@@ -4175,32 +4219,32 @@
       lineChart(
         "rhrChart",
 
-        recovery,
+        records,
 
         [
-          dataSet(
-            "Rusthartslag",
+          lineDataset(
+            "Dagwaarde",
 
-            recovery.map(
+            records.map(
               (record) =>
                 record.rhr
             ),
 
-            "rgba(234,88,12,.3)",
+            "rgba(37,99,235,.3)",
 
             1.2
           ),
 
-          dataSet(
-            "7-daags",
+          lineDataset(
+            "7-daags gemiddelde",
 
             movingAverage(
-              recovery,
+              records,
               "rhr",
               7
             ),
 
-            "#ea580c",
+            "#159a68",
 
             3
           )
@@ -4211,40 +4255,45 @@
       lineChart(
         "recoveryChart",
 
-        recovery,
+        records,
 
         [
-          dataSet(
+          lineDataset(
             "Recovery",
 
-            recovery.map(
+            records.map(
               (record) =>
                 record.recovery
             ),
 
-            "#7c3aed"
+            "rgba(124,58,237,.35)",
+
+            1.2
           ),
 
-          dataSet(
-            "7-daags",
+          lineDataset(
+            "7-daags gemiddelde",
 
             movingAverage(
-              recovery,
+              records,
               "recovery",
               7
             ),
 
-            "#159a68"
+            "#7c3aed",
+
+            3
           )
         ],
 
         {
           scales: {
 
-            ...common.scales,
+            ...commonOptions.scales,
 
             y: {
-              ...common.scales.y,
+
+              ...commonOptions.scales.y,
 
               min:
                 0,
@@ -4257,8 +4306,8 @@
       );
 
 
-      const skinRecords =
-        recovery.filter(
+      const skin =
+        records.filter(
           (record) =>
             num(
               record.skinTemp
@@ -4269,13 +4318,13 @@
       lineChart(
         "skinChart",
 
-        skinRecords,
+        skin,
 
         [
-          dataSet(
+          lineDataset(
             "Huidtemperatuur",
 
-            skinRecords.map(
+            skin.map(
               (record) =>
                 record.skinTemp
             ),
@@ -4286,8 +4335,8 @@
       );
 
 
-      const spo2Records =
-        recovery.filter(
+      const spo2 =
+        records.filter(
           (record) =>
             num(
               record.spo2
@@ -4298,38 +4347,96 @@
       lineChart(
         "spo2Chart",
 
-        spo2Records,
+        spo2,
 
         [
-          dataSet(
+          lineDataset(
             "SpO₂",
 
-            spo2Records.map(
+            spo2.map(
               (record) =>
                 record.spo2
             ),
 
             "#2563eb"
           )
-        ]
+        ],
+
+        {
+          scales: {
+
+            ...commonOptions.scales,
+
+            y: {
+
+              ...commonOptions.scales.y,
+
+              suggestedMin:
+                90,
+
+              suggestedMax:
+                100
+            }
+          }
+        }
       );
     }
 
 
-    if (
-      sleep.length
-    ) {
+    function renderSleepCharts() {
+
+      const records =
+        filterByRange(
+          sleepHistory
+        );
+
+
+      if (
+        !records.length
+      ) {
+        return;
+      }
+
+
+      const respiratory =
+        records.filter(
+          (record) =>
+            num(
+              record.respiratoryRate
+            ) !== null
+        );
+
+
+      lineChart(
+        "respChart",
+
+        respiratory,
+
+        [
+          lineDataset(
+            "Ademhaling",
+
+            respiratory.map(
+              (record) =>
+                record.respiratoryRate
+            ),
+
+            "#2563eb"
+          )
+        ]
+      );
+
 
       lineChart(
         "sleepDurationChart",
 
-        sleep,
+        records,
 
         [
-          dataSet(
-            "Slaapduur",
+          lineDataset(
+            "Werkelijke slaap",
 
-            sleep.map(
+            records.map(
               (record) =>
                 hours(
                   record.durationMilli
@@ -4339,10 +4446,10 @@
             "#2563eb"
           ),
 
-          dataSet(
+          lineDataset(
             "Slaapbehoefte",
 
-            sleep.map(
+            records.map(
               (record) =>
                 hours(
                   record.sleepNeedMilli
@@ -4358,13 +4465,13 @@
       lineChart(
         "sleepQualityChart",
 
-        sleep,
+        records,
 
         [
-          dataSet(
+          lineDataset(
             "Performance",
 
-            sleep.map(
+            records.map(
               (record) =>
                 record.performance
             ),
@@ -4372,10 +4479,10 @@
             "#2563eb"
           ),
 
-          dataSet(
+          lineDataset(
             "Consistentie",
 
-            sleep.map(
+            records.map(
               (record) =>
                 record.consistency
             ),
@@ -4383,10 +4490,10 @@
             "#7c3aed"
           ),
 
-          dataSet(
+          lineDataset(
             "Efficiëntie",
 
-            sleep.map(
+            records.map(
               (record) =>
                 record.efficiency
             ),
@@ -4398,10 +4505,10 @@
         {
           scales: {
 
-            ...common.scales,
+            ...commonOptions.scales,
 
             y: {
-              ...common.scales.y,
+              ...commonOptions.scales.y,
 
               min:
                 0,
@@ -4412,69 +4519,48 @@
           }
         }
       );
-
-
-      const respiratory =
-        sleep.filter(
-          (record) =>
-
-            num(
-              record.respiratoryRate ??
-              record.respiratory_rate
-            ) !== null
-        );
-
-
-      lineChart(
-        "respChart",
-
-        respiratory,
-
-        [
-          dataSet(
-            "Ademhaling",
-
-            respiratory.map(
-              (record) =>
-                record.respiratoryRate ??
-                record.respiratory_rate
-            ),
-
-            "#64748b"
-          )
-        ]
-      );
     }
 
 
-    if (
-      cycles.length
-    ) {
+    function renderStrain() {
+
+      const records =
+        filterByRange(
+          cycleHistory
+        );
+
+
+      if (
+        !records.length
+      ) {
+        return;
+      }
+
 
       lineChart(
         "strainChart",
 
-        cycles,
+        records,
 
         [
-          dataSet(
-            "Strain",
+          lineDataset(
+            "Dagstrain",
 
-            cycles.map(
+            records.map(
               (record) =>
                 record.strain
             ),
 
-            "rgba(234,88,12,.4)",
+            "rgba(234,88,12,.35)",
 
-            1.5
+            1.2
           ),
 
-          dataSet(
-            "7-daags",
+          lineDataset(
+            "7-daags gemiddelde",
 
             movingAverage(
-              cycles,
+              records,
               "strain",
               7
             ),
@@ -4488,10 +4574,10 @@
         {
           scales: {
 
-            ...common.scales,
+            ...commonOptions.scales,
 
             y: {
-              ...common.scales.y,
+              ...commonOptions.scales.y,
 
               min:
                 0,
@@ -4503,2495 +4589,814 @@
         }
       );
     }
-  }
 
 
-  /* ======================================================
-     CORRELATIES
-  ======================================================= */
+    /* ==================================================
+       CORRELATIES
+    =================================================== */
 
 
-  function pearson(points) {
-
-    if (
-      points.length <
-      3
-    ) {
-      return null;
-    }
-
-
-    const meanX =
-      mean(
-        points.map(
-          (point) =>
-            point.x
-        )
-      );
-
-
-    const meanY =
-      mean(
-        points.map(
-          (point) =>
-            point.y
-        )
-      );
-
-
-    let numerator =
-      0;
-
-
-    let dxTotal =
-      0;
-
-
-    let dyTotal =
-      0;
-
-
-    points.forEach(
-      (point) => {
-
-        const dx =
-          point.x -
-          meanX;
-
-
-        const dy =
-          point.y -
-          meanY;
-
-
-        numerator +=
-          dx * dy;
-
-
-        dxTotal +=
-          dx * dx;
-
-
-        dyTotal +=
-          dy * dy;
-      }
-    );
-
-
-    if (
-      !dxTotal ||
-      !dyTotal
-    ) {
-      return null;
-    }
-
-
-    return (
-      numerator /
-      Math.sqrt(
-        dxTotal *
-        dyTotal
-      )
-    );
-  }
-
-
-  function correlationText(
-    correlation
-  ) {
-
-    if (
-      correlation ===
-      null
-    ) {
-      return "onvoldoende data";
-    }
-
-
-    const absolute =
-      Math.abs(
-        correlation
-      );
-
-
-    let strength =
-      "zeer zwak";
-
-
-    if (
-      absolute >=
-      0.8
-    ) {
-      strength =
-        "zeer sterk";
-    }
-
-    else if (
-      absolute >=
-      0.6
-    ) {
-      strength =
-        "sterk";
-    }
-
-    else if (
-      absolute >=
-      0.4
-    ) {
-      strength =
-        "matig";
-    }
-
-    else if (
-      absolute >=
-      0.2
-    ) {
-      strength =
-        "zwak";
-    }
-
-
-    return (
-      `${strength} ` +
-      `${
-        correlation >= 0
-          ? "positief"
-          : "negatief"
-      } ` +
-      `(r=${correlation.toFixed(2)})`
-    );
-  }
-
-
-  function renderCorrelations() {
-
-    const sleepMap =
-      new Map(
-        sleepHistory.map(
-          (sleep) => [
-
-            String(
-              sleep.cycleId
-            ),
-
-            sleep
-          ]
-        )
-      );
-
-
-    const sleepHrv =
-      recoveryHistory
-        .map(
-          (recovery) => {
-
-            const sleep =
-              sleepMap.get(
-                String(
-                  recovery.cycleId
-                )
-              );
-
-
-            return {
-
-              x:
-                hours(
-                  sleep
-                    ?.durationMilli
-                ),
-
-              y:
-                num(
-                  recovery.hrv
-                )
-            };
-          }
-        )
-        .filter(
-          (point) =>
-            point.x !== null &&
-            point.y !== null
-        );
-
-
-    scatterChart(
-      "sleepHrvChart",
-
-      sleepHrv,
-
-      "Slaapduur (u)",
-
-      "HRV (ms)",
-
-      "rgba(37,99,235,.55)"
-    );
-
-
-    setText(
-      "sleepHrvMessage",
-
-      `${sleepHrv.length} gekoppelde nachten · ${
-        correlationText(
-          pearson(
-            sleepHrv
-          )
-        )
-      }`
-    );
-
-
-    const cycles =
-      [
-        ...cycleHistory
-      ]
-        .sort(
-          (a, b) =>
-            new Date(a.date) -
-            new Date(b.date)
-        );
-
-
-    const strainRecovery =
-      recoveryHistory
-        .map(
-          (recovery) => {
-
-            const recoveryTime =
-              new Date(
-                recovery.date
-              ).getTime();
-
-
-            const previous =
-              [
-                ...cycles
-              ]
-                .reverse()
-                .find(
-                  (cycle) =>
-                    new Date(
-                      cycle.date
-                    ).getTime() <
-                    recoveryTime
-                );
-
-
-            return {
-
-              x:
-                num(
-                  previous
-                    ?.strain
-                ),
-
-              y:
-                num(
-                  recovery
-                    .recovery
-                )
-            };
-          }
-        )
-        .filter(
-          (point) =>
-            point.x !== null &&
-            point.y !== null
-        );
-
-
-    scatterChart(
-      "strainRecoveryChart",
-
-      strainRecovery,
-
-      "Vorige strain",
-
-      "Recovery (%)",
-
-      "rgba(234,88,12,.55)"
-    );
-
-
-    setText(
-      "strainRecoveryMessage",
-
-      `${strainRecovery.length} gekoppelde dagen · ${
-        correlationText(
-          pearson(
-            strainRecovery
-          )
-        )
-      }`
-    );
-  }
-
-
-  /* ======================================================
-     TRAININGSCONSISTENTIE
-  ======================================================= */
-
-
-  function computeConsistency() {
-
-    const runs =
-      range(
-        stravaHistory,
-        56
-      )
-        .filter(
-          isRun
-        );
-
-
-    const weeks =
-      new Map();
-
-
-    runs.forEach(
-      (activity) => {
-
-        const key =
-          dateKey(
-            weekStart(
-              activity.localDate ||
-              activity.date
-            )
-          );
-
-
-        const week =
-          weeks.get(key) ||
-          {
-            count:
-              0,
-
-            km:
-              0
-          };
-
-
-        week.count +=
-          1;
-
-
-        week.km +=
-          num(
-            activity.distanceKm
-          ) || 0;
-
-
-        weeks.set(
-          key,
-          week
-        );
-      }
-    );
-
-
-    const values =
-      [
-        ...weeks.values()
-      ];
-
-
-    const stableWeeks =
-      values.filter(
-        (week) =>
-          week.count >= 3
-      ).length;
-
-
-    return {
-
-      score:
-        Math.min(
-          100,
-
-          stableWeeks /
-          8 *
-          100
-        ),
-
-      runs:
-        mean(
-          values.map(
-            (week) =>
-              week.count
-          )
-        ) || 0,
-
-      km:
-        mean(
-          values.map(
-            (week) =>
-              week.km
-          )
-        ) || 0
-    };
-  }
-
-
-  /* ======================================================
-     NIEUWE PERSOONLIJKE INZICHTEN
-  ======================================================= */
-
-
-  function renderInsights() {
-
-    /* WEEKRAPPORT */
-
-    const recovery7 =
-      range(
-        recoveryHistory,
-        7
-      );
-
-
-    const recoveryPrevious =
-      range(
-        recoveryHistory,
-        14,
-        7
-      );
-
-
-    const sleep7 =
-      range(
-        sleepHistory,
-        7
-      );
-
-
-    const sleepPrevious =
-      range(
-        sleepHistory,
-        14,
-        7
-      );
-
-
-    const strava7 =
-      range(
-        stravaHistory,
-        7
-      );
-
-
-    const stravaPrevious =
-      range(
-        stravaHistory,
-        14,
-        7
-      );
-
-
-    const withings7 =
-      range(
-        withingsHistory,
-        7
-      );
-
-
-    const withingsPrevious =
-      range(
-        withingsHistory,
-        14,
-        7
-      );
-
-
-    const runKm =
-      (records) =>
-        records
-          .filter(isRun)
-          .reduce(
-            (sum, activity) =>
-              sum +
-              (
-                num(
-                  activity.distanceKm
-                ) || 0
-              ),
-            0
-          );
-
-
-    $("weeklyReport")
-      .innerHTML =
-
-        insight(
-          "Recovery",
-
-          delta(
-            avg(
-              recovery7,
-              "recovery"
-            ),
-
-            avg(
-              recoveryPrevious,
-              "recovery"
-            ),
-
-            "%"
-          ),
-
-          "gemiddelde"
-        ) +
-
-        insight(
-          "Slaap",
-
-          delta(
-            mean(
-              sleep7.map(
-                (sleep) =>
-                  hours(
-                    sleep.durationMilli
-                  )
-              )
-            ),
-
-            mean(
-              sleepPrevious.map(
-                (sleep) =>
-                  hours(
-                    sleep.durationMilli
-                  )
-              )
-            ),
-
-            " u"
-          ),
-
-          "gemiddelde"
-        ) +
-
-        insight(
-          "Loopvolume",
-
-          delta(
-            runKm(
-              strava7
-            ),
-
-            runKm(
-              stravaPrevious
-            ),
-
-            " km"
-          ),
-
-          `${
-            strava7
-              .filter(isRun)
-              .length
-          } lopen`
-        ) +
-
-        insight(
-          "Gewicht",
-
-          delta(
-            avg(
-              withings7,
-              "weightKg"
-            ),
-
-            avg(
-              withingsPrevious,
-              "weightKg"
-            ),
-
-            " kg"
-          ),
-
-          "gemiddelde"
-        );
-
-
-    /* MAANDRAPPORT */
-
-    const recovery30 =
-      range(
-        recoveryHistory,
-        30
-      );
-
-
-    const recovery30Previous =
-      range(
-        recoveryHistory,
-        60,
-        30
-      );
-
-
-    const strava30 =
-      range(
-        stravaHistory,
-        30
-      );
-
-
-    const strava30Previous =
-      range(
-        stravaHistory,
-        60,
-        30
-      );
-
-
-    const withings30 =
-      range(
-        withingsHistory,
-        30
-      );
-
-
-    const withings30Previous =
-      range(
-        withingsHistory,
-        60,
-        30
-      );
-
-
-    const movingHours =
-      (records) =>
-        records.reduce(
-          (sum, activity) =>
-            sum +
-            (
-              num(
-                activity
-                  .movingTimeHours
-              ) ||
-
-              (
-                num(
-                  activity
-                    .movingTimeSeconds
-                ) || 0
-              ) /
-              3600
-            ),
-
-          0
-        );
-
-
-    $("monthlyReport")
-      .innerHTML =
-
-        insight(
-          "HRV",
-
-          delta(
-            avg(
-              recovery30,
-              "hrv"
-            ),
-
-            avg(
-              recovery30Previous,
-              "hrv"
-            ),
-
-            " ms"
-          ),
-
-          "30-daags"
-        ) +
-
-        insight(
-          "Rusthartslag",
-
-          delta(
-            avg(
-              recovery30,
-              "rhr"
-            ),
-
-            avg(
-              recovery30Previous,
-              "rhr"
-            ),
-
-            " bpm"
-          ),
-
-          "30-daags"
-        ) +
-
-        insight(
-          "Trainingsduur",
-
-          delta(
-            movingHours(
-              strava30
-            ),
-
-            movingHours(
-              strava30Previous
-            ),
-
-            " u"
-          ),
-
-          `${strava30.length} activiteiten`
-        ) +
-
-        insight(
-          "Vetpercentage",
-
-          delta(
-            avg(
-              withings30,
-              "fatRatioPercent"
-            ),
-
-            avg(
-              withings30Previous,
-              "fatRatioPercent"
-            ),
-
-            "%"
-          ),
-
-          "30-daags"
-        );
-
-
-    /* BASELINES */
-
-    const latestRecovery =
-      recoveryHistory.at(-1) ||
-      {};
-
-
-    const latestSleep =
-      sleepHistory.at(-1) ||
-      {};
-
-
-    const latestWithings =
-      withingsHistory.at(-1) ||
-      {};
-
-
-    const baselineRows =
-      [];
-
-
-    const baselineDefinitions = [
-
-      [
-        "HRV",
-
-        latestRecovery.hrv,
-
-        avg(
-          recovery30,
-          "hrv"
-        ),
-
-        "ms",
-
-        false
-      ],
-
-      [
-        "Rusthartslag",
-
-        latestRecovery.rhr,
-
-        avg(
-          recovery30,
-          "rhr"
-        ),
-
-        "bpm",
-
-        true
-      ],
-
-      [
-        "Recovery",
-
-        latestRecovery.recovery,
-
-        avg(
-          recovery30,
-          "recovery"
-        ),
-
-        "%",
-
-        false
-      ],
-
-      [
-        "Slaapduur",
-
-        hours(
-          latestSleep.durationMilli
-        ),
-
-        mean(
-          range(
-            sleepHistory,
-            30
-          )
-            .map(
-              (sleep) =>
-                hours(
-                  sleep.durationMilli
-                )
-            )
-        ),
-
-        "u",
-
-        false
-      ],
-
-      [
-        "Gewicht",
-
-        latestWithings.weightKg,
-
-        avg(
-          withings30,
-          "weightKg"
-        ),
-
-        "kg",
-
-        true
-      ]
-    ];
-
-
-    baselineDefinitions.forEach(
-      (
-        [
-          label,
-          current,
-          baseline,
-          unit,
-          lowerBetter
-        ]
-      ) => {
-
-        if (
-          num(current) === null ||
-          num(baseline) === null
-        ) {
-          return;
-        }
-
-
-        const percentage =
-          (
-            current -
-            baseline
-          ) /
-          baseline *
-          100;
-
-
-        const better =
-          lowerBetter
-
-            ? percentage < 0
-
-            : percentage > 0;
-
-
-        baselineRows.push(
-          insightRow(
-            label,
-
-            `${Number(
-              current
-            ).toFixed(1)} ${unit} · ${
-              percentage >= 0
-                ? "+"
-                : ""
-            }${percentage.toFixed(1)}% ${
-              better
-                ? "gunstiger"
-                : "ongunstiger"
-            }`
-          )
-        );
-      }
-    );
-
-
-    $("baselineInsights")
-      .innerHTML =
-
-        baselineRows.length
-
-          ? baselineRows.join("")
-
-          : insightRow(
-              "Status",
-              "Nog onvoldoende data"
-            );
-
-
-    /* WAT HANGT SAMEN MET RECOVERY */
-
-    const sleepMap =
-      new Map(
-        sleepHistory.map(
-          (sleep) => [
-
-            String(
-              sleep.cycleId
-            ),
-
-            sleep
-          ]
-        )
-      );
-
-
-    const sleepRecovery =
-      recoveryHistory
-        .map(
-          (recovery) => ({
-
-            x:
-              hours(
-                sleepMap.get(
-                  String(
-                    recovery.cycleId
-                  )
-                )
-                  ?.durationMilli
-              ),
-
-            y:
-              num(
-                recovery.recovery
-              )
-          })
-        )
-        .filter(
-          (point) =>
-            point.x !== null &&
-            point.y !== null
-        );
-
-
-    const hrvRecovery =
-      recoveryHistory
-        .map(
-          (recovery) => ({
-
-            x:
-              num(
-                recovery.hrv
-              ),
-
-            y:
-              num(
-                recovery.recovery
-              )
-          })
-        )
-        .filter(
-          (point) =>
-            point.x !== null &&
-            point.y !== null
-        );
-
-
-    const rhrRecovery =
-      recoveryHistory
-        .map(
-          (recovery) => ({
-
-            x:
-              num(
-                recovery.rhr
-              ),
-
-            y:
-              num(
-                recovery.recovery
-              )
-          })
-        )
-        .filter(
-          (point) =>
-            point.x !== null &&
-            point.y !== null
-        );
-
-
-    $("recoveryDrivers")
-      .innerHTML =
-
-        insightRow(
-          "Slaapduur ↔ recovery",
-
-          correlationText(
-            pearson(
-              sleepRecovery
-            )
-          )
-        ) +
-
-        insightRow(
-          "HRV ↔ recovery",
-
-          correlationText(
-            pearson(
-              hrvRecovery
-            )
-          )
-        ) +
-
-        insightRow(
-          "Rusthartslag ↔ recovery",
-
-          correlationText(
-            pearson(
-              rhrRecovery
-            )
-          )
-        );
-
-
-    /* BESTE 25% RECOVERY */
-
-    const scored =
-      recoveryHistory
-        .filter(
-          (recovery) =>
-            num(
-              recovery.recovery
-            ) !== null
-        )
-        .sort(
-          (a, b) =>
-            a.recovery -
-            b.recovery
-        );
-
-
-    if (
-      scored.length
-    ) {
-
-      const threshold =
-        scored[
-          Math.floor(
-            scored.length *
-            0.75
-          )
-        ]?.recovery;
-
-
-      const top =
-        scored.filter(
-          (recovery) =>
-            recovery.recovery >=
-            threshold
-        );
-
-
-      const topSleep =
-        top
-          .map(
-            (recovery) =>
-              sleepMap.get(
-                String(
-                  recovery.cycleId
-                )
-              )
-          )
-          .filter(Boolean);
-
-
-      $("bestConditions")
-        .innerHTML =
-
-          insightRow(
-            "Drempel beste 25%",
-
-            `Recovery ≥ ${
-              Math.round(
-                threshold
-              )
-            }%`
-          ) +
-
-          insightRow(
-            "Gemiddelde slaap",
-
-            `${
-              mean(
-                topSleep.map(
-                  (sleep) =>
-                    hours(
-                      sleep.durationMilli
-                    )
-                )
-              )
-                ?.toFixed(2) ||
-              "—"
-            } u`
-          ) +
-
-          insightRow(
-            "Gemiddelde HRV",
-
-            `${
-              avg(
-                top,
-                "hrv"
-              )
-                ?.toFixed(1) ||
-              "—"
-            } ms`
-          ) +
-
-          insightRow(
-            "Gemiddelde rusthartslag",
-
-            `${
-              avg(
-                top,
-                "rhr"
-              )
-                ?.toFixed(1) ||
-              "—"
-            } bpm`
-          );
-    }
-
-
-    /* CONSISTENTIE */
-
-    const consistency =
-      computeConsistency();
-
-
-    $("trainingConsistency")
-      .innerHTML =
-
-        insight(
-          "Consistentie",
-
-          `${consistency.score.toFixed(0)}%`,
-
-          "weken met ≥3 lopen"
-        ) +
-
-        insight(
-          "Lopen/week",
-
-          consistency.runs.toFixed(1),
-
-          "gemiddeld"
-        ) +
-
-        insight(
-          "Km/week",
-
-          `${consistency.km.toFixed(1)} km`,
-
-          "gemiddeld"
-        ) +
-
-        insight(
-          "Runs 8 weken",
-
-          range(
-            stravaHistory,
-            56
-          )
-            .filter(isRun)
-            .length,
-
-          "totaal"
-        );
-
-
-    /* LOOPEFFICIËNTIE */
-
-    const runs =
-      stravaHistory
-        .filter(isRun)
-        .filter(
-          (activity) =>
-            num(
-              activity
-                .averageHeartRate
-            ) !== null &&
-            num(
-              activity
-                .averagePaceMinutesPerKm
-            ) !== null
-        );
-
-
-    if (
-      runs.length
-    ) {
-
-      const averageHeartRate =
-        mean(
-          runs.map(
-            (run) =>
-              run.averageHeartRate
-          )
-        );
-
-
-      const matchedRuns =
-        runs
-          .filter(
-            (run) =>
-              Math.abs(
-                run.averageHeartRate -
-                averageHeartRate
-              ) <= 5
-          )
-          .sort(
-            (a, b) =>
-              new Date(
-                a.localDate ||
-                a.date
-              ) -
-              new Date(
-                b.localDate ||
-                b.date
-              )
-          );
-
-
-      const recent =
-        range(
-          matchedRuns,
-          30
-        );
-
-
-      const previous =
-        range(
-          matchedRuns,
-          60,
-          30
-        );
-
-
-      const recentPace =
-        avg(
-          recent,
-          "averagePaceMinutesPerKm"
-        );
-
-
-      const previousPace =
-        avg(
-          previous,
-          "averagePaceMinutesPerKm"
-        );
-
-
-      let text =
-        `${matchedRuns.length} lopen rond ${
-          Math.round(
-            averageHeartRate
-          )
-        } bpm ±5.`;
-
+    function pearson(points) {
 
       if (
-        recentPace !== null &&
-        previousPace !== null
+        points.length <
+        3
       ) {
-
-        const differenceSeconds =
-          (
-            recentPace -
-            previousPace
-          ) *
-          60;
-
-
-        text +=
-          ` Recent ${pace(recentPace)} versus ${pace(previousPace)} voordien (`;
-
-
-        text +=
-          differenceSeconds <
-          0
-
-            ? `${Math.abs(
-                differenceSeconds
-              ).toFixed(0)} sec/km sneller`
-
-            : `${differenceSeconds.toFixed(0)} sec/km trager`;
-
-
-        text +=
-          ").";
+        return null;
       }
 
 
-      setText(
-        "runningEfficiencySummary",
-        text
-      );
-
-
-      lineChart(
-        "runningEfficiencyChart",
-
-        matchedRuns,
-
-        [
-          dataSet(
-            "Tempo",
-
-            matchedRuns.map(
-              (run) =>
-                run
-                  .averagePaceMinutesPerKm
-            ),
-
-            "#ea580c"
+      const meanX =
+        mean(
+          points.map(
+            (point) =>
+              point.x
           )
-        ],
-
-        {
-          scales: {
-
-            ...common.scales,
-
-            y: {
-              ...common.scales.y,
-
-              reverse:
-                true
-            }
-          }
-        }
-      );
-    }
-
-
-    /* HERSTEL NA ZWARE TRAINING */
-
-    const heavy =
-      stravaHistory.filter(
-        (activity) =>
-
-          (
-            num(
-              activity
-                .movingTimeSeconds
-            ) || 0
-          ) >= 4500 ||
-
-          (
-            isRun(
-              activity
-            ) &&
-
-            (
-              num(
-                activity.distanceKm
-              ) || 0
-            ) >= 12
-          ) ||
-
-          (
-            num(
-              activity.sufferScore
-            ) || 0
-          ) >= 100
-      );
-
-
-    const recoveryByDate =
-      new Map(
-        recoveryHistory.map(
-          (recovery) => [
-
-            dateKey(
-              recovery.date
-            ),
-
-            recovery
-          ]
-        )
-      );
-
-
-    const nextDayValues =
-      [];
-
-
-    heavy.forEach(
-      (activity) => {
-
-        const date =
-          new Date(
-            activity.localDate ||
-            activity.date
-          );
-
-
-        date.setDate(
-          date.getDate() +
-          1
         );
 
 
-        const recovery =
-          recoveryByDate.get(
-            dateKey(
-              date
-            )
-          );
+      const meanY =
+        mean(
+          points.map(
+            (point) =>
+              point.y
+          )
+        );
 
 
-        if (
-          num(
-            recovery
-              ?.recovery
-          ) !== null
-        ) {
+      let numerator =
+        0;
 
-          nextDayValues.push(
-            recovery.recovery
-          );
+      let denominatorX =
+        0;
+
+      let denominatorY =
+        0;
+
+
+      points.forEach(
+        (point) => {
+
+          const dx =
+            point.x -
+            meanX;
+
+          const dy =
+            point.y -
+            meanY;
+
+          numerator +=
+            dx * dy;
+
+          denominatorX +=
+            dx * dx;
+
+          denominatorY +=
+            dy * dy;
         }
-      }
-    );
-
-
-    const heavyAverage =
-      mean(
-        nextDayValues
       );
 
 
-    const overallAverage =
-      avg(
-        recoveryHistory,
-        "recovery"
-      );
+      const denominator =
+        Math.sqrt(
+          denominatorX *
+          denominatorY
+        );
 
 
-    setText(
-      "heavyRecoverySummary",
-
-      heavyAverage ===
-      null
-
-        ? `${heavy.length} zware activiteiten gevonden; nog onvoldoende koppelingen.`
-
-        : `Gemiddelde recovery dag +1: ${heavyAverage.toFixed(1)}% versus ${overallAverage?.toFixed(1) || "—"}% algemeen.`
-    );
+      return denominator
+        ? numerator /
+          denominator
+        : null;
+    }
 
 
-    destroyChart(
-      "heavyRecoveryChart"
-    );
-
-
-    if (
-      heavyAverage !==
-        null &&
-      overallAverage !==
-        null
+    function scatterChart(
+      id,
+      points,
+      xLabel,
+      yLabel,
+      color
     ) {
 
-      charts
-        .heavyRecoveryChart =
-          new Chart(
-            $("heavyRecoveryChart"),
-            {
+      destroyChart(id);
 
-              type:
-                "bar",
+      const canvas =
+        $(id);
 
-              data: {
+      if (
+        !canvas ||
+        !points.length
+      ) {
+        return;
+      }
 
-                labels: [
-                  "Na zware training",
-                  "Alle dagen"
-                ],
 
-                datasets: [
-                  {
+      charts[id] =
+        new Chart(
+          canvas,
+          {
 
-                    data: [
-                      heavyAverage,
-                      overallAverage
-                    ],
+            type:
+              "scatter",
 
-                    backgroundColor: [
-                      "rgba(234,88,12,.55)",
-                      "rgba(37,99,235,.45)"
-                    ],
+            data: {
 
-                    borderRadius:
-                      8
+              datasets: [
+                {
+
+                  data:
+                    points,
+
+                  backgroundColor:
+                    color,
+
+                  pointRadius:
+                    3.5,
+
+                  pointHoverRadius:
+                    5
+                }
+              ]
+            },
+
+            options: {
+
+              responsive:
+                true,
+
+              maintainAspectRatio:
+                false,
+
+              plugins: {
+
+                legend: {
+                  display:
+                    false
+                },
+
+                tooltip: {
+
+                  callbacks: {
+
+                    label(context) {
+
+                      return (
+                        `${xLabel}: ${context.raw.x.toFixed(1)} · ` +
+                        `${yLabel}: ${context.raw.y.toFixed(1)}`
+                      );
+                    }
                   }
-                ]
+                }
               },
 
-              options: {
+              scales: {
 
-                responsive:
-                  true,
+                x: {
 
-                maintainAspectRatio:
-                  false,
-
-                plugins: {
-
-                  legend: {
+                  title: {
                     display:
-                      false
+                      true,
+
+                    text:
+                      xLabel
                   }
                 },
 
-                scales: {
+                y: {
 
-                  y: {
-                    min:
-                      0,
+                  title: {
+                    display:
+                      true,
 
-                    max:
-                      100
+                    text:
+                      yLabel
                   }
                 }
               }
             }
-          );
+          }
+        );
     }
 
 
-    /* RECORDS */
+    function renderCorrelations() {
 
-    const allRuns =
-      stravaHistory
-        .filter(isRun);
+      if (
+        !recoveryHistory.length ||
+        !sleepHistory.length
+      ) {
+        return;
+      }
 
 
-    const longest =
-      allRuns.reduce(
-        (best, run) =>
+      const recoveries =
+        filterByRange(
+          recoveryHistory
+        );
 
-          !best ||
 
-          (
-            num(
-              run.distanceKm
-            ) || 0
-          ) >
-          (
-            num(
-              best.distanceKm
-            ) || 0
+      const recoveryByCycle =
+        new Map(
+          recoveries.map(
+            (record) => [
+
+              String(
+                record.cycleId
+              ),
+
+              record
+            ]
           )
-
-            ? run
-            : best,
-
-        null
-      );
+        );
 
 
-    const fastest =
-      allRuns
-        .filter(
-          (run) =>
-
-            (
-              num(
-                run.distanceKm
-              ) || 0
-            ) >= 5 &&
-
-            num(
-              run
-                .averagePaceMinutesPerKm
-            ) !== null
+      const sleepHrv =
+        filterByRange(
+          sleepHistory
         )
-        .reduce(
-          (best, run) =>
+          .map(
+            (sleep) => {
 
-            !best ||
+              const recovery =
+                recoveryByCycle.get(
+                  String(
+                    sleep.cycleId
+                  )
+                );
 
-            run
-              .averagePaceMinutesPerKm <
-            best
-              .averagePaceMinutesPerKm
 
-              ? run
-              : best,
+              const x =
+                hours(
+                  sleep.durationMilli
+                );
 
-          null
+
+              const y =
+                num(
+                  recovery?.hrv
+                );
+
+
+              return (
+                x !== null &&
+                x > 0 &&
+                x < 16 &&
+                y !== null &&
+                y > 0
+              )
+
+                ? {
+                    x,
+                    y
+                  }
+
+                : null;
+            }
+          )
+          .filter(Boolean);
+
+
+      scatterChart(
+        "sleepHrvChart",
+
+        sleepHrv,
+
+        "Slaapduur (uur)",
+
+        "HRV (ms)",
+
+        "rgba(37,99,235,.55)"
+      );
+
+
+      const sleepCorrelation =
+        pearson(
+          sleepHrv
         );
 
 
-    const maximumWeek =
-      weekly(
-        stravaHistory
-      )
-        .reduce(
-          (best, week) =>
+      setText(
+        "sleepHrvMessage",
 
-            !best ||
-            week.distanceKm >
-            best.distanceKm
+        `${sleepHrv.length} gekoppelde nachten · correlatie r = ${
+          sleepCorrelation === null
+            ? "—"
+            : sleepCorrelation.toFixed(2)
+        }`
+      );
 
-              ? week
-              : best,
 
-          null
+      if (
+        !cycleHistory.length
+      ) {
+        return;
+      }
+
+
+      const cycles =
+        filterByRange(
+          cycleHistory
         );
 
 
-    const maximumHrv =
-      Math.max(
-
-        ...recoveryHistory
-          .map(
-            (recovery) =>
-              num(
-                recovery.hrv
-              )
-          )
-          .filter(
-            (value) =>
-              value !== null
-          ),
-
-        -Infinity
-      );
-
-
-    const minimumRhr =
-      Math.min(
-
-        ...recoveryHistory
-          .map(
-            (recovery) =>
-              num(
-                recovery.rhr
-              )
-          )
-          .filter(
-            (value) =>
-              value !== null
-          ),
-
-        Infinity
-      );
-
-
-    const maximumRecovery =
-      Math.max(
-
-        ...recoveryHistory
-          .map(
-            (recovery) =>
-              num(
-                recovery.recovery
-              )
-          )
-          .filter(
-            (value) =>
-              value !== null
-          ),
-
-        -Infinity
-      );
-
-
-    const minimumWeight =
-      Math.min(
-
-        ...withingsHistory
-          .map(
-            (record) =>
-              num(
-                record.weightKg
-              )
-          )
-          .filter(
-            (value) =>
-              value !== null
-          ),
-
-        Infinity
-      );
-
-
-    $("personalRecords")
-      .innerHTML =
-
-        insightRow(
-          "Langste loop",
-
-          longest
-
-            ? `${longest.distanceKm.toFixed(1)} km · ${formatDate(
-                longest.localDate ||
-                longest.date
-              )}`
-
-            : "—"
-        ) +
-
-        insightRow(
-          "Beste gemiddeld tempo ≥5 km",
-
-          fastest
-
-            ? `${pace(
-                fastest
-                  .averagePaceMinutesPerKm
-              )} · ${fastest.distanceKm.toFixed(1)} km`
-
-            : "—"
-        ) +
-
-        insightRow(
-          "Hoogste weekvolume",
-
-          maximumWeek
-
-            ? `${maximumWeek.distanceKm.toFixed(1)} km`
-
-            : "—"
-        ) +
-
-        insightRow(
-          "Hoogste HRV",
-
-          Number.isFinite(
-            maximumHrv
-          )
-
-            ? `${maximumHrv.toFixed(1)} ms`
-
-            : "—"
-        ) +
-
-        insightRow(
-          "Laagste rusthartslag",
-
-          Number.isFinite(
-            minimumRhr
-          )
-
-            ? `${minimumRhr.toFixed(0)} bpm`
-
-            : "—"
-        ) +
-
-        insightRow(
-          "Hoogste recovery",
-
-          Number.isFinite(
-            maximumRecovery
-          )
-
-            ? `${maximumRecovery.toFixed(0)}%`
-
-            : "—"
-        ) +
-
-        insightRow(
-          "Laagste gewicht",
-
-          Number.isFinite(
-            minimumWeight
-          )
-
-            ? `${minimumWeight.toFixed(1)} kg`
-
-            : "—"
-        );
-
-
-    /* DASHBOARDSCORE */
-
-    const components =
-      [];
-
-
-    if (
-      num(
-        latestRecovery.recovery
-      ) !== null
-    ) {
-
-      components.push(
-        {
-          name:
-            "recovery",
-
-          score:
-            latestRecovery.recovery,
-
-          weight:
-            0.35
-        }
-      );
-    }
-
-
-    const sleepPerformance =
-      avg(
-        range(
-          sleepHistory,
-          7
-        ),
-        "performance"
-      );
-
-
-    if (
-      sleepPerformance !==
-      null
-    ) {
-
-      components.push(
-        {
-          name:
-            "slaap",
-
-          score:
-            sleepPerformance,
-
-          weight:
-            0.25
-        }
-      );
-    }
-
-
-    const hrvBaseline =
-      avg(
-        recovery30,
-        "hrv"
-      );
-
-
-    if (
-      num(
-        latestRecovery.hrv
-      ) !== null &&
-      hrvBaseline
-    ) {
-
-      const deviation =
-        (
-          latestRecovery.hrv -
-          hrvBaseline
-        ) /
-        hrvBaseline;
-
-
-      components.push(
-        {
-          name:
-            "HRV",
-
-          score:
-            Math.max(
-              0,
-
-              Math.min(
-                100,
-
-                50 +
-                deviation *
-                250
-              )
-            ),
-
-          weight:
-            0.2
-        }
-      );
-    }
-
-
-    if (
-      stravaHistory.length
-    ) {
-
-      components.push(
-        {
-          name:
-            "consistentie",
-
-          score:
-            consistency.score,
-
-          weight:
-            0.2
-        }
-      );
-    }
-
-
-    const totalWeight =
-      components.reduce(
-        (sum, component) =>
-          sum +
-          component.weight,
-
-        0
-      );
-
-
-    const score =
-      totalWeight
-
-        ? components.reduce(
-            (
-              sum,
-              component
-            ) =>
-
-              sum +
-              component.score *
-              component.weight,
-
-            0
-          ) /
-          totalWeight
-
-        : null;
-
-
-    setText(
-      "healthScore",
-
-      score === null
-
-        ? "—"
-
-        : `${Math.round(score)}/100`
-    );
-
-
-    setText(
-      "healthScoreText",
-
-      score === null
-
-        ? "Nog onvoldoende gegevens."
-
-        : `Geen medische score. Samengesteld uit ${components.map(
-            (component) =>
-              component.name
-          ).join(", ")} en bedoeld om je persoonlijke trend te volgen.`
-    );
-  }
-
-
-  function renderAll() {
-
-    renderWithings();
-
-    renderStrava();
-
-    renderWhoop();
-
-    renderCorrelations();
-
-    renderInsights();
-  }
-
-
-  /* ======================================================
-     API LADEN
-  ======================================================= */
-
-
-  async function fetchJson(
-    url,
-    fallbackMessage
-  ) {
-
-    const response =
-      await fetch(
-        url,
-        {
-
-          credentials:
-            "same-origin",
-
-          headers: {
-            Accept:
-              "application/json"
+      const strainRecovery =
+        [];
+
+
+      recoveries.forEach(
+        (recovery) => {
+
+          const recoveryTime =
+            new Date(
+              recovery.date
+            ).getTime();
+
+
+          const previousCycle =
+            [
+              ...cycles
+            ]
+              .reverse()
+              .find(
+                (cycle) =>
+                  new Date(
+                    cycle.date
+                  ).getTime() <
+                  recoveryTime
+              );
+
+
+          const x =
+            num(
+              previousCycle?.strain
+            );
+
+
+          const y =
+            num(
+              recovery.recovery
+            );
+
+
+          if (
+            x !== null &&
+            x >= 0 &&
+            x <= 21 &&
+            y !== null &&
+            y >= 0 &&
+            y <= 100
+          ) {
+
+            strainRecovery.push(
+              {
+                x,
+                y
+              }
+            );
           }
         }
       );
 
 
-    let data;
+      scatterChart(
+        "strainRecoveryChart",
+
+        strainRecovery,
+
+        "Vorige strain",
+
+        "Recovery (%)",
+
+        "rgba(124,58,237,.55)"
+      );
 
 
-    try {
+      const strainCorrelation =
+        pearson(
+          strainRecovery
+        );
 
-      data =
-        await response.json();
 
-    } catch {
+      setText(
+        "strainRecoveryMessage",
 
-      throw new Error(
-        "Server gaf geen geldige JSON terug."
+        `${strainRecovery.length} gekoppelde dagen · correlatie r = ${
+          strainCorrelation === null
+            ? "—"
+            : strainCorrelation.toFixed(2)
+        }`
       );
     }
 
 
-    if (
-      !response.ok ||
-      data.connected === false
+    /* ==================================================
+       ALLES HERTEKENEN
+    =================================================== */
+
+
+    function renderAll() {
+
+      renderWithings();
+
+      renderStrava();
+
+      renderRecoveryCharts();
+
+      renderSleepCharts();
+
+      renderStrain();
+
+      renderCorrelations();
+    }
+
+
+    /* ==================================================
+       API
+    =================================================== */
+
+
+    async function fetchJson(
+      url,
+      fallback =
+        "Data kon niet worden geladen."
     ) {
 
-      throw new Error(
-        data.error ||
-        fallbackMessage ||
-        "Data kon niet worden geladen."
-      );
-    }
+      const response =
+        await fetch(
+          url,
+          {
 
+            method:
+              "GET",
 
-    return data;
-  }
+            credentials:
+              "same-origin",
 
+            headers: {
 
-  async function loadWithings() {
-
-    try {
-
-      const data =
-        await fetchJson(
-          "/api/withings-data",
-          "Withings niet verbonden."
+              Accept:
+                "application/json"
+            }
+          }
         );
 
 
-      withingsHistory =
-        Array.isArray(
-          data.records
-        )
-
-          ? data.records
-
-          : [];
+      let data;
 
 
-      $("withingsStatus")
-        .className =
-          "pill success";
+      try {
 
+        data =
+          await response.json();
 
-      setText(
-        "withingsStatus",
+      } catch {
 
-        `Withings · ${
-          withingsHistory.length
-        } metingen`
-      );
-
-
-      renderAll();
-
-    } catch (error) {
-
-      console.error(
-        error
-      );
-
-
-      $("withingsStatus")
-        .className =
-          "pill error";
-
-
-      setText(
-        "withingsStatus",
-        "Withings niet verbonden"
-      );
-    }
-  }
-
-
-  async function loadStrava() {
-
-    try {
-
-      const data =
-        await fetchJson(
-          "/api/strava-data",
-          "Strava niet verbonden."
+        throw new Error(
+          "De server gaf geen geldige JSON terug."
         );
+      }
 
 
-      stravaHistory =
-        Array.isArray(
-          data.records
-        )
+      if (
+        !response.ok ||
+        data.connected ===
+        false
+      ) {
 
-          ? data.records
-
-          : [];
-
-
-      $("stravaStatus")
-        .className =
-          "pill success";
-
-
-      setText(
-        "stravaStatus",
-
-        `Strava · ${
-          stravaHistory.length
-        } activiteiten`
-      );
-
-
-      renderAll();
-
-    } catch (error) {
-
-      console.error(
-        error
-      );
-
-
-      $("stravaStatus")
-        .className =
-          "pill error";
-
-
-      setText(
-        "stravaStatus",
-        "Strava niet verbonden"
-      );
-    }
-  }
-
-
-  async function loadWhoopHistory() {
-
-    setText(
-      "dashboardMessage",
-      "Recoveryhistoriek laden…"
-    );
-
-
-    try {
-
-      const data =
-        await fetchJson(
-          "/api/whoop-history?type=recovery"
+        throw new Error(
+          data.error ||
+          fallback
         );
+      }
 
 
-      recoveryHistory =
-        data.records ||
-        [];
-
-
-      renderAll();
-
-    } catch (error) {
-
-      console.error(
-        error
-      );
+      return data;
     }
 
 
-    /* Bewuste wachttijd wegens WHOOP rate limiting */
+    async function loadWhoopCurrent() {
 
-    await wait(
-      35000
-    );
+      try {
 
-
-    setText(
-      "dashboardMessage",
-      "Slaaphistoriek laden…"
-    );
+        const data =
+          await fetchJson(
+            "/api/whoop-data",
+            "WHOOP kon niet worden geladen."
+          );
 
 
-    try {
-
-      const data =
-        await fetchJson(
-          "/api/whoop-history?type=sleep"
+        renderCurrent(
+          data
         );
 
 
-      sleepHistory =
-        data.records ||
-        [];
+        $("connectionStatus")
+          .className =
+            "status success";
 
 
-      renderAll();
+        setText(
+          "connectionStatus",
+          "WHOOP live verbonden"
+        );
 
-    } catch (error) {
 
-      console.error(
-        error
-      );
+        return true;
+
+      } catch (error) {
+
+        console.error(
+          "WHOOP:",
+          error
+        );
+
+
+        $("connectionStatus")
+          .className =
+            "status error";
+
+
+        setText(
+          "connectionStatus",
+          "WHOOP niet verbonden"
+        );
+
+
+        setText(
+          "dashboardMessage",
+          error.message
+        );
+
+
+        return false;
+      }
     }
 
 
-    /* Tweede bewuste wachttijd */
+    async function loadWhoopHistory() {
 
-    await wait(
-      35000
-    );
-
-
-    setText(
-      "dashboardMessage",
-      "Strainhistoriek laden…"
-    );
+      setText(
+        "dashboardMessage",
+        "Recoveryhistoriek laden…"
+      );
 
 
-    try {
+      try {
 
-      const data =
-        await fetchJson(
-          "/api/whoop-history?type=cycle"
+        const data =
+          await fetchJson(
+            "/api/whoop-history?type=recovery"
+          );
+
+
+        recoveryHistory =
+          Array.isArray(
+            data.records
+          )
+            ? data.records
+            : [];
+
+
+        renderRecoveryCharts();
+
+      } catch (error) {
+
+        console.error(
+          "Recoveryhistoriek:",
+          error
         );
 
 
-      cycleHistory =
-        data.records ||
-        [];
-
-
-      renderAll();
-
-    } catch (error) {
-
-      console.error(
-        error
-      );
-    }
-
-
-    setText(
-      "dashboardMessage",
-      ""
-    );
-  }
-
-
-  async function loadEverything() {
-
-    const button =
-      $("refreshButton");
-
-
-    button.disabled =
-      true;
-
-
-    $("loadingView")
-      .classList
-      .remove(
-        "hidden"
-      );
-
-
-    try {
-
-      const current =
-        await fetchJson(
-          "/api/whoop-data",
-          "WHOOP niet verbonden."
+        setText(
+          "dashboardMessage",
+          `Recoveryhistoriek mislukt: ${error.message}`
         );
 
 
-      renderCurrent(
-        current
-      );
+        return;
+      }
 
 
-      $("whoopStatus")
-        .className =
-          "pill success";
-
-
-      setText(
-        "whoopStatus",
-        "WHOOP verbonden"
-      );
-
-
-      $("connectionStatus")
-        .className =
-          "status success";
-
-
-      setText(
-        "connectionStatus",
-        "Health Map live"
-      );
-
-    } catch (error) {
-
-      console.error(
-        error
-      );
-
-
-      $("whoopStatus")
-        .className =
-          "pill error";
-
-
-      setText(
-        "whoopStatus",
-        "WHOOP niet verbonden"
-      );
-
-
-      $("connectionStatus")
-        .className =
-          "status error";
-
-
-      setText(
-        "connectionStatus",
-        "WHOOP-fout"
+      await wait(
+        35000
       );
 
 
       setText(
         "dashboardMessage",
-        error.message
+        "Slaaphistoriek laden…"
+      );
+
+
+      try {
+
+        const data =
+          await fetchJson(
+            "/api/whoop-history?type=sleep"
+          );
+
+
+        sleepHistory =
+          Array.isArray(
+            data.records
+          )
+            ? data.records
+            : [];
+
+
+        renderSleepCharts();
+
+      } catch (error) {
+
+        console.error(
+          "Slaaphistoriek:",
+          error
+        );
+      }
+
+
+      await wait(
+        35000
+      );
+
+
+      setText(
+        "dashboardMessage",
+        "Strainhistoriek laden…"
+      );
+
+
+      try {
+
+        const data =
+          await fetchJson(
+            "/api/whoop-history?type=cycle"
+          );
+
+
+        cycleHistory =
+          Array.isArray(
+            data.records
+          )
+            ? data.records
+            : [];
+
+
+        renderStrain();
+
+      } catch (error) {
+
+        console.error(
+          "Strainhistoriek:",
+          error
+        );
+      }
+
+
+      renderCorrelations();
+
+
+      setText(
+        "dashboardMessage",
+        ""
       );
     }
 
 
-    $("loadingView")
-      .classList
-      .add(
-        "hidden"
+    async function loadEverything() {
+
+      const button =
+        $("refreshButton");
+
+
+      if (button) {
+        button.disabled =
+          true;
+      }
+
+
+      $("loadingView")
+        .classList
+        .remove(
+          "hidden"
+        );
+
+
+      const whoopOk =
+        await loadWhoopCurrent();
+
+
+      $("loadingView")
+        .classList
+        .add(
+          "hidden"
+        );
+
+
+      $("dashboardView")
+        .classList
+        .remove(
+          "hidden"
+        );
+
+
+      await Promise.all(
+        [
+          loadWithings(),
+          loadStrava()
+        ]
       );
 
 
-    $("dashboardView")
-      .classList
-      .remove(
-        "hidden"
-      );
+      if (whoopOk) {
+        await loadWhoopHistory();
+      }
 
 
-    await Promise.all(
-      [
-        loadWithings(),
-        loadStrava()
-      ]
-    );
+      if (button) {
+        button.disabled =
+          false;
+      }
+    }
 
 
-    renderAll();
+    /* ==================================================
+       KNOPPEN
+    =================================================== */
 
 
-    await loadWhoopHistory();
+    $("globalRanges")
+      .addEventListener(
+        "click",
+        (event) => {
+
+          const button =
+            event.target
+              .closest(
+                ".range-button"
+              );
 
 
-    button.disabled =
-      false;
-  }
+          if (!button) {
+            return;
+          }
 
 
-  /* ======================================================
-     KNOPPEN
-  ======================================================= */
+          selectedRange =
+            button.dataset
+              .range;
 
 
-  $("globalRanges")
-    .addEventListener(
-      "click",
-      (event) => {
+          document
+            .querySelectorAll(
+              ".range-button"
+            )
+            .forEach(
+              (item) => {
 
-        const button =
-          event.target.closest(
-            ".range-button"
-          );
-
-
-        if (
-          !button
-        ) {
-          return;
-        }
-
-
-        selectedRange =
-          button.dataset.range;
-
-
-        document
-          .querySelectorAll(
-            ".range-button"
-          )
-          .forEach(
-            (item) => {
-
-              item
-                .classList
-                .toggle(
+                item.classList.toggle(
                   "active",
                   item === button
                 );
-            }
-          );
+              }
+            );
 
 
-        renderAll();
-      }
-    );
+          renderAll();
+        }
+      );
 
 
-  $("refreshButton")
-    .addEventListener(
-      "click",
-      loadEverything
-    );
+    $("refreshButton")
+      .addEventListener(
+        "click",
+        loadEverything
+      );
 
 
-  /* ======================================================
-     START DASHBOARD
-  ======================================================= */
+    $("withingsRefreshButton")
+      .addEventListener(
+        "click",
+        loadWithings
+      );
 
 
-  loadEverything();
+    $("stravaRefreshButton")
+      .addEventListener(
+        "click",
+        loadStrava
+      );
 
-</script>
+
+    /* ==================================================
+       START
+    =================================================== */
+
+
+    loadEverything();
+
+  </script>
 
 </body>
 </html>
