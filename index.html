@@ -27,7 +27,13 @@
       --orange: #ea580c;
       --radius: 22px;
       --shadow: 0 16px 46px rgba(15, 23, 42, 0.08);
-      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Arial, sans-serif;
+      --font:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Inter,
+        Arial,
+        sans-serif;
     }
 
     * {
@@ -75,7 +81,7 @@
 
     .subtitle {
       margin-top: 11px;
-      max-width: 760px;
+      max-width: 800px;
       color: var(--muted);
       font-size: 14px;
       line-height: 1.55;
@@ -89,6 +95,14 @@
       background: var(--panel);
       color: var(--muted);
       font-size: 12px;
+    }
+
+    .status.success {
+      color: var(--green);
+    }
+
+    .status.error {
+      color: var(--red);
     }
 
     .toolbar {
@@ -105,10 +119,12 @@
       font-size: 13px;
     }
 
-    .range-buttons {
+    .range-buttons,
+    .actions {
       display: flex;
       gap: 7px;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     button,
@@ -156,6 +172,18 @@
       box-shadow: var(--shadow);
     }
 
+    .span-3 {
+      grid-column: span 3;
+    }
+
+    .span-4 {
+      grid-column: span 4;
+    }
+
+    .span-5 {
+      grid-column: span 5;
+    }
+
     .span-6 {
       grid-column: span 6;
     }
@@ -164,8 +192,8 @@
       grid-column: span 7;
     }
 
-    .span-5 {
-      grid-column: span 5;
+    .span-8 {
+      grid-column: span 8;
     }
 
     .card-head {
@@ -201,6 +229,22 @@
       color: var(--muted-2);
       font-size: 11px;
       white-space: nowrap;
+    }
+
+    .section-title {
+      grid-column: span 12;
+      margin: 20px 0 -3px;
+      font-size: 28px;
+      font-weight: 780;
+      letter-spacing: -0.04em;
+    }
+
+    .section-sub {
+      grid-column: span 12;
+      margin-top: -8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
     }
 
     .hero {
@@ -286,15 +330,17 @@
       font-size: 14px;
     }
 
-    .metrics {
+    .metrics,
+    .overview,
+    .insight-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
-      margin-top: 20px;
     }
 
     .metric,
-    .summary-stat {
+    .summary-stat,
+    .insight-item {
       padding: 14px;
       border: 1px solid var(--border);
       border-radius: 15px;
@@ -302,7 +348,8 @@
     }
 
     .metric-label,
-    .summary-label {
+    .summary-label,
+    .insight-label {
       color: var(--muted-2);
       text-transform: uppercase;
       letter-spacing: 0.13em;
@@ -321,21 +368,52 @@
       margin-top: 5px;
       color: var(--muted-2);
       font-size: 10px;
+      line-height: 1.4;
     }
 
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 9px;
-      margin-bottom: 14px;
-    }
-
-    .summary-value {
+    .insight-value {
       display: block;
-      margin-top: 7px;
-      font-size: 18px;
+      margin-top: 8px;
+      font-size: 20px;
       font-weight: 760;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.035em;
+    }
+
+    .insight-sub {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.45;
+    }
+
+    .bio-list,
+    .insight-list {
+      display: grid;
+    }
+
+    .bio-row,
+    .insight-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .bio-row:last-child,
+    .insight-row:last-child {
+      border-bottom: 0;
+    }
+
+    .bio-row span,
+    .insight-row span {
+      color: var(--muted);
+    }
+
+    .bio-row strong,
+    .insight-row strong {
+      text-align: right;
     }
 
     .sleep-bar {
@@ -382,41 +460,17 @@
       font-size: 13px;
     }
 
-    .bio-list {
-      display: grid;
-    }
-
-    .bio-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 13px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .bio-row:last-child {
-      border-bottom: 0;
-    }
-
-    .bio-row span {
-      color: var(--muted);
-    }
-
-    .bio-row strong {
-      white-space: nowrap;
-    }
-
     .chart-wrap {
       position: relative;
       height: 315px;
     }
 
     .chart-wrap.small {
-      height: 280px;
+      height: 270px;
     }
 
     .chart-wrap.scatter {
-      height: 340px;
+      height: 330px;
     }
 
     .chart-message {
@@ -424,94 +478,26 @@
       margin-top: 9px;
       color: var(--muted);
       font-size: 11px;
+      line-height: 1.45;
     }
 
-    .error {
-      color: var(--red);
+    .score-box {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: 22px;
+      align-items: center;
     }
 
-    .section-title {
-      grid-column: span 12;
-      margin: 18px 0 -3px;
-      font-size: 27px;
-      font-weight: 780;
-      letter-spacing: -0.04em;
+    .big-score {
+      font-size: 54px;
+      font-weight: 800;
+      letter-spacing: -0.06em;
     }
 
-    .section-sub {
-      grid-column: span 12;
-      margin-top: -8px;
+    .score-copy {
       color: var(--muted);
+      line-height: 1.6;
       font-size: 13px;
-    }
-
-
-    .withings-overview {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .withings-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .withings-status {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .withings-status.success {
-      color: var(--green);
-      font-weight: 700;
-    }
-
-    .withings-status.error {
-      color: var(--red);
-      font-weight: 700;
-    }
-
-    .loading-card {
-      text-align: center;
-      padding: 34px;
-      color: var(--muted);
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-
-    .strava-overview {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .strava-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 16px;
-    }
-
-    .strava-status {
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .strava-status.success {
-      color: var(--green);
-    }
-
-    .strava-status.error {
-      color: var(--red);
     }
 
     .activity-table-wrap {
@@ -539,19 +525,65 @@
       font-size: 9px;
     }
 
+    .source-status {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    .source-pill {
+      padding: 7px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 10px;
+      background: #fff;
+    }
+
+    .source-pill.success {
+      color: var(--green);
+    }
+
+    .source-pill.error {
+      color: var(--red);
+    }
+
+    .loading-card {
+      text-align: center;
+      padding: 34px;
+      color: var(--muted);
+    }
+
+    .error {
+      color: var(--red) !important;
+    }
+
+    .success {
+      color: var(--green) !important;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
     @media (max-width: 900px) {
+      .span-3,
+      .span-4,
+      .span-5,
       .span-6,
       .span-7,
-      .span-5 {
+      .span-8 {
         grid-column: span 12;
       }
 
-      .hero {
+      .hero,
+      .score-box {
         grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 650px) {
+    @media (max-width: 700px) {
       body {
         padding-inline: 10px;
       }
@@ -561,14 +593,9 @@
         align-items: flex-start;
       }
 
-      .card {
-        padding: 17px;
-      }
-
       .metrics,
-      .summary-grid,
-      .withings-overview,
-      .strava-overview {
+      .overview,
+      .insight-grid {
         grid-template-columns: repeat(2, 1fr);
       }
 
@@ -576,12 +603,20 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
+      .card {
+        padding: 17px;
+      }
+
       .chart-wrap {
         height: 280px;
       }
+    }
 
-      .chart-wrap.scatter {
-        height: 310px;
+    @media (max-width: 450px) {
+      .metrics,
+      .overview,
+      .insight-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -594,19 +629,19 @@
         <h1>Health Map</h1>
 
         <div class="subtitle">
-          Dagelijks herstel, slaap, belasting en lichaamssamenstelling —
-          met WHOOP- en Withings-trends in één dashboard.
+          WHOOP, Withings en Strava gecombineerd tot één persoonlijk dashboard
+          voor herstel, slaap, lichaamssamenstelling, training en langetermijntrends.
         </div>
       </div>
 
       <div id="connectionStatus" class="status">
-        WHOOP controleren…
+        Data laden…
       </div>
     </header>
 
     <div class="toolbar">
       <div class="toolbar-title">
-        Periode voor de historische analyses
+        Periode voor historische grafieken
       </div>
 
       <div class="range-buttons" id="globalRanges">
@@ -628,36 +663,34 @@
       </div>
     </div>
 
-    <section id="disconnectedView" class="card hidden">
-      <div class="card-head">
-        <div>
-          <h2>Verbind je WHOOP-account</h2>
-          <p>Je Client Secret blijft uitsluitend op de server in Vercel.</p>
-        </div>
-      </div>
-
-      <a class="button" href="/api/whoop-connect">
-        Connect WHOOP
-      </a>
-
-      <div id="disconnectMessage" class="chart-message"></div>
-    </section>
-
     <section id="loadingView" class="card loading-card">
-      WHOOP-data en historiek laden…
+      Health Map laden…
     </section>
 
     <section id="dashboardView" class="grid hidden">
+
+      <!-- VANDAAG -->
+
       <article class="card">
         <div class="card-head">
-          <h3>Vandaag</h3>
+          <div>
+            <h3>Vandaag</h3>
+            <p>Je meest recente WHOOP-herstelgegevens.</p>
+          </div>
+
           <span id="updatedAt" class="updated">—</span>
         </div>
 
         <div class="hero">
           <div class="ring-wrap">
             <svg class="ring" viewBox="0 0 220 220" aria-hidden="true">
-              <circle class="ring-track" cx="110" cy="110" r="96"></circle>
+              <circle
+                class="ring-track"
+                cx="110"
+                cy="110"
+                r="96"
+              ></circle>
+
               <circle
                 id="recoveryRing"
                 class="ring-value"
@@ -668,19 +701,27 @@
             </svg>
 
             <div class="ring-center">
-              <div id="recoveryScore" class="recovery-score">—</div>
-              <div class="eyebrow">Recovery</div>
-              <div id="recoveryState" class="recovery-state">—</div>
+              <div id="recoveryScore" class="recovery-score">
+                —
+              </div>
+
+              <div class="eyebrow">
+                Recovery
+              </div>
+
+              <div id="recoveryState" class="recovery-state">
+                —
+              </div>
             </div>
           </div>
 
           <div class="hero-copy">
             <h2 id="dailyHeadline">
-              WHOOP-gegevens laden…
+              Data laden…
             </h2>
 
             <p id="dailySummary">
-              Je actuele herstel-, slaap- en strainwaarden worden opgehaald.
+              Je actuele herstel- en slaapgegevens worden opgehaald.
             </p>
 
             <div class="metrics">
@@ -709,12 +750,38 @@
               </div>
             </div>
 
-            <div style="margin-top: 18px">
+            <div class="actions" style="margin-top:18px">
               <button id="refreshButton" type="button">
                 Alles vernieuwen
               </button>
 
-              <span id="dashboardMessage" class="chart-message"></span>
+              <a class="button" href="/api/whoop-connect">
+                WHOOP
+              </a>
+
+              <a class="button" href="/api/withings-connect">
+                Withings
+              </a>
+
+              <a class="button" href="/api/strava-connect">
+                Strava
+              </a>
+            </div>
+
+            <div id="dashboardMessage" class="chart-message"></div>
+
+            <div class="source-status">
+              <span id="whoopSourceStatus" class="source-pill">
+                WHOOP…
+              </span>
+
+              <span id="withingsSourceStatus" class="source-pill">
+                Withings…
+              </span>
+
+              <span id="stravaSourceStatus" class="source-pill">
+                Strava…
+              </span>
             </div>
           </div>
         </div>
@@ -727,17 +794,32 @@
         </div>
 
         <div class="sleep-bar">
-          <div id="remBar" class="sleep-stage rem" style="width: 0%"></div>
-          <div id="deepBar" class="sleep-stage deep" style="width: 0%"></div>
-          <div id="lightBar" class="sleep-stage light" style="width: 0%"></div>
-          <div id="awakeBar" class="sleep-stage awake" style="width: 0%"></div>
+          <div id="remBar" class="sleep-stage rem"></div>
+          <div id="deepBar" class="sleep-stage deep"></div>
+          <div id="lightBar" class="sleep-stage light"></div>
+          <div id="awakeBar" class="sleep-stage awake"></div>
         </div>
 
         <div class="sleep-legend">
-          <div>REM<strong id="remValue">—</strong></div>
-          <div>Diep<strong id="deepValue">—</strong></div>
-          <div>Licht<strong id="lightValue">—</strong></div>
-          <div>Wakker<strong id="awakeValue">—</strong></div>
+          <div>
+            REM
+            <strong id="remValue">—</strong>
+          </div>
+
+          <div>
+            Diep
+            <strong id="deepValue">—</strong>
+          </div>
+
+          <div>
+            Licht
+            <strong id="lightValue">—</strong>
+          </div>
+
+          <div>
+            Wakker
+            <strong id="awakeValue">—</strong>
+          </div>
         </div>
       </article>
 
@@ -774,28 +856,180 @@
         </div>
       </article>
 
+      <!-- PERSOONLIJKE INZICHTEN -->
+
+      <div class="section-title">
+        Persoonlijke inzichten
+      </div>
+
+      <div class="section-sub">
+        Automatische analyses op basis van je WHOOP-, Withings- en Strava-gegevens.
+        Verbanden zijn beschrijvend en bewijzen geen oorzakelijk effect.
+      </div>
+
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h3>Health trendscore</h3>
+            <p>
+              Een samenvattend trendgetal. Geen medische score of diagnose.
+            </p>
+          </div>
+        </div>
+
+        <div class="score-box">
+          <div>
+            <div id="healthScore" class="big-score">
+              —
+            </div>
+
+            <div class="metric-sub">
+              Persoonlijke trend
+            </div>
+          </div>
+
+          <div id="healthScoreText" class="score-copy">
+            Eerst voldoende data laden.
+          </div>
+        </div>
+      </article>
+
+      <article class="card span-6">
+        <div class="card-head">
+          <div>
+            <h3>Deze week</h3>
+            <p>Vergeleken met de vorige zeven dagen.</p>
+          </div>
+        </div>
+
+        <div id="weeklyReport" class="insight-grid"></div>
+      </article>
+
+      <article class="card span-6">
+        <div class="card-head">
+          <div>
+            <h3>Deze maand</h3>
+            <p>Laatste 30 dagen tegenover de 30 dagen ervoor.</p>
+          </div>
+        </div>
+
+        <div id="monthlyReport" class="insight-grid"></div>
+      </article>
+
+      <article class="card span-6">
+        <div class="card-head">
+          <div>
+            <h3>Persoonlijke baselines</h3>
+            <p>Recente waarden tegenover je eigen 30-daagse gemiddelde.</p>
+          </div>
+        </div>
+
+        <div id="baselineInsights" class="insight-list"></div>
+      </article>
+
+      <article class="card span-6">
+        <div class="card-head">
+          <div>
+            <h3>Wat hangt samen met herstel?</h3>
+            <p>Correlaties op basis van je eigen historische data.</p>
+          </div>
+        </div>
+
+        <div id="recoveryDrivers" class="insight-list"></div>
+      </article>
+
+      <article class="card span-6">
+        <div class="card-head">
+          <div>
+            <h3>Beste omstandigheden</h3>
+            <p>
+              Welke waarden zie je gemiddeld op je beste 25% recoveries?
+            </p>
+          </div>
+        </div>
+
+        <div id="bestConditions" class="insight-list"></div>
+      </article>
+
+      <article class="card span-6">
+        <div class="card-head">
+          <div>
+            <h3>Trainingsconsistentie</h3>
+            <p>
+              Analyse van je loopfrequentie en weekvolume.
+            </p>
+          </div>
+        </div>
+
+        <div id="trainingConsistency" class="insight-grid"></div>
+      </article>
+
+      <article class="card span-6">
+        <div class="card-head">
+          <div>
+            <h3>Loopefficiëntie</h3>
+            <p>
+              Tempo bij vergelijkbare gemiddelde hartslag.
+            </p>
+          </div>
+        </div>
+
+        <div id="runningEfficiencySummary" class="chart-message"></div>
+
+        <div class="chart-wrap">
+          <canvas id="runningEfficiencyChart"></canvas>
+        </div>
+      </article>
+
+      <article class="card span-6">
+        <div class="card-head">
+          <div>
+            <h3>Herstel na zware trainingen</h3>
+            <p>
+              Recovery dag +1 na lange of zware activiteiten.
+            </p>
+          </div>
+        </div>
+
+        <div id="heavyRecoverySummary" class="chart-message"></div>
+
+        <div class="chart-wrap small">
+          <canvas id="heavyRecoveryChart"></canvas>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-head">
+          <div>
+            <h3>Persoonlijke records</h3>
+            <p>Automatisch berekend uit je beschikbare historiek.</p>
+          </div>
+        </div>
+
+        <div id="personalRecords" class="insight-list"></div>
+      </article>
+
+      <!-- WITHINGS -->
 
       <div class="section-title">
         Lichaamssamenstelling
       </div>
 
       <div class="section-sub">
-        Withings-metingen met voortschrijdende gemiddelden en veranderingen sinds de start.
+        Withings: gewicht, vetpercentage, spiermassa en lichaamssamenstelling.
       </div>
 
       <article class="card">
         <div class="card-head">
           <div>
             <h3>Withings-overzicht</h3>
-            <p>
-              Dagelijkse schommelingen zijn normaal. Kijk vooral naar de trend over meerdere weken.
-            </p>
+            <p>Kijk vooral naar trends over meerdere weken.</p>
           </div>
 
           <span id="withingsUpdatedAt" class="updated">—</span>
         </div>
 
-        <div class="withings-overview">
+        <div class="overview">
           <div class="metric">
             <div class="metric-label">Gewicht</div>
             <div id="withingsWeightValue" class="metric-value">—</div>
@@ -820,293 +1054,187 @@
             <div id="withingsVisceralChange" class="metric-sub">—</div>
           </div>
         </div>
-
-        <div class="withings-actions">
-          <a id="withingsConnectButton" class="button" href="/api/withings-connect">
-            Verbind Withings
-          </a>
-
-          <button id="withingsRefreshButton" type="button">
-            Withings vernieuwen
-          </button>
-
-          <span id="withingsStatus" class="withings-status">
-            Withings controleren…
-          </span>
-        </div>
       </article>
 
       <article class="card span-6">
         <div class="card-head">
           <div>
             <h3>Gewicht</h3>
-            <p>Dagmetingen plus het voortschrijdend gemiddelde over zeven dagen.</p>
+            <p>Dagwaarden en 7-daags gemiddelde.</p>
           </div>
         </div>
 
         <div class="chart-wrap">
           <canvas id="withingsWeightChart"></canvas>
         </div>
-
-        <div id="withingsWeightMessage" class="chart-message"></div>
       </article>
 
       <article class="card span-6">
         <div class="card-head">
           <div>
             <h3>Vetpercentage</h3>
-            <p>Dagmetingen plus een rustiger gemiddelde over veertien dagen.</p>
+            <p>Dagwaarden en 14-daags gemiddelde.</p>
           </div>
         </div>
 
         <div class="chart-wrap">
           <canvas id="withingsFatChart"></canvas>
         </div>
-
-        <div id="withingsFatMessage" class="chart-message"></div>
       </article>
 
-      <article class="card span-6">
+      <article class="card">
         <div class="card-head">
           <div>
-            <h3>Vetmassa en spiermassa</h3>
-            <p>Lichaamssamenstelling in kilogram, weergegeven over dezelfde periode.</p>
+            <h3>Vetmassa versus spiermassa</h3>
           </div>
         </div>
 
         <div class="chart-wrap">
           <canvas id="withingsCompositionChart"></canvas>
         </div>
-
-        <div id="withingsCompositionMessage" class="chart-message"></div>
       </article>
 
-      <article class="card span-6">
-        <div class="card-head">
-          <div>
-            <h3>Verandering sinds de start</h3>
-            <p>Gewicht, vetmassa en spiermassa herleid naar nul bij je eerste meting.</p>
-          </div>
-        </div>
-
-        <div class="chart-wrap">
-          <canvas id="withingsChangeChart"></canvas>
-        </div>
-
-        <div id="withingsChangeMessage" class="chart-message"></div>
-      </article>
+      <!-- STRAVA -->
 
       <div class="section-title">
         Training
       </div>
 
       <div class="section-sub">
-        Strava-activiteiten, weekvolume, sportverdeling en loopontwikkeling.
+        Strava: volume, frequentie, tempo, hartslag en recente activiteiten.
       </div>
 
       <article class="card">
         <div class="card-head">
           <div>
             <h3>Strava-overzicht</h3>
-            <p>Samenvatting van de geselecteerde periode.</p>
           </div>
-          <span id="stravaUpdatedAt" class="updated">—</span>
         </div>
 
-        <div class="strava-overview">
+        <div class="overview">
           <div class="metric">
-            <div class="metric-label">Loopkilometers</div>
-            <div id="stravaRunDistance" class="metric-value">—</div>
-            <div id="stravaRunCount" class="metric-sub">—</div>
+            <div class="metric-label">Loopkm deze week</div>
+            <div id="stravaWeekKm" class="metric-value">—</div>
           </div>
+
           <div class="metric">
             <div class="metric-label">Trainingen</div>
-            <div id="stravaActivityCount" class="metric-value">—</div>
-            <div class="metric-sub">geselecteerde periode</div>
+            <div id="stravaWeekActivities" class="metric-value">—</div>
           </div>
+
           <div class="metric">
             <div class="metric-label">Trainingsduur</div>
-            <div id="stravaMovingHours" class="metric-value">—</div>
-            <div class="metric-sub">bewegende tijd</div>
+            <div id="stravaWeekHours" class="metric-value">—</div>
           </div>
+
           <div class="metric">
             <div class="metric-label">Hoogtemeters</div>
-            <div id="stravaElevation" class="metric-value">—</div>
-            <div class="metric-sub">totaal</div>
+            <div id="stravaWeekElevation" class="metric-value">—</div>
           </div>
-        </div>
-
-        <div class="strava-actions">
-          <a id="stravaConnectButton" class="button" href="/api/strava-connect">
-            Verbind Strava
-          </a>
-          <button id="stravaRefreshButton" type="button">Strava vernieuwen</button>
-          <span id="stravaStatus" class="strava-status">Strava controleren…</span>
         </div>
       </article>
 
-      <article class="card span-7">
+      <article class="card span-6">
         <div class="card-head">
           <div>
             <h3>Loopvolume per week</h3>
-            <p>Kilometers per week met een voortschrijdend gemiddelde over vier weken.</p>
+            <p>Kilometers per week met vierweeks gemiddelde.</p>
           </div>
         </div>
-        <div class="chart-wrap"><canvas id="stravaWeeklyChart"></canvas></div>
-        <div id="stravaWeeklyMessage" class="chart-message"></div>
-      </article>
 
-      <article class="card span-5">
-        <div class="card-head">
-          <div>
-            <h3>Sportverdeling</h3>
-            <p>Aantal activiteiten per sportcategorie.</p>
-          </div>
+        <div class="chart-wrap">
+          <canvas id="weeklyRunChart"></canvas>
         </div>
-        <div class="chart-wrap"><canvas id="stravaSportChart"></canvas></div>
-        <div id="stravaSportMessage" class="chart-message"></div>
       </article>
 
       <article class="card span-6">
         <div class="card-head">
           <div>
             <h3>Tempo versus hartslag</h3>
-            <p>Elke stip is één loopactiviteit met hartslagmeting.</p>
+            <p>Alle loopactiviteiten met voldoende gegevens.</p>
           </div>
         </div>
-        <div class="chart-wrap scatter"><canvas id="stravaPaceHrChart"></canvas></div>
-        <div id="stravaPaceHrMessage" class="chart-message"></div>
-      </article>
 
-      <article class="card span-6">
-        <div class="card-head">
-          <div>
-            <h3>Lange duurlopen</h3>
-            <p>Afstand van loopactiviteiten van minstens acht kilometer.</p>
-          </div>
+        <div class="chart-wrap scatter">
+          <canvas id="paceHrChart"></canvas>
         </div>
-        <div class="chart-wrap scatter"><canvas id="stravaLongRunChart"></canvas></div>
-        <div id="stravaLongRunMessage" class="chart-message"></div>
       </article>
 
       <article class="card">
         <div class="card-head">
           <div>
             <h3>Recente activiteiten</h3>
-            <p>De tien meest recente activiteiten binnen de geselecteerde periode.</p>
           </div>
         </div>
+
         <div class="activity-table-wrap">
           <table class="activity-table">
             <thead>
-              <tr><th>Datum</th><th>Activiteit</th><th>Sport</th><th>Afstand</th><th>Duur</th><th>Tempo</th><th>Hartslag</th><th>Hoogte</th></tr>
+              <tr>
+                <th>Datum</th>
+                <th>Activiteit</th>
+                <th>Sport</th>
+                <th>Afstand</th>
+                <th>Duur</th>
+                <th>Tempo</th>
+                <th>HR</th>
+                <th>Hoogte</th>
+              </tr>
             </thead>
-            <tbody id="stravaActivityRows"></tbody>
+
+            <tbody id="recentActivitiesBody"></tbody>
           </table>
         </div>
-        <div id="stravaActivityMessage" class="chart-message"></div>
       </article>
+
+      <!-- WHOOP HISTORIE -->
 
       <div class="section-title">
         Herstel en gezondheid
       </div>
 
       <div class="section-sub">
-        Dagwaarden plus een voortschrijdend gemiddelde over zeven dagen.
+        WHOOP-historiek met voortschrijdende gemiddelden.
       </div>
 
       <article class="card span-6">
         <div class="card-head">
-          <div>
-            <h3>HRV</h3>
-            <p>Hoger is meestal gunstig binnen je persoonlijke context.</p>
-          </div>
+          <h3>HRV</h3>
         </div>
-
-        <div id="hrvStats" class="summary-grid"></div>
 
         <div class="chart-wrap">
           <canvas id="hrvChart"></canvas>
         </div>
-
-        <div id="hrvMessage" class="chart-message"></div>
       </article>
 
       <article class="card span-6">
         <div class="card-head">
-          <div>
-            <h3>Rusthartslag</h3>
-            <p>Lager is meestal gunstig binnen je persoonlijke context.</p>
-          </div>
+          <h3>Rusthartslag</h3>
         </div>
-
-        <div id="rhrStats" class="summary-grid"></div>
 
         <div class="chart-wrap">
           <canvas id="rhrChart"></canvas>
         </div>
-
-        <div id="rhrMessage" class="chart-message"></div>
       </article>
 
       <article class="card span-6">
         <div class="card-head">
-          <div>
-            <h3>Recoveryscore</h3>
-            <p>Dagelijkse WHOOP-paraatheid van 0 tot 100.</p>
-          </div>
+          <h3>Recovery</h3>
         </div>
 
-        <div class="chart-wrap small">
+        <div class="chart-wrap">
           <canvas id="recoveryChart"></canvas>
         </div>
-
-        <div id="recoveryMessage" class="chart-message"></div>
       </article>
 
       <article class="card span-6">
         <div class="card-head">
-          <div>
-            <h3>Ademhalingsfrequentie</h3>
-            <p>Vooral afwijkingen tegenover je eigen baseline zijn relevant.</p>
-          </div>
+          <h3>Dagelijkse strain</h3>
         </div>
 
-        <div class="chart-wrap small">
-          <canvas id="respChart"></canvas>
+        <div class="chart-wrap">
+          <canvas id="strainChart"></canvas>
         </div>
-
-        <div id="respMessage" class="chart-message"></div>
-      </article>
-
-      <article class="card span-6">
-        <div class="card-head">
-          <div>
-            <h3>Huidtemperatuur</h3>
-            <p>Nachtelijke huidtemperatuur als aanvullende context.</p>
-          </div>
-        </div>
-
-        <div class="chart-wrap small">
-          <canvas id="skinChart"></canvas>
-        </div>
-
-        <div id="skinMessage" class="chart-message"></div>
-      </article>
-
-      <article class="card span-6">
-        <div class="card-head">
-          <div>
-            <h3>SpO₂</h3>
-            <p>Nachtelijke zuurstofsaturatie, wanneer beschikbaar.</p>
-          </div>
-        </div>
-
-        <div class="chart-wrap small">
-          <canvas id="spo2Chart"></canvas>
-        </div>
-
-        <div id="spo2Message" class="chart-message"></div>
       </article>
 
       <div class="section-title">
@@ -1114,149 +1242,109 @@
       </div>
 
       <div class="section-sub">
-        Duur, behoefte, performance, consistentie en efficiëntie.
+        Slaapduur, behoefte en slaapkwaliteit.
       </div>
 
-      <article class="card">
+      <article class="card span-6">
         <div class="card-head">
-          <div>
-            <h3>Slaapduur versus slaapbehoefte</h3>
-            <p>Werkelijke slaap en door WHOOP berekende behoefte.</p>
-          </div>
+          <h3>Slaapduur versus behoefte</h3>
         </div>
 
         <div class="chart-wrap">
           <canvas id="sleepDurationChart"></canvas>
         </div>
-
-        <div id="sleepDurationMessage" class="chart-message"></div>
       </article>
 
-      <article class="card">
+      <article class="card span-6">
         <div class="card-head">
-          <div>
-            <h3>Slaapkwaliteit</h3>
-            <p>Performance, consistentie en efficiëntie in procent.</p>
-          </div>
+          <h3>Slaapkwaliteit</h3>
         </div>
 
         <div class="chart-wrap">
           <canvas id="sleepQualityChart"></canvas>
         </div>
-
-        <div id="sleepQualityMessage" class="chart-message"></div>
       </article>
 
-      <div class="section-title">
-        Belasting
-      </div>
-
-      <div class="section-sub">
-        Dagelijkse WHOOP-strain en het voortschrijdend gemiddelde.
-      </div>
-
-      <article class="card">
-        <div class="card-head">
-          <div>
-            <h3>Dagelijkse strain</h3>
-            <p>WHOOP-strain is een niet-lineaire schaal van 0 tot 21.</p>
-          </div>
-        </div>
-
-        <div class="chart-wrap">
-          <canvas id="strainChart"></canvas>
-        </div>
-
-        <div id="strainMessage" class="chart-message"></div>
-      </article>
-
-      <div class="section-title">
-        Persoonlijke verbanden
-      </div>
-
-      <div class="section-sub">
-        Beschrijvende correlaties: ze tonen samenhang, maar bewijzen geen oorzaak.
-      </div>
-
-      <article class="card span-6">
-        <div class="card-head">
-          <div>
-            <h3>Slaapduur versus HRV</h3>
-            <p>Elke stip is één nacht en de HRV van de gekoppelde recovery.</p>
-          </div>
-        </div>
-
-        <div class="chart-wrap scatter">
-          <canvas id="sleepHrvChart"></canvas>
-        </div>
-
-        <div id="sleepHrvMessage" class="chart-message"></div>
-      </article>
-
-      <article class="card span-6">
-        <div class="card-head">
-          <div>
-            <h3>Vorige strain versus recovery</h3>
-            <p>
-              Vorige fysiologische cyclus tegenover de daaropvolgende recovery.
-            </p>
-          </div>
-        </div>
-
-        <div class="chart-wrap scatter">
-          <canvas id="strainRecoveryChart"></canvas>
-        </div>
-
-        <div id="strainRecoveryMessage" class="chart-message"></div>
-      </article>
     </section>
   </main>
 
   <script>
-    const $ = (id) => document.getElementById(id);
-    const CIRCUMFERENCE = 603.19;
-
-    let selectedRange = "all";
-    let recoveryHistory = [];
-    let sleepHistory = [];
-    let cycleHistory = [];
-    let withingsHistory = [];
-    let stravaHistory = [];
+    const $ = (id) =>
+      document.getElementById(id);
 
     const charts = {};
 
+    const CIRCUMFERENCE =
+      603.19;
+
+    let selectedRange =
+      "all";
+
+    let recoveryHistory =
+      [];
+
+    let sleepHistory =
+      [];
+
+    let cycleHistory =
+      [];
+
+    let withingsHistory =
+      [];
+
+    let stravaHistory =
+      [];
+
     function num(value) {
-      const parsed = Number(value);
-      return Number.isFinite(parsed) ? parsed : null;
+      const parsed =
+        Number(value);
+
+      return Number.isFinite(parsed)
+        ? parsed
+        : null;
     }
 
     function setText(id, value) {
-      const element = $(id);
+      const element =
+        $(id);
 
       if (element) {
-        element.textContent = value;
+        element.textContent =
+          value;
       }
     }
 
-    function wait(milliseconds) {
-      return new Promise((resolve) => {
-        setTimeout(resolve, milliseconds);
-      });
+    function wait(ms) {
+      return new Promise(
+        (resolve) =>
+          setTimeout(resolve, ms)
+      );
     }
 
     function hours(milliseconds) {
-      const value = num(milliseconds);
-      return value === null ? null : value / 3600000;
+      const value =
+        num(milliseconds);
+
+      return value === null
+        ? null
+        : value / 3600000;
     }
 
     function durationLabel(milliseconds) {
-      const value = num(milliseconds);
+      const value =
+        num(milliseconds);
 
-      if (value === null || value <= 0) {
+      if (
+        value === null ||
+        value <= 0
+      ) {
         return "—";
       }
 
-      const minutes = Math.round(value / 60000);
+      const minutes =
+        Math.round(
+          value / 60000
+        );
 
       return (
         `${Math.floor(minutes / 60)}u ` +
@@ -1264,38 +1352,284 @@
       );
     }
 
+    function secondsDurationLabel(seconds) {
+      const value =
+        num(seconds);
+
+      if (
+        value === null ||
+        value <= 0
+      ) {
+        return "—";
+      }
+
+      const minutes =
+        Math.round(
+          value / 60
+        );
+
+      return (
+        `${Math.floor(minutes / 60)}u ` +
+        `${String(minutes % 60).padStart(2, "0")}m`
+      );
+    }
+
+    function paceLabel(value) {
+      const pace =
+        num(value);
+
+      if (
+        pace === null ||
+        pace <= 0
+      ) {
+        return "—";
+      }
+
+      let minutes =
+        Math.floor(pace);
+
+      let seconds =
+        Math.round(
+          (pace - minutes) * 60
+        );
+
+      if (seconds === 60) {
+        minutes += 1;
+        seconds = 0;
+      }
+
+      return (
+        `${minutes}:` +
+        `${String(seconds).padStart(2, "0")}/km`
+      );
+    }
+
+    function mean(values) {
+      const clean =
+        values
+          .map(num)
+          .filter(
+            (value) =>
+              value !== null
+          );
+
+      if (!clean.length) {
+        return null;
+      }
+
+      return (
+        clean.reduce(
+          (sum, value) =>
+            sum + value,
+          0
+        ) / clean.length
+      );
+    }
+
+    function median(values) {
+      const clean =
+        values
+          .map(num)
+          .filter(
+            (value) =>
+              value !== null
+          )
+          .sort(
+            (a, b) => a - b
+          );
+
+      if (!clean.length) {
+        return null;
+      }
+
+      const middle =
+        Math.floor(
+          clean.length / 2
+        );
+
+      return clean.length % 2
+        ? clean[middle]
+        : (
+            clean[middle - 1] +
+            clean[middle]
+          ) / 2;
+    }
+
+    function avgMetric(
+      records,
+      key
+    ) {
+      return mean(
+        records.map(
+          (record) =>
+            record[key]
+        )
+      );
+    }
+
+    function dateKey(date) {
+      const d =
+        new Date(date);
+
+      if (
+        Number.isNaN(
+          d.getTime()
+        )
+      ) {
+        return "";
+      }
+
+      return (
+        `${d.getFullYear()}-` +
+        `${String(d.getMonth() + 1).padStart(2, "0")}-` +
+        `${String(d.getDate()).padStart(2, "0")}`
+      );
+    }
+
+    function inDays(
+      records,
+      days,
+      olderThanDays = 0
+    ) {
+      const now =
+        Date.now();
+
+      const newest =
+        now -
+        olderThanDays *
+        86400000;
+
+      const oldest =
+        now -
+        days *
+        86400000;
+
+      return records.filter(
+        (record) => {
+          const time =
+            new Date(
+              record.localDate ||
+              record.date
+            ).getTime();
+
+          return (
+            time >= oldest &&
+            time < newest
+          );
+        }
+      );
+    }
+
+    function filterByRange(
+      records
+    ) {
+      if (
+        selectedRange ===
+        "all"
+      ) {
+        return [
+          ...records
+        ];
+      }
+
+      const cutoff =
+        Date.now() -
+        Number(
+          selectedRange
+        ) *
+        86400000;
+
+      return records.filter(
+        (record) =>
+          new Date(
+            record.localDate ||
+            record.date
+          ).getTime() >= cutoff
+      );
+    }
+
+    function movingAverage(
+      records,
+      key,
+      windowSize = 7
+    ) {
+      return records.map(
+        (record, index) => {
+          const values =
+            records
+              .slice(
+                Math.max(
+                  0,
+                  index -
+                    windowSize +
+                    1
+                ),
+                index + 1
+              )
+              .map(
+                (item) =>
+                  num(
+                    item[key]
+                  )
+              )
+              .filter(
+                (value) =>
+                  value !== null
+              );
+
+          return values.length
+            ? mean(values)
+            : null;
+        }
+      );
+    }
+
     function recoveryMeta(score) {
       if (score >= 67) {
         return {
-          label: "Hoog herstel",
-          color: "#159a68",
-          headline: "Je lichaam lijkt goed hersteld.",
+          label:
+            "Hoog herstel",
+          color:
+            "#159a68",
+          headline:
+            "Je lichaam lijkt goed hersteld.",
           summary:
-            "Je herstelstatus ondersteunt je geplande training, zolang je subjectief ook goed voelt."
+            "Je WHOOP-herstel is hoog. Combineer dit altijd met hoe je je subjectief voelt."
         };
       }
 
       if (score >= 34) {
         return {
-          label: "Gemiddeld herstel",
-          color: "#d58b12",
-          headline: "Je herstel is vandaag gemengd.",
+          label:
+            "Gemiddeld herstel",
+          color:
+            "#d58b12",
+          headline:
+            "Je herstel is vandaag gemengd.",
           summary:
-            "Voer je training gecontroleerd uit en let extra op energie, spierpijn en slaap."
+            "Train gecontroleerd en hou rekening met energie, spierpijn en recente belasting."
         };
       }
 
       return {
-        label: "Laag herstel",
-        color: "#d94b4b",
-        headline: "Je herstel is vandaag beperkt.",
+        label:
+          "Laag herstel",
+        color:
+          "#d94b4b",
+        headline:
+          "Je herstel is vandaag beperkt.",
         summary:
-          "Overweeg minder intensiteit of volume, afhankelijk van symptomen en je volledige trainingsbelasting."
+          "Een lichtere trainingsdag kan passend zijn afhankelijk van klachten en je geplande belasting."
       };
     }
 
-    function setSleepBar(id, value, total) {
-      const element = $(id);
+    function setSleepBar(
+      id,
+      value,
+      total
+    ) {
+      const element =
+        $(id);
 
       if (!element) {
         return;
@@ -1303,221 +1637,313 @@
 
       element.style.width =
         total > 0
-          ? `${Math.max(0, Math.min(100, value / total * 100))}%`
+          ? `${Math.max(
+              0,
+              Math.min(
+                100,
+                value /
+                  total *
+                  100
+              )
+            )}%`
           : "0%";
-    }
-
-    function showDisconnected(message) {
-      $("loadingView").classList.add("hidden");
-      $("dashboardView").classList.add("hidden");
-      $("disconnectedView").classList.remove("hidden");
-
-      setText("connectionStatus", "WHOOP niet verbonden");
-      setText("disconnectMessage", message || "");
-    }
-
-    function showDashboard() {
-      $("loadingView").classList.add("hidden");
-      $("disconnectedView").classList.add("hidden");
-      $("dashboardView").classList.remove("hidden");
-
-      setText("connectionStatus", "WHOOP live verbonden");
     }
 
     function renderCurrent(data) {
       const recovery =
-        data?.recovery?.records?.[0]?.score || {};
+        data?.recovery
+          ?.records?.[0]
+          ?.score || {};
 
       const sleep =
-        data?.sleep?.records?.[0]?.score || {};
+        data?.sleep
+          ?.records?.[0]
+          ?.score || {};
 
       const stages =
-        sleep.stage_summary || {};
+        sleep.stage_summary ||
+        {};
 
       const cycle =
-        data?.cycle?.records?.[0]?.score || {};
+        data?.cycle
+          ?.records?.[0]
+          ?.score || {};
 
-      const recoveryScore =
-        num(recovery.recovery_score);
+      const score =
+        num(
+          recovery
+            .recovery_score
+        );
 
-      if (recoveryScore !== null) {
+      if (score !== null) {
         const rounded =
-          Math.round(recoveryScore);
+          Math.round(score);
 
         const meta =
-          recoveryMeta(rounded);
+          recoveryMeta(
+            rounded
+          );
 
-        setText("recoveryScore", rounded);
-        setText("recoveryState", meta.label);
-        setText("dailyHeadline", meta.headline);
-        setText("dailySummary", meta.summary);
+        setText(
+          "recoveryScore",
+          rounded
+        );
 
-        $("recoveryState").style.color =
-          meta.color;
+        setText(
+          "recoveryState",
+          meta.label
+        );
 
-        $("recoveryRing").style.stroke =
-          meta.color;
+        setText(
+          "dailyHeadline",
+          meta.headline
+        );
 
-        $("recoveryRing").style.strokeDashoffset =
-          CIRCUMFERENCE -
-          CIRCUMFERENCE * rounded / 100;
+        setText(
+          "dailySummary",
+          meta.summary
+        );
+
+        $("recoveryState")
+          .style.color =
+            meta.color;
+
+        $("recoveryRing")
+          .style.stroke =
+            meta.color;
+
+        $("recoveryRing")
+          .style.strokeDashoffset =
+            CIRCUMFERENCE -
+            CIRCUMFERENCE *
+              rounded /
+              100;
       }
 
       setText(
         "hrvValue",
-        num(recovery.hrv_rmssd_milli) !== null
-          ? Math.round(recovery.hrv_rmssd_milli)
+        num(
+          recovery
+            .hrv_rmssd_milli
+        ) !== null
+          ? Math.round(
+              recovery
+                .hrv_rmssd_milli
+            )
           : "—"
       );
 
       setText(
         "rhrValue",
-        num(recovery.resting_heart_rate) !== null
-          ? Math.round(recovery.resting_heart_rate)
+        num(
+          recovery
+            .resting_heart_rate
+        ) !== null
+          ? Math.round(
+              recovery
+                .resting_heart_rate
+            )
           : "—"
       );
 
       setText(
         "sleepScore",
-        num(sleep.sleep_performance_percentage) !== null
-          ? `${Math.round(sleep.sleep_performance_percentage)}%`
+        num(
+          sleep
+            .sleep_performance_percentage
+        ) !== null
+          ? `${Math.round(
+              sleep
+                .sleep_performance_percentage
+            )}%`
           : "—"
       );
 
       setText(
         "strainValue",
-        num(cycle.strain) !== null
-          ? Number(cycle.strain).toFixed(1)
+        num(
+          cycle.strain
+        ) !== null
+          ? Number(
+              cycle.strain
+            ).toFixed(1)
           : "—"
       );
 
       setText(
         "respValue",
-        num(sleep.respiratory_rate) !== null
-          ? `${Number(sleep.respiratory_rate).toFixed(1)} rpm`
+        num(
+          sleep
+            .respiratory_rate
+        ) !== null
+          ? `${Number(
+              sleep
+                .respiratory_rate
+            ).toFixed(1)} rpm`
           : "—"
       );
 
       setText(
         "skinTempValue",
-        num(recovery.skin_temp_celsius) !== null
-          ? `${Number(recovery.skin_temp_celsius).toFixed(1)} °C`
+        num(
+          recovery
+            .skin_temp_celsius
+        ) !== null
+          ? `${Number(
+              recovery
+                .skin_temp_celsius
+            ).toFixed(1)} °C`
           : "—"
       );
 
       setText(
         "spo2Value",
-        num(recovery.spo2_percentage) !== null
-          ? `${Number(recovery.spo2_percentage).toFixed(1)}%`
+        num(
+          recovery
+            .spo2_percentage
+        ) !== null
+          ? `${Number(
+              recovery
+                .spo2_percentage
+            ).toFixed(1)}%`
           : "—"
       );
 
       setText(
         "avgHrValue",
-        num(cycle.average_heart_rate) !== null
-          ? `${Math.round(cycle.average_heart_rate)} bpm`
+        num(
+          cycle
+            .average_heart_rate
+        ) !== null
+          ? `${Math.round(
+              cycle
+                .average_heart_rate
+            )} bpm`
           : "—"
       );
 
       setText(
         "maxHrValue",
-        num(cycle.max_heart_rate) !== null
-          ? `${Math.round(cycle.max_heart_rate)} bpm`
+        num(
+          cycle
+            .max_heart_rate
+        ) !== null
+          ? `${Math.round(
+              cycle
+                .max_heart_rate
+            )} bpm`
           : "—"
       );
 
       const rem =
-        num(stages.total_rem_sleep_time_milli) || 0;
+        num(
+          stages
+            .total_rem_sleep_time_milli
+        ) || 0;
 
       const deep =
-        num(stages.total_slow_wave_sleep_time_milli) || 0;
+        num(
+          stages
+            .total_slow_wave_sleep_time_milli
+        ) || 0;
 
       const light =
-        num(stages.total_light_sleep_time_milli) || 0;
+        num(
+          stages
+            .total_light_sleep_time_milli
+        ) || 0;
 
       const awake =
-        num(stages.total_awake_time_milli) || 0;
+        num(
+          stages
+            .total_awake_time_milli
+        ) || 0;
 
       const total =
-        rem + deep + light + awake;
+        rem +
+        deep +
+        light +
+        awake;
 
       const asleep =
-        rem + deep + light;
+        rem +
+        deep +
+        light;
 
-      setText("sleepDuration", durationLabel(asleep));
-      setText("remValue", durationLabel(rem));
-      setText("deepValue", durationLabel(deep));
-      setText("lightValue", durationLabel(light));
-      setText("awakeValue", durationLabel(awake));
+      setText(
+        "sleepDuration",
+        durationLabel(
+          asleep
+        )
+      );
 
-      setSleepBar("remBar", rem, total);
-      setSleepBar("deepBar", deep, total);
-      setSleepBar("lightBar", light, total);
-      setSleepBar("awakeBar", awake, total);
+      setText(
+        "remValue",
+        durationLabel(rem)
+      );
+
+      setText(
+        "deepValue",
+        durationLabel(deep)
+      );
+
+      setText(
+        "lightValue",
+        durationLabel(light)
+      );
+
+      setText(
+        "awakeValue",
+        durationLabel(awake)
+      );
+
+      setSleepBar(
+        "remBar",
+        rem,
+        total
+      );
+
+      setSleepBar(
+        "deepBar",
+        deep,
+        total
+      );
+
+      setSleepBar(
+        "lightBar",
+        light,
+        total
+      );
+
+      setSleepBar(
+        "awakeBar",
+        awake,
+        total
+      );
 
       setText(
         "updatedAt",
-        `Bijgewerkt ${
-          new Date().toLocaleTimeString("nl-BE", {
-            hour: "2-digit",
-            minute: "2-digit"
-          })
-        }`
-      );
-
-      showDashboard();
-    }
-
-    function movingAverage(records, key, windowSize = 7) {
-      return records.map((record, index) => {
-        const values = records
-          .slice(
-            Math.max(0, index - windowSize + 1),
-            index + 1
+        new Date()
+          .toLocaleTimeString(
+            "nl-BE",
+            {
+              hour:
+                "2-digit",
+              minute:
+                "2-digit"
+            }
           )
-          .map((item) => num(item[key]))
-          .filter((value) => value !== null);
-
-        return values.length
-          ? values.reduce((sum, value) => sum + value, 0) / values.length
-          : null;
-      });
+      );
     }
 
-    function filterByRange(records) {
-      if (selectedRange === "all") {
-        return [...records];
+    function destroyChart(id) {
+      if (charts[id]) {
+        charts[id]
+          .destroy();
+
+        charts[id] =
+          null;
       }
-
-      const cutoff =
-        Date.now() -
-        Number(selectedRange) *
-          24 *
-          60 *
-          60 *
-          1000;
-
-      return records.filter(
-        (record) =>
-          new Date(record.date).getTime() >= cutoff
-      );
-    }
-
-    function dateLabels(records) {
-      return records.map(
-        (record) => new Date(record.date)
-      );
-    }
-
-    function chartDate(date) {
-      return new Intl.DateTimeFormat(
-        "nl-BE",
-        {
-          day: "numeric",
-          month: "short",
-          year: "numeric"
-        }
-      ).format(new Date(date));
     }
 
     const commonOptions = {
@@ -1535,12 +1961,15 @@
 
       plugins: {
         legend: {
-          position: "bottom",
+          position:
+            "bottom",
 
           labels: {
-            usePointStyle: true,
+            usePointStyle:
+              true,
             padding: 16,
-            color: "#5f6672",
+            color:
+              "#5f6672",
             font: {
               size: 10
             }
@@ -1548,17 +1977,10 @@
         },
 
         tooltip: {
-          backgroundColor: "rgba(17, 24, 39, 0.96)",
+          backgroundColor:
+            "rgba(17,24,39,.96)",
           padding: 10,
-          cornerRadius: 9,
-
-          callbacks: {
-            title(items) {
-              return items?.[0]?.label
-                ? chartDate(items[0].label)
-                : "";
-            }
-          }
+          cornerRadius: 9
         }
       },
 
@@ -1573,22 +1995,10 @@
           },
 
           ticks: {
-            color: "#8a919c",
-            maxTicksLimit: 7,
-            maxRotation: 0,
-
-            callback(value) {
-              const label =
-                this.getLabelForValue(value);
-
-              return new Intl.DateTimeFormat(
-                "nl-BE",
-                {
-                  month: "short",
-                  year: "2-digit"
-                }
-              ).format(new Date(label));
-            }
+            color:
+              "#8a919c",
+            maxTicksLimit: 8,
+            maxRotation: 0
           }
         },
 
@@ -1596,7 +2006,8 @@
           beginAtZero: false,
 
           grid: {
-            color: "rgba(15, 23, 42, 0.07)"
+            color:
+              "rgba(15,23,42,.07)"
           },
 
           border: {
@@ -1604,58 +2015,12 @@
           },
 
           ticks: {
-            color: "#8a919c"
+            color:
+              "#8a919c"
           }
         }
       }
     };
-
-    function destroyChart(id) {
-      if (charts[id]) {
-        charts[id].destroy();
-        charts[id] = null;
-      }
-    }
-
-    function createLineChart(
-      id,
-      records,
-      datasets,
-      options = {}
-    ) {
-      destroyChart(id);
-
-      const canvas = $(id);
-
-      if (!canvas || !records.length) {
-        return;
-      }
-
-      charts[id] =
-        new Chart(canvas, {
-          type: "line",
-
-          data: {
-            labels: dateLabels(records),
-            datasets
-          },
-
-          options: {
-            ...commonOptions,
-            ...options,
-
-            plugins: {
-              ...commonOptions.plugins,
-              ...(options.plugins || {})
-            },
-
-            scales: {
-              ...commonOptions.scales,
-              ...(options.scales || {})
-            }
-          }
-        });
-    }
 
     function lineDataset(
       label,
@@ -1666,1165 +2031,101 @@
       return {
         label,
         data,
-        borderColor: color,
-        backgroundColor: color,
-        borderWidth: width,
-        pointRadius: 0,
-        pointHoverRadius: 4,
-        pointHitRadius: 9,
-        tension: 0.22,
-        fill: false,
-        spanGaps: true
+        borderColor:
+          color,
+        backgroundColor:
+          color,
+        borderWidth:
+          width,
+        pointRadius:
+          0,
+        pointHoverRadius:
+          4,
+        pointHitRadius:
+          9,
+        tension:
+          0.22,
+        fill:
+          false,
+        spanGaps:
+          true
       };
     }
 
-    function statCards(
-      containerId,
-      metric,
+    function createLineChart(
+      id,
       records,
-      unit,
-      lowerBetter = false
+      datasets,
+      options = {}
     ) {
-      const container = $(containerId);
-
-      const values =
-        records
-          .map((record) => num(record[metric]))
-          .filter((value) => value !== null);
-
-      if (!container || !values.length) {
-        if (container) {
-          container.innerHTML = "";
-        }
-
-        return;
-      }
-
-      const current =
-        values.at(-1);
-
-      const start =
-        values[0];
-
-      const recentValues =
-        values.slice(-7);
-
-      const seven =
-        recentValues.reduce(
-          (sum, value) => sum + value,
-          0
-        ) / recentValues.length;
-
-      const change =
-        start === 0
-          ? null
-          : (current - start) / start * 100;
-
-      const beneficial =
-        change === null
-          ? null
-          : lowerBetter
-            ? change < 0
-            : change > 0;
-
-      const changeColor =
-        beneficial === null
-          ? ""
-          : beneficial
-            ? "color: var(--green)"
-            : "color: var(--red)";
-
-      const decimals =
-        metric === "hrv" ? 1 : 0;
-
-      container.innerHTML = `
-        <div class="summary-stat">
-          <span class="summary-label">Huidig</span>
-          <strong class="summary-value">
-            ${current.toFixed(decimals)} ${unit}
-          </strong>
-        </div>
-
-        <div class="summary-stat">
-          <span class="summary-label">7-daags</span>
-          <strong class="summary-value">
-            ${seven.toFixed(1)} ${unit}
-          </strong>
-        </div>
-
-        <div class="summary-stat">
-          <span class="summary-label">Start</span>
-          <strong class="summary-value">
-            ${start.toFixed(decimals)} ${unit}
-          </strong>
-        </div>
-
-        <div class="summary-stat">
-          <span class="summary-label">Verandering</span>
-          <strong
-            class="summary-value"
-            style="${changeColor}"
-          >
-            ${
-              change === null
-                ? "—"
-                : `${change > 0 ? "+" : ""}${change.toFixed(1)}%`
-            }
-          </strong>
-        </div>
-      `;
-    }
-
-
-    function latestNumeric(records, key) {
-      for (let index = records.length - 1; index >= 0; index -= 1) {
-        const value = num(records[index]?.[key]);
-
-        if (value !== null) {
-          return {
-            value,
-            record: records[index]
-          };
-        }
-      }
-
-      return null;
-    }
-
-    function firstNumeric(records, key) {
-      for (const record of records) {
-        const value = num(record?.[key]);
-
-        if (value !== null) {
-          return {
-            value,
-            record
-          };
-        }
-      }
-
-      return null;
-    }
-
-    function formatSigned(value, decimals, unit) {
-      if (value === null || !Number.isFinite(value)) {
-        return "—";
-      }
-
-      const sign = value > 0 ? "+" : "";
-
-      return `${sign}${value.toFixed(decimals)} ${unit}`;
-    }
-
-    function setWithingsStatus(message, type = "") {
-      const element = $("withingsStatus");
-
-      if (!element) {
-        return;
-      }
-
-      element.textContent = message;
-      element.classList.remove("success", "error");
-
-      if (type) {
-        element.classList.add(type);
-      }
-    }
-
-    function renderWithingsSummary(records) {
-      const latestWeight = latestNumeric(records, "weightKg");
-      const firstWeight = firstNumeric(records, "weightKg");
-      const latestFat = latestNumeric(records, "fatRatioPercent");
-      const firstFat = firstNumeric(records, "fatRatioPercent");
-      const latestMuscle = latestNumeric(records, "muscleMassKg");
-      const firstMuscle = firstNumeric(records, "muscleMassKg");
-      const latestVisceral = latestNumeric(records, "visceralFatIndex");
-      const firstVisceral = firstNumeric(records, "visceralFatIndex");
-
-      setText(
-        "withingsWeightValue",
-        latestWeight ? `${latestWeight.value.toFixed(1)} kg` : "—"
-      );
-
-      setText(
-        "withingsWeightChange",
-        latestWeight && firstWeight
-          ? `${formatSigned(
-              latestWeight.value - firstWeight.value,
-              1,
-              "kg"
-            )} sinds start`
-          : "Geen trend beschikbaar"
-      );
-
-      setText(
-        "withingsFatValue",
-        latestFat ? `${latestFat.value.toFixed(1)}%` : "—"
-      );
-
-      setText(
-        "withingsFatChange",
-        latestFat && firstFat
-          ? `${formatSigned(
-              latestFat.value - firstFat.value,
-              1,
-              "procentpunt"
-            )} sinds start`
-          : "Geen trend beschikbaar"
-      );
-
-      setText(
-        "withingsMuscleValue",
-        latestMuscle ? `${latestMuscle.value.toFixed(1)} kg` : "—"
-      );
-
-      setText(
-        "withingsMuscleChange",
-        latestMuscle && firstMuscle
-          ? `${formatSigned(
-              latestMuscle.value - firstMuscle.value,
-              1,
-              "kg"
-            )} sinds start`
-          : "Geen trend beschikbaar"
-      );
-
-      setText(
-        "withingsVisceralValue",
-        latestVisceral ? latestVisceral.value.toFixed(1) : "—"
-      );
-
-      setText(
-        "withingsVisceralChange",
-        latestVisceral && firstVisceral
-          ? `${formatSigned(
-              latestVisceral.value - firstVisceral.value,
-              1,
-              "punten"
-            )} sinds start`
-          : "Geen trend beschikbaar"
-      );
-
-      const latestRecord =
-        [...records]
-          .reverse()
-          .find((record) =>
-            [
-              "weightKg",
-              "fatRatioPercent",
-              "muscleMassKg",
-              "visceralFatIndex"
-            ].some((key) => num(record[key]) !== null)
-          );
-
-      setText(
-        "withingsUpdatedAt",
-        latestRecord
-          ? `Laatste meting ${new Date(latestRecord.date).toLocaleDateString(
-              "nl-BE",
-              {
-                day: "numeric",
-                month: "short",
-                year: "numeric"
-              }
-            )}`
-          : "Geen metingen"
-      );
-    }
-
-    function renderWithingsCharts() {
-      const records = filterByRange(withingsHistory);
-
-      renderWithingsSummary(withingsHistory);
-
-      const weightRecords =
-        records.filter(
-          (record) => num(record.weightKg) !== null
-        );
-
-      createLineChart(
-        "withingsWeightChart",
-        weightRecords,
-        [
-          lineDataset(
-            "Dagmeting",
-            weightRecords.map((record) => record.weightKg),
-            "rgba(37, 99, 235, 0.35)",
-            1.2
-          ),
-
-          lineDataset(
-            "7-daags gemiddelde",
-            movingAverage(weightRecords, "weightKg", 7),
-            "#2563eb",
-            3
-          )
-        ],
-        {
-          scales: {
-            ...commonOptions.scales,
-            y: {
-              ...commonOptions.scales.y,
-              ticks: {
-                color: "#8a919c",
-                callback(value) {
-                  return `${value} kg`;
-                }
-              }
-            }
-          }
-        }
-      );
-
-      const fatRecords =
-        records.filter(
-          (record) => num(record.fatRatioPercent) !== null
-        );
-
-      createLineChart(
-        "withingsFatChart",
-        fatRecords,
-        [
-          lineDataset(
-            "Dagmeting",
-            fatRecords.map((record) => record.fatRatioPercent),
-            "rgba(234, 88, 12, 0.35)",
-            1.2
-          ),
-
-          lineDataset(
-            "14-daags gemiddelde",
-            movingAverage(fatRecords, "fatRatioPercent", 14),
-            "#ea580c",
-            3
-          )
-        ],
-        {
-          scales: {
-            ...commonOptions.scales,
-            y: {
-              ...commonOptions.scales.y,
-              ticks: {
-                color: "#8a919c",
-                callback(value) {
-                  return `${value}%`;
-                }
-              }
-            }
-          }
-        }
-      );
-
-      const compositionRecords =
-        records.filter(
-          (record) =>
-            num(record.fatMassKg) !== null ||
-            num(record.muscleMassKg) !== null
-        );
-
-      createLineChart(
-        "withingsCompositionChart",
-        compositionRecords,
-        [
-          lineDataset(
-            "Vetmassa",
-            compositionRecords.map((record) => record.fatMassKg),
-            "#ea580c",
-            2.5
-          ),
-
-          lineDataset(
-            "Spiermassa",
-            compositionRecords.map((record) => record.muscleMassKg),
-            "#159a68",
-            2.5
-          )
-        ],
-        {
-          scales: {
-            ...commonOptions.scales,
-            y: {
-              ...commonOptions.scales.y,
-              ticks: {
-                color: "#8a919c",
-                callback(value) {
-                  return `${value} kg`;
-                }
-              }
-            }
-          }
-        }
-      );
-
-      const firstWeight =
-        firstNumeric(withingsHistory, "weightKg")?.value ?? null;
-
-      const firstFatMass =
-        firstNumeric(withingsHistory, "fatMassKg")?.value ?? null;
-
-      const firstMuscle =
-        firstNumeric(withingsHistory, "muscleMassKg")?.value ?? null;
-
-      const changeRecords =
-        records
-          .map((record) => ({
-            ...record,
-
-            weightChange:
-              firstWeight !== null && num(record.weightKg) !== null
-                ? record.weightKg - firstWeight
-                : null,
-
-            fatMassChange:
-              firstFatMass !== null && num(record.fatMassKg) !== null
-                ? record.fatMassKg - firstFatMass
-                : null,
-
-            muscleChange:
-              firstMuscle !== null && num(record.muscleMassKg) !== null
-                ? record.muscleMassKg - firstMuscle
-                : null
-          }))
-          .filter(
-            (record) =>
-              num(record.weightChange) !== null ||
-              num(record.fatMassChange) !== null ||
-              num(record.muscleChange) !== null
-          );
-
-      createLineChart(
-        "withingsChangeChart",
-        changeRecords,
-        [
-          lineDataset(
-            "Gewicht",
-            changeRecords.map((record) => record.weightChange),
-            "#2563eb",
-            2.5
-          ),
-
-          lineDataset(
-            "Vetmassa",
-            changeRecords.map((record) => record.fatMassChange),
-            "#ea580c",
-            2.5
-          ),
-
-          lineDataset(
-            "Spiermassa",
-            changeRecords.map((record) => record.muscleChange),
-            "#159a68",
-            2.5
-          )
-        ],
-        {
-          scales: {
-            ...commonOptions.scales,
-            y: {
-              ...commonOptions.scales.y,
-              ticks: {
-                color: "#8a919c",
-                callback(value) {
-                  return `${value > 0 ? "+" : ""}${value} kg`;
-                }
-              }
-            }
-          }
-        }
-      );
-
-      setText(
-        "withingsWeightMessage",
-        `${weightRecords.length} gewichtsmetingen weergegeven.`
-      );
-
-      setText(
-        "withingsFatMessage",
-        `${fatRecords.length} vetmetingen weergegeven.`
-      );
-
-      setText(
-        "withingsCompositionMessage",
-        `${compositionRecords.length} metingen van lichaamssamenstelling weergegeven.`
-      );
-
-      setText(
-        "withingsChangeMessage",
-        `${changeRecords.length} metingen vergeleken met je eerste beschikbare meting.`
-      );
-    }
-
-    async function loadWithings() {
-      const refreshButton = $("withingsRefreshButton");
-
-      if (refreshButton) {
-        refreshButton.disabled = true;
-      }
-
-      setWithingsStatus("Withings-data laden…");
-
-      try {
-        const data =
-          await fetchJson(
-            "/api/withings-data",
-            "Withings-data kon niet worden geladen."
-          );
-
-        withingsHistory =
-          Array.isArray(data.records)
-            ? data.records
-            : [];
-
-        if (!withingsHistory.length) {
-          setWithingsStatus(
-            "Verbonden, maar nog geen metingen gevonden.",
-            "error"
-          );
-
-          $("withingsConnectButton")
-            ?.classList
-            .add("hidden");
-
-          return;
-        }
-
-        $("withingsConnectButton")
-          ?.classList
-          .add("hidden");
-
-        renderWithingsCharts();
-
-        setWithingsStatus(
-          `Withings verbonden · ${withingsHistory.length} metingen`,
-          "success"
-        );
-      } catch (error) {
-        console.error("Withings laden mislukt:", error);
-
-        withingsHistory = [];
-
-        $("withingsConnectButton")
-          ?.classList
-          .remove("hidden");
-
-        setWithingsStatus(
-          error?.message || "Withings is niet verbonden.",
-          "error"
-        );
-      } finally {
-        if (refreshButton) {
-          refreshButton.disabled = false;
-        }
-      }
-    }
-
-    function setStravaStatus(message, type = "") {
-      const element = $("stravaStatus");
-      if (!element) return;
-      element.textContent = message;
-      element.classList.remove("success", "error");
-      if (type) element.classList.add(type);
-    }
-
-    function isRunActivity(activity) {
-      return ["run", "trailrun", "virtualrun"].includes(
-        String(activity.sportType || activity.type || "").toLowerCase()
-      );
-    }
-
-    function weekStart(dateValue) {
-      const date = new Date(dateValue);
-      const day = (date.getDay() + 6) % 7;
-      date.setHours(0, 0, 0, 0);
-      date.setDate(date.getDate() - day);
-      return date;
-    }
-
-    function weeklyRunRecords(records) {
-      const weeks = new Map();
-      records.filter(isRunActivity).forEach((activity) => {
-        const start = weekStart(activity.localDate || activity.date);
-        const key = start.toISOString().slice(0, 10);
-        const current = weeks.get(key) || { date: start.toISOString(), distanceKm: 0, count: 0 };
-        current.distanceKm += num(activity.distanceKm) || 0;
-        current.count += 1;
-        weeks.set(key, current);
-      });
-      return [...weeks.values()].sort((a, b) => new Date(a.date) - new Date(b.date));
-    }
-
-    function paceLabel(minutesPerKm) {
-      const value = num(minutesPerKm);
-      if (value === null) return "—";
-      const totalSeconds = Math.round(value * 60);
-      return `${Math.floor(totalSeconds / 60)}:${String(totalSeconds % 60).padStart(2, "0")}/km`;
-    }
-
-    function secondsLabel(seconds) {
-      const value = num(seconds);
-      if (value === null) return "—";
-      const minutes = Math.round(value / 60);
-      return `${Math.floor(minutes / 60)}u ${String(minutes % 60).padStart(2, "0")}m`;
-    }
-
-    function createBarLineChart(id, labels, bars, line) {
       destroyChart(id);
-      const canvas = $(id);
-      if (!canvas || !labels.length) return;
-      charts[id] = new Chart(canvas, {
-        data: {
-          labels,
-          datasets: [
-            {
-              type: "bar",
-              label: "Loopkilometers",
-              data: bars,
-              backgroundColor: "rgba(234, 88, 12, 0.45)",
-              borderColor: "#ea580c",
-              borderWidth: 1,
-              borderRadius: 7
+
+      const canvas =
+        $(id);
+
+      if (
+        !canvas ||
+        !records.length
+      ) {
+        return;
+      }
+
+      charts[id] =
+        new Chart(
+          canvas,
+          {
+            type: "line",
+
+            data: {
+              labels:
+                records.map(
+                  (record) =>
+                    new Date(
+                      record.localDate ||
+                      record.date
+                    )
+                      .toLocaleDateString(
+                        "nl-BE",
+                        {
+                          day:
+                            "2-digit",
+                          month:
+                            "2-digit",
+                          year:
+                            "2-digit"
+                        }
+                      )
+                ),
+
+              datasets
             },
-            {
-              type: "line",
-              label: "4-weeks gemiddelde",
-              data: line,
-              borderColor: "#111827",
-              backgroundColor: "#111827",
-              borderWidth: 2.5,
-              pointRadius: 0,
-              tension: 0.25,
-              spanGaps: true
-            }
-          ]
-        },
-        options: {
-          ...commonOptions,
-          scales: {
-            ...commonOptions.scales,
-            y: {
-              ...commonOptions.scales.y,
-              beginAtZero: true,
-              ticks: { color: "#8a919c", callback(value) { return `${value} km`; } }
-            }
-          }
-        }
-      });
-    }
 
-    function createDoughnutChart(id, labels, values) {
-      destroyChart(id);
-      const canvas = $(id);
-      if (!canvas || !values.length) return;
-      charts[id] = new Chart(canvas, {
-        type: "doughnut",
-        data: {
-          labels,
-          datasets: [{
-            data: values,
-            backgroundColor: ["#ea580c", "#2563eb", "#159a68", "#7c3aed", "#d58b12", "#64748b"],
-            borderWidth: 0
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: "64%",
-          plugins: commonOptions.plugins
-        }
-      });
-    }
+            options: {
+              ...commonOptions,
+              ...options,
 
-    function renderStravaSummary(records) {
-      const runs = records.filter(isRunActivity);
-      const runDistance = runs.reduce((sum, a) => sum + (num(a.distanceKm) || 0), 0);
-      const movingHours = records.reduce((sum, a) => sum + (num(a.movingTimeHours) || 0), 0);
-      const elevation = records.reduce((sum, a) => sum + (num(a.elevationMeters) || 0), 0);
-      setText("stravaRunDistance", `${runDistance.toFixed(1)} km`);
-      setText("stravaRunCount", `${runs.length} loopactiviteiten`);
-      setText("stravaActivityCount", records.length);
-      setText("stravaMovingHours", `${movingHours.toFixed(1)} u`);
-      setText("stravaElevation", `${Math.round(elevation)} m`);
-      const latest = records.at(-1);
-      setText("stravaUpdatedAt", latest ? `Laatste activiteit ${new Date(latest.localDate || latest.date).toLocaleDateString("nl-BE")}` : "Geen activiteiten");
-    }
+              plugins: {
+                ...commonOptions
+                  .plugins,
+                ...(
+                  options
+                    .plugins ||
+                  {}
+                )
+              },
 
-    function renderStravaCharts() {
-      const records = filterByRange(stravaHistory);
-      renderStravaSummary(records);
-
-      const weeks = weeklyRunRecords(records);
-      createBarLineChart(
-        "stravaWeeklyChart",
-        weeks.map((w) => new Date(w.date)),
-        weeks.map((w) => Number(w.distanceKm.toFixed(2))),
-        movingAverage(weeks, "distanceKm", 4)
-      );
-      setText("stravaWeeklyMessage", `${weeks.length} trainingsweken weergegeven.`);
-
-      const sportCounts = new Map();
-      records.forEach((activity) => {
-        const sport = String(activity.sportType || activity.type || "Overig");
-        sportCounts.set(sport, (sportCounts.get(sport) || 0) + 1);
-      });
-      const sports = [...sportCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 6);
-      createDoughnutChart("stravaSportChart", sports.map(([name]) => name), sports.map(([, count]) => count));
-      setText("stravaSportMessage", `${records.length} activiteiten verdeeld over ${sportCounts.size} sporttypes.`);
-
-      const paceHrPoints = records
-        .filter(isRunActivity)
-        .map((a) => ({ x: num(a.averagePaceMinutesPerKm), y: num(a.averageHeartRate) }))
-        .filter((p) => p.x !== null && p.y !== null && p.x > 0);
-      createScatter("stravaPaceHrChart", paceHrPoints, "Tempo (min/km)", "Gemiddelde hartslag", "rgba(234, 88, 12, 0.58)");
-      setText("stravaPaceHrMessage", `${paceHrPoints.length} loopactiviteiten met tempo en hartslag.`);
-
-      const longRuns = records.filter((a) => isRunActivity(a) && (num(a.distanceKm) || 0) >= 8);
-      destroyChart("stravaLongRunChart");
-      if (longRuns.length) {
-        charts.stravaLongRunChart = new Chart($("stravaLongRunChart"), {
-          type: "line",
-          data: {
-            labels: longRuns.map((a) => new Date(a.localDate || a.date)),
-            datasets: [lineDataset("Afstand", longRuns.map((a) => a.distanceKm), "#159a68", 2.5)]
-          },
-          options: {
-            ...commonOptions,
-            scales: {
-              ...commonOptions.scales,
-              y: { ...commonOptions.scales.y, ticks: { color: "#8a919c", callback(value) { return `${value} km`; } } }
-            }
-          }
-        });
-      }
-      setText("stravaLongRunMessage", `${longRuns.length} duurlopen van minstens 8 km.`);
-
-      const rows = [...records].reverse().slice(0, 10).map((a) => `
-        <tr>
-          <td>${new Date(a.localDate || a.date).toLocaleDateString("nl-BE")}</td>
-          <td>${a.name || "—"}</td>
-          <td>${a.sportType || a.type || "—"}</td>
-          <td>${num(a.distanceKm) !== null ? `${a.distanceKm.toFixed(1)} km` : "—"}</td>
-          <td>${secondsLabel(a.movingTimeSeconds)}</td>
-          <td>${paceLabel(a.averagePaceMinutesPerKm)}</td>
-          <td>${num(a.averageHeartRate) !== null ? `${Math.round(a.averageHeartRate)} bpm` : "—"}</td>
-          <td>${num(a.elevationMeters) !== null ? `${Math.round(a.elevationMeters)} m` : "—"}</td>
-        </tr>`).join("");
-      $("stravaActivityRows").innerHTML = rows;
-      setText("stravaActivityMessage", `${Math.min(records.length, 10)} recente activiteiten weergegeven.`);
-    }
-
-    async function loadStrava() {
-      const button = $("stravaRefreshButton");
-      if (button) button.disabled = true;
-      setStravaStatus("Strava-data laden…");
-      try {
-        const data = await fetchJson("/api/strava-data", "Strava-data kon niet worden geladen.");
-        stravaHistory = Array.isArray(data.records) ? data.records : [];
-        if (!stravaHistory.length) {
-          $("stravaConnectButton")?.classList.add("hidden");
-          setStravaStatus("Verbonden, maar geen activiteiten gevonden.", "error");
-          return;
-        }
-        $("stravaConnectButton")?.classList.add("hidden");
-        renderStravaCharts();
-        setStravaStatus(`Strava verbonden · ${stravaHistory.length} activiteiten`, "success");
-      } catch (error) {
-        stravaHistory = [];
-        $("stravaConnectButton")?.classList.remove("hidden");
-        setStravaStatus(error?.message || "Strava is niet verbonden.", "error");
-      } finally {
-        if (button) button.disabled = false;
-      }
-    }
-
-    function renderRecoveryCharts() {
-      const records =
-        filterByRange(recoveryHistory);
-
-      statCards(
-        "hrvStats",
-        "hrv",
-        records,
-        "ms"
-      );
-
-      statCards(
-        "rhrStats",
-        "rhr",
-        records,
-        "bpm",
-        true
-      );
-
-      createLineChart(
-        "hrvChart",
-        records,
-        [
-          lineDataset(
-            "Dagwaarde",
-            records.map((record) => record.hrv),
-            "rgba(37, 99, 235, 0.35)",
-            1.2
-          ),
-
-          lineDataset(
-            "7-daags gemiddelde",
-            movingAverage(records, "hrv"),
-            "#159a68",
-            3
-          )
-        ]
-      );
-
-      createLineChart(
-        "rhrChart",
-        records,
-        [
-          lineDataset(
-            "Dagwaarde",
-            records.map((record) => record.rhr),
-            "rgba(37, 99, 235, 0.35)",
-            1.2
-          ),
-
-          lineDataset(
-            "7-daags gemiddelde",
-            movingAverage(records, "rhr"),
-            "#159a68",
-            3
-          )
-        ]
-      );
-
-      createLineChart(
-        "recoveryChart",
-        records,
-        [
-          lineDataset(
-            "Recoveryscore",
-            records.map((record) => record.recovery),
-            "rgba(37, 99, 235, 0.35)",
-            1.2
-          ),
-
-          lineDataset(
-            "7-daags gemiddelde",
-            movingAverage(records, "recovery"),
-            "#7c3aed",
-            3
-          )
-        ],
-        {
-          scales: {
-            ...commonOptions.scales,
-
-            y: {
-              ...commonOptions.scales.y,
-              min: 0,
-              max: 100
-            }
-          }
-        }
-      );
-
-      const skinRecords =
-        records.filter(
-          (record) =>
-            num(record.skinTemp) !== null
-        );
-
-      createLineChart(
-        "skinChart",
-        skinRecords,
-        [
-          lineDataset(
-            "Huidtemperatuur",
-            skinRecords.map((record) => record.skinTemp),
-            "rgba(234, 88, 12, 0.35)",
-            1.2
-          ),
-
-          lineDataset(
-            "7-daags gemiddelde",
-            movingAverage(skinRecords, "skinTemp"),
-            "#ea580c",
-            3
-          )
-        ]
-      );
-
-      const spo2Records =
-        records.filter(
-          (record) =>
-            num(record.spo2) !== null
-        );
-
-      createLineChart(
-        "spo2Chart",
-        spo2Records,
-        [
-          lineDataset(
-            "SpO₂",
-            spo2Records.map((record) => record.spo2),
-            "rgba(37, 99, 235, 0.4)",
-            1.4
-          ),
-
-          lineDataset(
-            "7-daags gemiddelde",
-            movingAverage(spo2Records, "spo2"),
-            "#2563eb",
-            3
-          )
-        ],
-        {
-          scales: {
-            ...commonOptions.scales,
-
-            y: {
-              ...commonOptions.scales.y,
-              suggestedMin: 90,
-              suggestedMax: 100
-            }
-          }
-        }
-      );
-
-      setText(
-        "hrvMessage",
-        `${records.length} meetdagen weergegeven.`
-      );
-
-      setText(
-        "rhrMessage",
-        `${records.length} meetdagen weergegeven.`
-      );
-
-      setText(
-        "recoveryMessage",
-        `${records.length} meetdagen weergegeven.`
-      );
-
-      setText(
-        "skinMessage",
-        `${skinRecords.length} meetdagen weergegeven.`
-      );
-
-      setText(
-        "spo2Message",
-        `${spo2Records.length} meetdagen weergegeven.`
-      );
-    }
-
-    function renderSleepCharts() {
-      const records =
-        filterByRange(sleepHistory);
-
-      const respiratoryRecords =
-        records.filter(
-          (record) =>
-            num(record.respiratoryRate) !== null
-        );
-
-      createLineChart(
-        "respChart",
-        respiratoryRecords,
-        [
-          lineDataset(
-            "Ademhaling",
-            respiratoryRecords.map(
-              (record) => record.respiratoryRate
-            ),
-            "rgba(37, 99, 235, 0.35)",
-            1.2
-          ),
-
-          lineDataset(
-            "7-daags gemiddelde",
-            movingAverage(
-              respiratoryRecords,
-              "respiratoryRate"
-            ),
-            "#2563eb",
-            3
-          )
-        ]
-      );
-
-      createLineChart(
-        "sleepDurationChart",
-        records,
-        [
-          lineDataset(
-            "Werkelijke slaap",
-            records.map(
-              (record) => hours(record.durationMilli)
-            ),
-            "#2563eb",
-            2.5
-          ),
-
-          lineDataset(
-            "Slaapbehoefte",
-            records.map(
-              (record) => hours(record.sleepNeedMilli)
-            ),
-            "#ea580c",
-            2.5
-          )
-        ],
-        {
-          scales: {
-            ...commonOptions.scales,
-
-            y: {
-              ...commonOptions.scales.y,
-
-              ticks: {
-                color: "#8a919c",
-
-                callback(value) {
-                  return `${value} u`;
-                }
+              scales: {
+                ...commonOptions
+                  .scales,
+                ...(
+                  options
+                    .scales ||
+                  {}
+                )
               }
             }
           }
-        }
-      );
-
-      createLineChart(
-        "sleepQualityChart",
-        records,
-        [
-          lineDataset(
-            "Performance",
-            records.map((record) => record.performance),
-            "#2563eb",
-            2
-          ),
-
-          lineDataset(
-            "Consistentie",
-            records.map((record) => record.consistency),
-            "#7c3aed",
-            2
-          ),
-
-          lineDataset(
-            "Efficiëntie",
-            records.map((record) => record.efficiency),
-            "#159a68",
-            2
-          )
-        ],
-        {
-          scales: {
-            ...commonOptions.scales,
-
-            y: {
-              ...commonOptions.scales.y,
-              min: 0,
-              max: 100
-            }
-          }
-        }
-      );
-
-      setText(
-        "respMessage",
-        `${respiratoryRecords.length} nachten weergegeven.`
-      );
-
-      setText(
-        "sleepDurationMessage",
-        `${records.length} nachten weergegeven.`
-      );
-
-      setText(
-        "sleepQualityMessage",
-        `${records.length} nachten weergegeven.`
-      );
-    }
-
-    function renderStrainChart() {
-      const cycles =
-        filterByRange(cycleHistory);
-
-      createLineChart(
-        "strainChart",
-        cycles,
-        [
-          lineDataset(
-            "Dagstrain",
-            cycles.map((record) => record.strain),
-            "rgba(234, 88, 12, 0.38)",
-            1.3
-          ),
-
-          lineDataset(
-            "7-daags gemiddelde",
-            movingAverage(cycles, "strain"),
-            "#ea580c",
-            3
-          )
-        ],
-        {
-          scales: {
-            ...commonOptions.scales,
-
-            y: {
-              ...commonOptions.scales.y,
-              min: 0,
-              max: 21
-            }
-          }
-        }
-      );
-
-      setText(
-        "strainMessage",
-        `${cycles.length} fysiologische cycli weergegeven.`
-      );
-    }
-
-    function pearson(points) {
-      if (points.length < 3) {
-        return null;
-      }
-
-      const meanX =
-        points.reduce(
-          (sum, point) => sum + point.x,
-          0
-        ) / points.length;
-
-      const meanY =
-        points.reduce(
-          (sum, point) => sum + point.y,
-          0
-        ) / points.length;
-
-      let numerator = 0;
-      let denominatorX = 0;
-      let denominatorY = 0;
-
-      points.forEach((point) => {
-        const dx = point.x - meanX;
-        const dy = point.y - meanY;
-
-        numerator += dx * dy;
-        denominatorX += dx * dx;
-        denominatorY += dy * dy;
-      });
-
-      const denominator =
-        Math.sqrt(
-          denominatorX *
-          denominatorY
         );
-
-      return denominator === 0
-        ? null
-        : numerator / denominator;
     }
 
     function createScatter(
@@ -2836,265 +2137,2667 @@
     ) {
       destroyChart(id);
 
-      const canvas = $(id);
+      const canvas =
+        $(id);
 
       if (!canvas) {
         return;
       }
 
       charts[id] =
-        new Chart(canvas, {
-          type: "scatter",
+        new Chart(
+          canvas,
+          {
+            type:
+              "scatter",
 
-          data: {
-            datasets: [
-              {
-                label: `${xLabel} versus ${yLabel}`,
-                data: points,
-                backgroundColor: color,
-                pointRadius: 3.5,
-                pointHoverRadius: 5
-              }
-            ]
-          },
-
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-
-            animation: {
-              duration: 200
+            data: {
+              datasets: [
+                {
+                  label:
+                    `${xLabel} versus ${yLabel}`,
+                  data:
+                    points,
+                  backgroundColor:
+                    color,
+                  pointRadius:
+                    4,
+                  pointHoverRadius:
+                    6
+                }
+              ]
             },
 
-            plugins: {
-              legend: {
-                display: false
+            options: {
+              responsive:
+                true,
+              maintainAspectRatio:
+                false,
+
+              plugins: {
+                legend: {
+                  display:
+                    false
+                }
               },
 
-              tooltip: {
-                backgroundColor: "rgba(17, 24, 39, 0.96)",
-                padding: 10,
-                cornerRadius: 9,
-
-                callbacks: {
-                  label(context) {
-                    return (
-                      `${xLabel}: ${context.raw.x.toFixed(1)} · ` +
-                      `${yLabel}: ${context.raw.y.toFixed(1)}`
-                    );
+              scales: {
+                x: {
+                  title: {
+                    display:
+                      true,
+                    text:
+                      xLabel
                   }
-                }
-              }
-            },
-
-            scales: {
-              x: {
-                title: {
-                  display: true,
-                  text: xLabel,
-                  color: "#5f6672"
                 },
 
-                grid: {
-                  color: "rgba(15, 23, 42, 0.07)"
-                },
-
-                border: {
-                  display: false
-                },
-
-                ticks: {
-                  color: "#8a919c"
-                }
-              },
-
-              y: {
-                title: {
-                  display: true,
-                  text: yLabel,
-                  color: "#5f6672"
-                },
-
-                grid: {
-                  color: "rgba(15, 23, 42, 0.07)"
-                },
-
-                border: {
-                  display: false
-                },
-
-                ticks: {
-                  color: "#8a919c"
+                y: {
+                  title: {
+                    display:
+                      true,
+                    text:
+                      yLabel
+                  }
                 }
               }
             }
           }
-        });
+        );
     }
 
-    function renderCorrelations() {
-      const filteredRecoveries =
-        filterByRange(recoveryHistory);
+    function insightItem(
+      label,
+      value,
+      sub = ""
+    ) {
+      return `
+        <div class="insight-item">
+          <div class="insight-label">
+            ${label}
+          </div>
 
-      const recoveryByCycle =
+          <strong class="insight-value">
+            ${value}
+          </strong>
+
+          <div class="insight-sub">
+            ${sub}
+          </div>
+        </div>
+      `;
+    }
+
+    function insightRow(
+      label,
+      value
+    ) {
+      return `
+        <div class="insight-row">
+          <span>${label}</span>
+          <strong>${value}</strong>
+        </div>
+      `;
+    }
+
+    function deltaText(
+      current,
+      previous,
+      unit = ""
+    ) {
+      if (
+        num(current) === null
+      ) {
+        return "—";
+      }
+
+      let result =
+        `${Number(
+          current
+        ).toFixed(1)}${unit}`;
+
+      if (
+        num(previous) !==
+          null &&
+        previous !== 0
+      ) {
+        const change =
+          (
+            current -
+            previous
+          ) /
+          Math.abs(
+            previous
+          ) *
+          100;
+
+        result +=
+          ` · ${change >= 0 ? "+" : ""}${change.toFixed(0)}%`;
+      }
+
+      return result;
+    }
+
+    function pearson(points) {
+      if (
+        points.length < 3
+      ) {
+        return null;
+      }
+
+      const meanX =
+        mean(
+          points.map(
+            (point) =>
+              point.x
+          )
+        );
+
+      const meanY =
+        mean(
+          points.map(
+            (point) =>
+              point.y
+          )
+        );
+
+      let numerator =
+        0;
+
+      let dxSum =
+        0;
+
+      let dySum =
+        0;
+
+      points.forEach(
+        (point) => {
+          const dx =
+            point.x -
+            meanX;
+
+          const dy =
+            point.y -
+            meanY;
+
+          numerator +=
+            dx * dy;
+
+          dxSum +=
+            dx * dx;
+
+          dySum +=
+            dy * dy;
+        }
+      );
+
+      const denominator =
+        Math.sqrt(
+          dxSum *
+          dySum
+        );
+
+      return denominator
+        ? numerator /
+            denominator
+        : null;
+    }
+
+    function correlationLabel(r) {
+      if (r === null) {
+        return "onvoldoende data";
+      }
+
+      const abs =
+        Math.abs(r);
+
+      let strength =
+        "zeer zwak";
+
+      if (abs >= 0.8) {
+        strength =
+          "zeer sterk";
+      } else if (
+        abs >= 0.6
+      ) {
+        strength =
+          "sterk";
+      } else if (
+        abs >= 0.4
+      ) {
+        strength =
+          "matig";
+      } else if (
+        abs >= 0.2
+      ) {
+        strength =
+          "zwak";
+      }
+
+      return (
+        `${strength} ` +
+        `${r >= 0 ? "positief" : "negatief"} ` +
+        `(r=${r.toFixed(2)})`
+      );
+    }
+
+    function isRunActivity(
+      activity
+    ) {
+      const type =
+        String(
+          activity.sportType ||
+          activity.type ||
+          ""
+        ).toLowerCase();
+
+      return [
+        "run",
+        "trailrun",
+        "virtualrun"
+      ].includes(type);
+    }
+
+    function weekStart(date) {
+      const d =
+        new Date(date);
+
+      d.setHours(
+        0,
+        0,
+        0,
+        0
+      );
+
+      const day =
+        d.getDay();
+
+      const diff =
+        day === 0
+          ? -6
+          : 1 - day;
+
+      d.setDate(
+        d.getDate() +
+        diff
+      );
+
+      return d;
+    }
+
+    function weeklyRunRecords(
+      activities
+    ) {
+      const weeks =
+        new Map();
+
+      activities
+        .filter(
+          isRunActivity
+        )
+        .forEach(
+          (activity) => {
+            const date =
+              activity.localDate ||
+              activity.date;
+
+            const start =
+              weekStart(date);
+
+            const key =
+              dateKey(start);
+
+            if (
+              !weeks.has(key)
+            ) {
+              weeks.set(
+                key,
+                {
+                  date:
+                    start,
+                  distanceKm:
+                    0,
+                  activities:
+                    0,
+                  elevation:
+                    0
+                }
+              );
+            }
+
+            const week =
+              weeks.get(key);
+
+            week.distanceKm +=
+              num(
+                activity.distanceKm
+              ) || 0;
+
+            week.activities +=
+              1;
+
+            week.elevation +=
+              num(
+                activity.elevationMeters
+              ) || 0;
+          }
+        );
+
+      return [
+        ...weeks.values()
+      ].sort(
+        (a, b) =>
+          new Date(
+            a.date
+          ) -
+          new Date(
+            b.date
+          )
+      );
+    }
+
+    function renderWithings() {
+      const records =
+        filterByRange(
+          withingsHistory
+        );
+
+      if (!records.length) {
+        return;
+      }
+
+      const latest =
+        records.at(-1);
+
+      setText(
+        "withingsWeightValue",
+        num(
+          latest.weightKg
+        ) !== null
+          ? `${latest.weightKg.toFixed(1)} kg`
+          : "—"
+      );
+
+      setText(
+        "withingsFatValue",
+        num(
+          latest
+            .fatRatioPercent
+        ) !== null
+          ? `${latest.fatRatioPercent.toFixed(1)}%`
+          : "—"
+      );
+
+      setText(
+        "withingsMuscleValue",
+        num(
+          latest.muscleMassKg
+        ) !== null
+          ? `${latest.muscleMassKg.toFixed(1)} kg`
+          : "—"
+      );
+
+      setText(
+        "withingsVisceralValue",
+        num(
+          latest
+            .visceralFatIndex
+        ) !== null
+          ? latest
+              .visceralFatIndex
+              .toFixed(1)
+          : "—"
+      );
+
+      function changeFromStart(
+        key,
+        unit
+      ) {
+        const first =
+          records.find(
+            (record) =>
+              num(
+                record[key]
+              ) !== null
+          );
+
+        if (
+          !first ||
+          num(
+            latest[key]
+          ) === null
+        ) {
+          return "—";
+        }
+
+        const diff =
+          latest[key] -
+          first[key];
+
+        return (
+          `${diff >= 0 ? "+" : ""}` +
+          `${diff.toFixed(1)} ${unit} sinds start`
+        );
+      }
+
+      setText(
+        "withingsWeightChange",
+        changeFromStart(
+          "weightKg",
+          "kg"
+        )
+      );
+
+      setText(
+        "withingsFatChange",
+        changeFromStart(
+          "fatRatioPercent",
+          "pp"
+        )
+      );
+
+      setText(
+        "withingsMuscleChange",
+        changeFromStart(
+          "muscleMassKg",
+          "kg"
+        )
+      );
+
+      setText(
+        "withingsVisceralChange",
+        changeFromStart(
+          "visceralFatIndex",
+          ""
+        )
+      );
+
+      setText(
+        "withingsUpdatedAt",
+        new Date(
+          latest.date
+        )
+          .toLocaleDateString(
+            "nl-BE"
+          )
+      );
+
+      const weight =
+        records.filter(
+          (record) =>
+            num(
+              record.weightKg
+            ) !== null
+        );
+
+      createLineChart(
+        "withingsWeightChart",
+        weight,
+        [
+          lineDataset(
+            "Gewicht",
+            weight.map(
+              (record) =>
+                record.weightKg
+            ),
+            "rgba(37,99,235,.35)",
+            1.4
+          ),
+
+          lineDataset(
+            "7-daags gemiddelde",
+            movingAverage(
+              weight,
+              "weightKg",
+              7
+            ),
+            "#2563eb",
+            3
+          )
+        ]
+      );
+
+      const fat =
+        records.filter(
+          (record) =>
+            num(
+              record
+                .fatRatioPercent
+            ) !== null
+        );
+
+      createLineChart(
+        "withingsFatChart",
+        fat,
+        [
+          lineDataset(
+            "Vetpercentage",
+            fat.map(
+              (record) =>
+                record
+                  .fatRatioPercent
+            ),
+            "rgba(234,88,12,.35)",
+            1.4
+          ),
+
+          lineDataset(
+            "14-daags gemiddelde",
+            movingAverage(
+              fat,
+              "fatRatioPercent",
+              14
+            ),
+            "#ea580c",
+            3
+          )
+        ]
+      );
+
+      const composition =
+        records.filter(
+          (record) =>
+            num(
+              record.fatMassKg
+            ) !== null ||
+            num(
+              record.muscleMassKg
+            ) !== null
+        );
+
+      createLineChart(
+        "withingsCompositionChart",
+        composition,
+        [
+          lineDataset(
+            "Vetmassa",
+            composition.map(
+              (record) =>
+                record.fatMassKg
+            ),
+            "#ea580c",
+            2.5
+          ),
+
+          lineDataset(
+            "Spiermassa",
+            composition.map(
+              (record) =>
+                record
+                  .muscleMassKg
+            ),
+            "#159a68",
+            2.5
+          )
+        ]
+      );
+    }
+
+    function renderStrava() {
+      if (
+        !stravaHistory.length
+      ) {
+        return;
+      }
+
+      const now =
+        new Date();
+
+      const currentWeek =
+        weekStart(now);
+
+      const thisWeek =
+        stravaHistory.filter(
+          (activity) =>
+            new Date(
+              activity.localDate ||
+              activity.date
+            ) >= currentWeek
+        );
+
+      const runKm =
+        thisWeek
+          .filter(
+            isRunActivity
+          )
+          .reduce(
+            (sum, activity) =>
+              sum +
+              (
+                num(
+                  activity
+                    .distanceKm
+                ) || 0
+              ),
+            0
+          );
+
+      const totalSeconds =
+        thisWeek.reduce(
+          (sum, activity) =>
+            sum +
+            (
+              num(
+                activity
+                  .movingTimeSeconds
+              ) || 0
+            ),
+          0
+        );
+
+      const elevation =
+        thisWeek.reduce(
+          (sum, activity) =>
+            sum +
+            (
+              num(
+                activity
+                  .elevationMeters
+              ) || 0
+            ),
+          0
+        );
+
+      setText(
+        "stravaWeekKm",
+        `${runKm.toFixed(1)} km`
+      );
+
+      setText(
+        "stravaWeekActivities",
+        thisWeek.length
+      );
+
+      setText(
+        "stravaWeekHours",
+        `${(
+          totalSeconds /
+          3600
+        ).toFixed(1)} u`
+      );
+
+      setText(
+        "stravaWeekElevation",
+        `${Math.round(elevation)} m`
+      );
+
+      const weeks =
+        weeklyRunRecords(
+          filterByRange(
+            stravaHistory
+          )
+        );
+
+      destroyChart(
+        "weeklyRunChart"
+      );
+
+      if (
+        weeks.length &&
+        $("weeklyRunChart")
+      ) {
+        const fourWeek =
+          weeks.map(
+            (week, index) =>
+              mean(
+                weeks
+                  .slice(
+                    Math.max(
+                      0,
+                      index - 3
+                    ),
+                    index + 1
+                  )
+                  .map(
+                    (item) =>
+                      item
+                        .distanceKm
+                  )
+              )
+          );
+
+        charts.weeklyRunChart =
+          new Chart(
+            $("weeklyRunChart"),
+            {
+              data: {
+                labels:
+                  weeks.map(
+                    (week) =>
+                      new Date(
+                        week.date
+                      )
+                        .toLocaleDateString(
+                          "nl-BE",
+                          {
+                            day:
+                              "2-digit",
+                            month:
+                              "2-digit"
+                          }
+                        )
+                  ),
+
+                datasets: [
+                  {
+                    type:
+                      "bar",
+                    label:
+                      "Loopkm",
+                    data:
+                      weeks.map(
+                        (week) =>
+                          week
+                            .distanceKm
+                      ),
+                    backgroundColor:
+                      "rgba(37,99,235,.45)",
+                    borderRadius:
+                      7
+                  },
+
+                  {
+                    type:
+                      "line",
+                    label:
+                      "4-weeks gemiddelde",
+                    data:
+                      fourWeek,
+                    borderColor:
+                      "#159a68",
+                    backgroundColor:
+                      "#159a68",
+                    borderWidth:
+                      3,
+                    pointRadius:
+                      0,
+                    tension:
+                      .25
+                  }
+                ]
+              },
+
+              options:
+                commonOptions
+            }
+          );
+      }
+
+      const runs =
+        filterByRange(
+          stravaHistory
+        )
+          .filter(
+            isRunActivity
+          )
+          .filter(
+            (activity) =>
+              num(
+                activity
+                  .averageHeartRate
+              ) !== null &&
+              num(
+                activity
+                  .averagePaceMinutesPerKm
+              ) !== null
+          );
+
+      createScatter(
+        "paceHrChart",
+        runs.map(
+          (run) => ({
+            x:
+              run
+                .averageHeartRate,
+            y:
+              run
+                .averagePaceMinutesPerKm
+          })
+        ),
+        "Gemiddelde hartslag",
+        "Tempo (min/km)",
+        "rgba(124,58,237,.55)"
+      );
+
+      const body =
+        $("recentActivitiesBody");
+
+      if (body) {
+        body.innerHTML =
+          [
+            ...stravaHistory
+          ]
+            .reverse()
+            .slice(
+              0,
+              10
+            )
+            .map(
+              (activity) => `
+                <tr>
+                  <td>
+                    ${
+                      new Date(
+                        activity.localDate ||
+                        activity.date
+                      )
+                        .toLocaleDateString(
+                          "nl-BE"
+                        )
+                    }
+                  </td>
+
+                  <td>
+                    ${activity.name || "—"}
+                  </td>
+
+                  <td>
+                    ${activity.sportType || activity.type || "—"}
+                  </td>
+
+                  <td>
+                    ${
+                      num(
+                        activity.distanceKm
+                      ) !== null
+                        ? `${activity.distanceKm.toFixed(1)} km`
+                        : "—"
+                    }
+                  </td>
+
+                  <td>
+                    ${
+                      secondsDurationLabel(
+                        activity.movingTimeSeconds
+                      )
+                    }
+                  </td>
+
+                  <td>
+                    ${
+                      paceLabel(
+                        activity.averagePaceMinutesPerKm
+                      )
+                    }
+                  </td>
+
+                  <td>
+                    ${
+                      num(
+                        activity.averageHeartRate
+                      ) !== null
+                        ? `${Math.round(activity.averageHeartRate)}`
+                        : "—"
+                    }
+                  </td>
+
+                  <td>
+                    ${
+                      num(
+                        activity.elevationMeters
+                      ) !== null
+                        ? `${Math.round(activity.elevationMeters)} m`
+                        : "—"
+                    }
+                  </td>
+                </tr>
+              `
+            )
+            .join("");
+      }
+    }
+
+    function renderWhoopCharts() {
+      const recoveries =
+        filterByRange(
+          recoveryHistory
+        );
+
+      if (
+        recoveries.length
+      ) {
+        createLineChart(
+          "hrvChart",
+          recoveries,
+          [
+            lineDataset(
+              "Dagwaarde",
+              recoveries.map(
+                (record) =>
+                  record.hrv
+              ),
+              "rgba(37,99,235,.3)",
+              1.3
+            ),
+
+            lineDataset(
+              "7-daags gemiddelde",
+              movingAverage(
+                recoveries,
+                "hrv",
+                7
+              ),
+              "#159a68",
+              3
+            )
+          ]
+        );
+
+        createLineChart(
+          "rhrChart",
+          recoveries,
+          [
+            lineDataset(
+              "Dagwaarde",
+              recoveries.map(
+                (record) =>
+                  record.rhr
+              ),
+              "rgba(37,99,235,.3)",
+              1.3
+            ),
+
+            lineDataset(
+              "7-daags gemiddelde",
+              movingAverage(
+                recoveries,
+                "rhr",
+                7
+              ),
+              "#159a68",
+              3
+            )
+          ]
+        );
+
+        createLineChart(
+          "recoveryChart",
+          recoveries,
+          [
+            lineDataset(
+              "Recovery",
+              recoveries.map(
+                (record) =>
+                  record.recovery
+              ),
+              "rgba(124,58,237,.4)",
+              1.5
+            ),
+
+            lineDataset(
+              "7-daags gemiddelde",
+              movingAverage(
+                recoveries,
+                "recovery",
+                7
+              ),
+              "#7c3aed",
+              3
+            )
+          ],
+          {
+            scales: {
+              ...commonOptions
+                .scales,
+
+              y: {
+                ...commonOptions
+                  .scales.y,
+                min:
+                  0,
+                max:
+                  100
+              }
+            }
+          }
+        );
+      }
+
+      const cycles =
+        filterByRange(
+          cycleHistory
+        );
+
+      if (
+        cycles.length
+      ) {
+        createLineChart(
+          "strainChart",
+          cycles,
+          [
+            lineDataset(
+              "Strain",
+              cycles.map(
+                (record) =>
+                  record.strain
+              ),
+              "rgba(234,88,12,.38)",
+              1.5
+            ),
+
+            lineDataset(
+              "7-daags gemiddelde",
+              movingAverage(
+                cycles,
+                "strain",
+                7
+              ),
+              "#ea580c",
+              3
+            )
+          ],
+          {
+            scales: {
+              ...commonOptions
+                .scales,
+
+              y: {
+                ...commonOptions
+                  .scales.y,
+                min:
+                  0,
+                max:
+                  21
+              }
+            }
+          }
+        );
+      }
+
+      const sleep =
+        filterByRange(
+          sleepHistory
+        );
+
+      if (
+        sleep.length
+      ) {
+        createLineChart(
+          "sleepDurationChart",
+          sleep,
+          [
+            lineDataset(
+              "Werkelijke slaap",
+              sleep.map(
+                (record) =>
+                  hours(
+                    record
+                      .durationMilli
+                  )
+              ),
+              "#2563eb",
+              2.5
+            ),
+
+            lineDataset(
+              "Slaapbehoefte",
+              sleep.map(
+                (record) =>
+                  hours(
+                    record
+                      .sleepNeedMilli
+                  )
+              ),
+              "#ea580c",
+              2.5
+            )
+          ]
+        );
+
+        createLineChart(
+          "sleepQualityChart",
+          sleep,
+          [
+            lineDataset(
+              "Performance",
+              sleep.map(
+                (record) =>
+                  record.performance
+              ),
+              "#2563eb",
+              2
+            ),
+
+            lineDataset(
+              "Consistentie",
+              sleep.map(
+                (record) =>
+                  record.consistency
+              ),
+              "#7c3aed",
+              2
+            ),
+
+            lineDataset(
+              "Efficiëntie",
+              sleep.map(
+                (record) =>
+                  record.efficiency
+              ),
+              "#159a68",
+              2
+            )
+          ],
+          {
+            scales: {
+              ...commonOptions
+                .scales,
+
+              y: {
+                ...commonOptions
+                  .scales.y,
+                min:
+                  0,
+                max:
+                  100
+              }
+            }
+          }
+        );
+      }
+    }
+
+    function computeConsistency() {
+      const runs =
+        inDays(
+          stravaHistory,
+          56
+        )
+          .filter(
+            isRunActivity
+          );
+
+      const weeks =
+        new Map();
+
+      runs.forEach(
+        (activity) => {
+          const key =
+            dateKey(
+              weekStart(
+                activity.localDate ||
+                activity.date
+              )
+            );
+
+          const week =
+            weeks.get(key) ||
+            {
+              count: 0,
+              km: 0
+            };
+
+          week.count +=
+            1;
+
+          week.km +=
+            num(
+              activity
+                .distanceKm
+            ) || 0;
+
+          weeks.set(
+            key,
+            week
+          );
+        }
+      );
+
+      const values =
+        [
+          ...weeks.values()
+        ];
+
+      const stableWeeks =
+        values.filter(
+          (week) =>
+            week.count >= 3
+        ).length;
+
+      const consistency =
+        Math.min(
+          100,
+          stableWeeks /
+          8 *
+          100
+        );
+
+      const avgRuns =
+        mean(
+          values.map(
+            (week) =>
+              week.count
+          )
+        ) || 0;
+
+      const avgKm =
+        mean(
+          values.map(
+            (week) =>
+              week.km
+          )
+        ) || 0;
+
+      return {
+        consistency,
+        avgRuns,
+        avgKm
+      };
+    }
+
+    function renderReports() {
+      const rec7 =
+        inDays(
+          recoveryHistory,
+          7
+        );
+
+      const previousRec7 =
+        inDays(
+          recoveryHistory,
+          14,
+          7
+        );
+
+      const sleep7 =
+        inDays(
+          sleepHistory,
+          7
+        );
+
+      const previousSleep7 =
+        inDays(
+          sleepHistory,
+          14,
+          7
+        );
+
+      const strava7 =
+        inDays(
+          stravaHistory,
+          7
+        );
+
+      const previousStrava7 =
+        inDays(
+          stravaHistory,
+          14,
+          7
+        );
+
+      const runs7 =
+        strava7.filter(
+          isRunActivity
+        );
+
+      const previousRuns7 =
+        previousStrava7.filter(
+          isRunActivity
+        );
+
+      const runKm7 =
+        runs7.reduce(
+          (sum, run) =>
+            sum +
+            (
+              num(
+                run.distanceKm
+              ) || 0
+            ),
+          0
+        );
+
+      const previousRunKm7 =
+        previousRuns7.reduce(
+          (sum, run) =>
+            sum +
+            (
+              num(
+                run.distanceKm
+              ) || 0
+            ),
+          0
+        );
+
+      $("weeklyReport")
+        .innerHTML = [
+          insightItem(
+            "Recovery",
+            deltaText(
+              avgMetric(
+                rec7,
+                "recovery"
+              ),
+              avgMetric(
+                previousRec7,
+                "recovery"
+              ),
+              "%"
+            ),
+            "gemiddelde"
+          ),
+
+          insightItem(
+            "HRV",
+            deltaText(
+              avgMetric(
+                rec7,
+                "hrv"
+              ),
+              avgMetric(
+                previousRec7,
+                "hrv"
+              ),
+              " ms"
+            ),
+            "gemiddelde"
+          ),
+
+          insightItem(
+            "Slaap",
+            deltaText(
+              mean(
+                sleep7.map(
+                  (record) =>
+                    hours(
+                      record.durationMilli
+                    )
+                )
+              ),
+              mean(
+                previousSleep7.map(
+                  (record) =>
+                    hours(
+                      record.durationMilli
+                    )
+                )
+              ),
+              " u"
+            ),
+            "gemiddelde slaapduur"
+          ),
+
+          insightItem(
+            "Loopvolume",
+            deltaText(
+              runKm7,
+              previousRunKm7,
+              " km"
+            ),
+            `${runs7.length} lopen`
+          )
+        ].join("");
+
+      const rec30 =
+        inDays(
+          recoveryHistory,
+          30
+        );
+
+      const previousRec30 =
+        inDays(
+          recoveryHistory,
+          60,
+          30
+        );
+
+      const with30 =
+        inDays(
+          withingsHistory,
+          30
+        );
+
+      const previousWith30 =
+        inDays(
+          withingsHistory,
+          60,
+          30
+        );
+
+      const strava30 =
+        inDays(
+          stravaHistory,
+          30
+        );
+
+      const previousStrava30 =
+        inDays(
+          stravaHistory,
+          60,
+          30
+        );
+
+      const hours30 =
+        strava30.reduce(
+          (sum, activity) =>
+            sum +
+            (
+              num(
+                activity
+                  .movingTimeSeconds
+              ) || 0
+            ),
+          0
+        ) /
+        3600;
+
+      const previousHours30 =
+        previousStrava30.reduce(
+          (sum, activity) =>
+            sum +
+            (
+              num(
+                activity
+                  .movingTimeSeconds
+              ) || 0
+            ),
+          0
+        ) /
+        3600;
+
+      $("monthlyReport")
+        .innerHTML = [
+          insightItem(
+            "Recovery",
+            deltaText(
+              avgMetric(
+                rec30,
+                "recovery"
+              ),
+              avgMetric(
+                previousRec30,
+                "recovery"
+              ),
+              "%"
+            ),
+            "30-daags gemiddelde"
+          ),
+
+          insightItem(
+            "HRV",
+            deltaText(
+              avgMetric(
+                rec30,
+                "hrv"
+              ),
+              avgMetric(
+                previousRec30,
+                "hrv"
+              ),
+              " ms"
+            ),
+            "30-daags gemiddelde"
+          ),
+
+          insightItem(
+            "Trainingsduur",
+            deltaText(
+              hours30,
+              previousHours30,
+              " u"
+            ),
+            `${strava30.length} activiteiten`
+          ),
+
+          insightItem(
+            "Vetpercentage",
+            deltaText(
+              avgMetric(
+                with30,
+                "fatRatioPercent"
+              ),
+              avgMetric(
+                previousWith30,
+                "fatRatioPercent"
+              ),
+              "%"
+            ),
+            "30-daags gemiddelde"
+          )
+        ].join("");
+    }
+
+    function renderBaselines() {
+      const rec30 =
+        inDays(
+          recoveryHistory,
+          30
+        );
+
+      const sleep30 =
+        inDays(
+          sleepHistory,
+          30
+        );
+
+      const weight30 =
+        inDays(
+          withingsHistory,
+          30
+        );
+
+      const latestRec =
+        recoveryHistory.at(-1) ||
+        {};
+
+      const latestSleep =
+        sleepHistory.at(-1) ||
+        {};
+
+      const latestWeight =
+        withingsHistory.at(-1) ||
+        {};
+
+      const rows =
+        [];
+
+      function add(
+        label,
+        current,
+        baseline,
+        unit,
+        lowerBetter = false
+      ) {
+        if (
+          num(current) === null ||
+          num(baseline) === null
+        ) {
+          return;
+        }
+
+        const difference =
+          current -
+          baseline;
+
+        const percent =
+          baseline
+            ? difference /
+              baseline *
+              100
+            : null;
+
+        let signal =
+          "≈ baseline";
+
+        if (
+          percent !== null &&
+          Math.abs(
+            percent
+          ) >= 3
+        ) {
+          const better =
+            lowerBetter
+              ? difference < 0
+              : difference > 0;
+
+          signal =
+            `${difference >= 0 ? "+" : ""}` +
+            `${percent.toFixed(1)}% ` +
+            `${better ? "gunstiger" : "ongunstiger"}`;
+        }
+
+        rows.push(
+          insightRow(
+            label,
+            `${Number(current).toFixed(1)} ${unit} · ${signal}`
+          )
+        );
+      }
+
+      add(
+        "HRV",
+        latestRec.hrv,
+        avgMetric(
+          rec30,
+          "hrv"
+        ),
+        "ms"
+      );
+
+      add(
+        "Rusthartslag",
+        latestRec.rhr,
+        avgMetric(
+          rec30,
+          "rhr"
+        ),
+        "bpm",
+        true
+      );
+
+      add(
+        "Recovery",
+        latestRec.recovery,
+        avgMetric(
+          rec30,
+          "recovery"
+        ),
+        "%"
+      );
+
+      add(
+        "Slaapduur",
+        hours(
+          latestSleep.durationMilli
+        ),
+        mean(
+          sleep30.map(
+            (record) =>
+              hours(
+                record.durationMilli
+              )
+          )
+        ),
+        "u"
+      );
+
+      add(
+        "Gewicht",
+        latestWeight.weightKg,
+        avgMetric(
+          weight30,
+          "weightKg"
+        ),
+        "kg",
+        true
+      );
+
+      $("baselineInsights")
+        .innerHTML =
+          rows.length
+            ? rows.join("")
+            : insightRow(
+                "Status",
+                "Nog onvoldoende data"
+              );
+    }
+
+    function renderRecoveryDrivers() {
+      const sleepByCycle =
         new Map(
-          filteredRecoveries.map(
+          sleepHistory.map(
+            (sleep) => [
+              String(
+                sleep.cycleId
+              ),
+              sleep
+            ]
+          )
+        );
+
+      const sleepRecovery =
+        recoveryHistory
+          .map(
+            (recovery) => {
+              const sleep =
+                sleepByCycle.get(
+                  String(
+                    recovery.cycleId
+                  )
+                );
+
+              const x =
+                hours(
+                  sleep
+                    ?.durationMilli
+                );
+
+              const y =
+                num(
+                  recovery
+                    .recovery
+                );
+
+              return (
+                x !== null &&
+                y !== null
+              )
+                ? { x, y }
+                : null;
+            }
+          )
+          .filter(Boolean);
+
+      const hrvRecovery =
+        recoveryHistory
+          .map(
+            (recovery) => ({
+              x:
+                num(
+                  recovery.hrv
+                ),
+              y:
+                num(
+                  recovery
+                    .recovery
+                )
+            })
+          )
+          .filter(
+            (point) =>
+              point.x !== null &&
+              point.y !== null
+          );
+
+      const rhrRecovery =
+        recoveryHistory
+          .map(
+            (recovery) => ({
+              x:
+                num(
+                  recovery.rhr
+                ),
+              y:
+                num(
+                  recovery
+                    .recovery
+                )
+            })
+          )
+          .filter(
+            (point) =>
+              point.x !== null &&
+              point.y !== null
+          );
+
+      const cycles =
+        [
+          ...cycleHistory
+        ].sort(
+          (a, b) =>
+            new Date(a.date) -
+            new Date(b.date)
+        );
+
+      const strainRecovery =
+        recoveryHistory
+          .map(
+            (recovery) => {
+              const time =
+                new Date(
+                  recovery.date
+                ).getTime();
+
+              const previousCycle =
+                [
+                  ...cycles
+                ]
+                  .reverse()
+                  .find(
+                    (cycle) =>
+                      new Date(
+                        cycle.date
+                      ).getTime() <
+                      time
+                  );
+
+              const x =
+                num(
+                  previousCycle
+                    ?.strain
+                );
+
+              const y =
+                num(
+                  recovery
+                    .recovery
+                );
+
+              return (
+                x !== null &&
+                y !== null
+              )
+                ? { x, y }
+                : null;
+            }
+          )
+          .filter(Boolean);
+
+      $("recoveryDrivers")
+        .innerHTML = [
+          insightRow(
+            "Slaapduur ↔ recovery",
+            correlationLabel(
+              pearson(
+                sleepRecovery
+              )
+            )
+          ),
+
+          insightRow(
+            "Vorige strain ↔ recovery",
+            correlationLabel(
+              pearson(
+                strainRecovery
+              )
+            )
+          ),
+
+          insightRow(
+            "HRV ↔ recovery",
+            correlationLabel(
+              pearson(
+                hrvRecovery
+              )
+            )
+          ),
+
+          insightRow(
+            "Rusthartslag ↔ recovery",
+            correlationLabel(
+              pearson(
+                rhrRecovery
+              )
+            )
+          )
+        ].join("");
+
+      const scored =
+        recoveryHistory
+          .filter(
+            (record) =>
+              num(
+                record.recovery
+              ) !== null
+          )
+          .sort(
+            (a, b) =>
+              a.recovery -
+              b.recovery
+          );
+
+      if (!scored.length) {
+        return;
+      }
+
+      const threshold =
+        scored[
+          Math.floor(
+            scored.length *
+            .75
+          )
+        ]?.recovery;
+
+      const top =
+        scored.filter(
+          (record) =>
+            record.recovery >=
+            threshold
+        );
+
+      const topSleeps =
+        top
+          .map(
+            (recovery) =>
+              sleepByCycle.get(
+                String(
+                  recovery.cycleId
+                )
+              )
+          )
+          .filter(Boolean);
+
+      $("bestConditions")
+        .innerHTML = [
+          insightRow(
+            "Drempel beste 25%",
+            `Recovery ≥ ${Math.round(threshold)}%`
+          ),
+
+          insightRow(
+            "Gemiddelde slaap",
+            `${
+              mean(
+                topSleeps.map(
+                  (sleep) =>
+                    hours(
+                      sleep.durationMilli
+                    )
+                )
+              )?.toFixed(2) ||
+              "—"
+            } u`
+          ),
+
+          insightRow(
+            "Gemiddelde HRV",
+            `${
+              avgMetric(
+                top,
+                "hrv"
+              )?.toFixed(1) ||
+              "—"
+            } ms`
+          ),
+
+          insightRow(
+            "Gemiddelde rusthartslag",
+            `${
+              avgMetric(
+                top,
+                "rhr"
+              )?.toFixed(1) ||
+              "—"
+            } bpm`
+          )
+        ].join("");
+    }
+
+    function renderConsistency() {
+      const consistency =
+        computeConsistency();
+
+      $("trainingConsistency")
+        .innerHTML = [
+          insightItem(
+            "Consistentie",
+            `${consistency.consistency.toFixed(0)}%`,
+            "weken met minstens 3 lopen in de laatste 8 weken"
+          ),
+
+          insightItem(
+            "Lopen/week",
+            consistency.avgRuns.toFixed(1),
+            "gemiddeld"
+          ),
+
+          insightItem(
+            "Km/week",
+            `${consistency.avgKm.toFixed(1)} km`,
+            "gemiddeld"
+          ),
+
+          insightItem(
+            "Historiek",
+            `${inDays(stravaHistory, 56).filter(isRunActivity).length}`,
+            "lopen in 8 weken"
+          )
+        ].join("");
+    }
+
+    function renderRunningEfficiency() {
+      const runs =
+        stravaHistory
+          .filter(
+            isRunActivity
+          )
+          .filter(
+            (run) =>
+              num(
+                run.averageHeartRate
+              ) !== null &&
+              num(
+                run.averagePaceMinutesPerKm
+              ) !== null
+          );
+
+      if (!runs.length) {
+        setText(
+          "runningEfficiencySummary",
+          "Nog onvoldoende looptrainingen met hartslagdata."
+        );
+
+        return;
+      }
+
+      const targetHr =
+        median(
+          runs.map(
+            (run) =>
+              run.averageHeartRate
+          )
+        );
+
+      const matched =
+        runs
+          .filter(
+            (run) =>
+              Math.abs(
+                run.averageHeartRate -
+                targetHr
+              ) <= 5
+          )
+          .sort(
+            (a, b) =>
+              new Date(
+                a.localDate ||
+                a.date
+              ) -
+              new Date(
+                b.localDate ||
+                b.date
+              )
+          );
+
+      const recent =
+        inDays(
+          matched,
+          30
+        );
+
+      const previous =
+        inDays(
+          matched,
+          60,
+          30
+        );
+
+      const recentPace =
+        avgMetric(
+          recent,
+          "averagePaceMinutesPerKm"
+        );
+
+      const previousPace =
+        avgMetric(
+          previous,
+          "averagePaceMinutesPerKm"
+        );
+
+      let text =
+        `${matched.length} lopen rond ${Math.round(targetHr)} bpm ±5.`;
+
+      if (
+        recentPace !== null &&
+        previousPace !== null
+      ) {
+        const diff =
+          (
+            recentPace -
+            previousPace
+          ) *
+          60;
+
+        text +=
+          ` Recent: ${paceLabel(recentPace)} versus ${paceLabel(previousPace)} voordien. `;
+
+        text +=
+          diff < 0
+            ? `${Math.abs(diff).toFixed(0)} sec/km sneller.`
+            : `${diff.toFixed(0)} sec/km trager.`;
+      }
+
+      setText(
+        "runningEfficiencySummary",
+        text
+      );
+
+      createLineChart(
+        "runningEfficiencyChart",
+        matched.map(
+          (run) => ({
+            date:
+              run.localDate ||
+              run.date,
+            pace:
+              run
+                .averagePaceMinutesPerKm
+          })
+        ),
+        [
+          lineDataset(
+            "Tempo",
+            matched.map(
+              (run) =>
+                run
+                  .averagePaceMinutesPerKm
+            ),
+            "#ea580c",
+            2.5
+          )
+        ],
+        {
+          scales: {
+            ...commonOptions
+              .scales,
+
+            y: {
+              ...commonOptions
+                .scales.y,
+              reverse:
+                true
+            }
+          }
+        }
+      );
+    }
+
+    function renderHeavyRecovery() {
+      const heavy =
+        stravaHistory.filter(
+          (activity) =>
+            (
+              num(
+                activity.movingTimeSeconds
+              ) || 0
+            ) >= 4500 ||
+            (
+              isRunActivity(
+                activity
+              ) &&
+              (
+                num(
+                  activity.distanceKm
+                ) || 0
+              ) >= 12
+            ) ||
+            (
+              num(
+                activity.sufferScore
+              ) || 0
+            ) >= 100
+        );
+
+      const recoveryByDate =
+        new Map(
+          recoveryHistory.map(
             (record) => [
-              String(record.cycleId),
+              dateKey(
+                record.date
+              ),
               record
             ]
           )
         );
 
-      const sleepHrvPoints =
-        filterByRange(sleepHistory)
-          .map((sleep) => {
-            const recovery =
-              recoveryByCycle.get(
-                String(sleep.cycleId)
-              );
+      const nextDayRecovery =
+        [];
 
-            const x =
-              hours(sleep.durationMilli);
-
-            const y =
-              num(recovery?.hrv);
-
-            return x !== null && y !== null
-              ? { x, y }
-              : null;
-          })
-          .filter(Boolean);
-
-      const cycles =
-        filterByRange(cycleHistory);
-
-      const strainRecoveryPoints = [];
-
-      for (
-        let index = 1;
-        index < filteredRecoveries.length;
-        index += 1
-      ) {
-        const recovery =
-          filteredRecoveries[index];
-
-        const recoveryTime =
-          new Date(recovery.date).getTime();
-
-        const previousCycle =
-          [...cycles]
-            .reverse()
-            .find(
-              (cycle) =>
-                new Date(cycle.date).getTime() <
-                recoveryTime
+      heavy.forEach(
+        (activity) => {
+          const d =
+            new Date(
+              activity.localDate ||
+              activity.date
             );
 
-        const x =
-          num(previousCycle?.strain);
+          d.setDate(
+            d.getDate() +
+            1
+          );
 
-        const y =
-          num(recovery.recovery);
+          const recovery =
+            recoveryByDate.get(
+              dateKey(d)
+            );
 
-        if (x !== null && y !== null) {
-          strainRecoveryPoints.push({
-            x,
-            y
-          });
+          if (
+            num(
+              recovery?.recovery
+            ) !== null
+          ) {
+            nextDayRecovery.push(
+              recovery.recovery
+            );
+          }
         }
+      );
+
+      const heavyAverage =
+        mean(
+          nextDayRecovery
+        );
+
+      const baseline =
+        avgMetric(
+          recoveryHistory,
+          "recovery"
+        );
+
+      setText(
+        "heavyRecoverySummary",
+        heavyAverage === null
+          ? `${heavy.length} zware activiteiten gevonden, maar nog onvoldoende gekoppelde recoverydata.`
+          : `${heavy.length} zware activiteiten gevonden. Gemiddelde recovery dag +1: ${heavyAverage.toFixed(1)}% versus ${baseline?.toFixed(1) || "—"}% algemeen.`
+      );
+
+      destroyChart(
+        "heavyRecoveryChart"
+      );
+
+      if (
+        heavyAverage !== null &&
+        baseline !== null &&
+        $("heavyRecoveryChart")
+      ) {
+        charts.heavyRecoveryChart =
+          new Chart(
+            $("heavyRecoveryChart"),
+            {
+              type:
+                "bar",
+
+              data: {
+                labels: [
+                  "Na zware training",
+                  "Alle dagen"
+                ],
+
+                datasets: [
+                  {
+                    label:
+                      "Recovery",
+                    data: [
+                      heavyAverage,
+                      baseline
+                    ],
+                    backgroundColor: [
+                      "rgba(234,88,12,.55)",
+                      "rgba(37,99,235,.45)"
+                    ],
+                    borderRadius:
+                      8
+                  }
+                ]
+              },
+
+              options: {
+                responsive:
+                  true,
+                maintainAspectRatio:
+                  false,
+
+                plugins: {
+                  legend: {
+                    display:
+                      false
+                  }
+                },
+
+                scales: {
+                  y: {
+                    min:
+                      0,
+                    max:
+                      100
+                  }
+                }
+              }
+            }
+          );
       }
-
-      createScatter(
-        "sleepHrvChart",
-        sleepHrvPoints,
-        "Slaapduur (uur)",
-        "HRV (ms)",
-        "rgba(37, 99, 235, 0.55)"
-      );
-
-      createScatter(
-        "strainRecoveryChart",
-        strainRecoveryPoints,
-        "Vorige strain",
-        "Recovery (%)",
-        "rgba(124, 58, 237, 0.55)"
-      );
-
-      const sleepCorrelation =
-        pearson(sleepHrvPoints);
-
-      const strainCorrelation =
-        pearson(strainRecoveryPoints);
-
-      setText(
-        "sleepHrvMessage",
-        (
-          `${sleepHrvPoints.length} gekoppelde nachten · ` +
-          `correlatie r = ${
-            sleepCorrelation === null
-              ? "—"
-              : sleepCorrelation.toFixed(2)
-          }`
-        )
-      );
-
-      setText(
-        "strainRecoveryMessage",
-        (
-          `${strainRecoveryPoints.length} gekoppelde dagen · ` +
-          `correlatie r = ${
-            strainCorrelation === null
-              ? "—"
-              : strainCorrelation.toFixed(2)
-          }`
-        )
-      );
     }
 
-    function renderAllLoadedHistory() {
-      if (recoveryHistory.length) {
-        renderRecoveryCharts();
+    function renderRecords() {
+      const runs =
+        stravaHistory.filter(
+          isRunActivity
+        );
+
+      const longest =
+        runs.reduce(
+          (best, run) =>
+            !best ||
+            (
+              num(
+                run.distanceKm
+              ) || 0
+            ) >
+            (
+              num(
+                best.distanceKm
+              ) || 0
+            )
+              ? run
+              : best,
+          null
+        );
+
+      const paceCandidates =
+        runs.filter(
+          (run) =>
+            (
+              num(
+                run.distanceKm
+              ) || 0
+            ) >= 5 &&
+            num(
+              run.averagePaceMinutesPerKm
+            ) !== null
+        );
+
+      const fastest =
+        paceCandidates.reduce(
+          (best, run) =>
+            !best ||
+            run
+              .averagePaceMinutesPerKm <
+            best
+              .averagePaceMinutesPerKm
+              ? run
+              : best,
+          null
+        );
+
+      const weeks =
+        weeklyRunRecords(
+          stravaHistory
+        );
+
+      const maxWeek =
+        weeks.reduce(
+          (best, week) =>
+            !best ||
+            week.distanceKm >
+            best.distanceKm
+              ? week
+              : best,
+          null
+        );
+
+      const maxHrv =
+        Math.max(
+          ...recoveryHistory
+            .map(
+              (record) =>
+                num(
+                  record.hrv
+                )
+            )
+            .filter(
+              (value) =>
+                value !== null
+            ),
+          -Infinity
+        );
+
+      const minRhr =
+        Math.min(
+          ...recoveryHistory
+            .map(
+              (record) =>
+                num(
+                  record.rhr
+                )
+            )
+            .filter(
+              (value) =>
+                value !== null
+            ),
+          Infinity
+        );
+
+      const maxRecovery =
+        Math.max(
+          ...recoveryHistory
+            .map(
+              (record) =>
+                num(
+                  record.recovery
+                )
+            )
+            .filter(
+              (value) =>
+                value !== null
+            ),
+          -Infinity
+        );
+
+      const minWeight =
+        Math.min(
+          ...withingsHistory
+            .map(
+              (record) =>
+                num(
+                  record.weightKg
+                )
+            )
+            .filter(
+              (value) =>
+                value !== null
+            ),
+          Infinity
+        );
+
+      $("personalRecords")
+        .innerHTML = [
+          insightRow(
+            "Langste loop",
+            longest
+              ? `${longest.distanceKm.toFixed(1)} km`
+              : "—"
+          ),
+
+          insightRow(
+            "Beste gemiddeld tempo ≥5 km",
+            fastest
+              ? `${paceLabel(fastest.averagePaceMinutesPerKm)} · ${fastest.distanceKm.toFixed(1)} km`
+              : "—"
+          ),
+
+          insightRow(
+            "Hoogste weekvolume",
+            maxWeek
+              ? `${maxWeek.distanceKm.toFixed(1)} km`
+              : "—"
+          ),
+
+          insightRow(
+            "Hoogste HRV",
+            Number.isFinite(
+              maxHrv
+            )
+              ? `${maxHrv.toFixed(1)} ms`
+              : "—"
+          ),
+
+          insightRow(
+            "Laagste rusthartslag",
+            Number.isFinite(
+              minRhr
+            )
+              ? `${minRhr.toFixed(0)} bpm`
+              : "—"
+          ),
+
+          insightRow(
+            "Hoogste recovery",
+            Number.isFinite(
+              maxRecovery
+            )
+              ? `${maxRecovery.toFixed(0)}%`
+              : "—"
+          ),
+
+          insightRow(
+            "Laagste gewicht",
+            Number.isFinite(
+              minWeight
+            )
+              ? `${minWeight.toFixed(1)} kg`
+              : "—"
+          )
+        ].join("");
+    }
+
+    function renderHealthScore() {
+      const latest =
+        recoveryHistory.at(-1);
+
+      const rec30 =
+        inDays(
+          recoveryHistory,
+          30
+        );
+
+      const sleep7 =
+        inDays(
+          sleepHistory,
+          7
+        );
+
+      const consistency =
+        computeConsistency()
+          .consistency;
+
+      const components =
+        [];
+
+      if (
+        num(
+          latest?.recovery
+        ) !== null
+      ) {
+        components.push({
+          name:
+            "recovery",
+          score:
+            Math.max(
+              0,
+              Math.min(
+                100,
+                latest.recovery
+              )
+            ),
+          weight:
+            .35
+        });
       }
 
-      if (sleepHistory.length) {
-        renderSleepCharts();
+      const sleepScore =
+        avgMetric(
+          sleep7,
+          "performance"
+        );
+
+      if (
+        sleepScore !== null
+      ) {
+        components.push({
+          name:
+            "slaap",
+          score:
+            Math.max(
+              0,
+              Math.min(
+                100,
+                sleepScore
+              )
+            ),
+          weight:
+            .25
+        });
       }
 
-      if (cycleHistory.length) {
-        renderStrainChart();
-      }
+      const hrvBaseline =
+        avgMetric(
+          rec30,
+          "hrv"
+        );
 
-      if (withingsHistory.length) {
-        renderWithingsCharts();
-      }
+      if (
+        num(
+          latest?.hrv
+        ) !== null &&
+        hrvBaseline
+      ) {
+        const deviation =
+          (
+            latest.hrv -
+            hrvBaseline
+          ) /
+          hrvBaseline;
 
-      if (stravaHistory.length) {
-        renderStravaCharts();
+        components.push({
+          name:
+            "HRV",
+          score:
+            Math.max(
+              0,
+              Math.min(
+                100,
+                50 +
+                deviation *
+                250
+              )
+            ),
+          weight:
+            .2
+        });
       }
 
       if (
-        recoveryHistory.length &&
-        sleepHistory.length &&
-        cycleHistory.length
+        stravaHistory.length
       ) {
-        renderCorrelations();
+        components.push({
+          name:
+            "consistentie",
+          score:
+            consistency,
+          weight:
+            .2
+        });
       }
+
+      const totalWeight =
+        components.reduce(
+          (sum, component) =>
+            sum +
+            component.weight,
+          0
+        );
+
+      const score =
+        totalWeight
+          ? components.reduce(
+              (sum, component) =>
+                sum +
+                component.score *
+                component.weight,
+              0
+            ) /
+            totalWeight
+          : null;
+
+      setText(
+        "healthScore",
+        score === null
+          ? "—"
+          : `${Math.round(score)}/100`
+      );
+
+      setText(
+        "healthScoreText",
+        score === null
+          ? "Nog onvoldoende gegevens."
+          : `Geen medische score. Gebaseerd op ${components.map((component) => component.name).join(", ")}. Gebruik dit vooral als persoonlijke trendindicator.`
+      );
+    }
+
+    function renderAdvancedInsights() {
+      renderReports();
+      renderBaselines();
+      renderRecoveryDrivers();
+      renderConsistency();
+      renderRunningEfficiency();
+      renderHeavyRecovery();
+      renderRecords();
+      renderHealthScore();
+    }
+
+    function renderAll() {
+      renderWithings();
+      renderStrava();
+      renderWhoopCharts();
+      renderAdvancedInsights();
     }
 
     async function fetchJson(
       url,
-      fallbackMessage = "WHOOP-data kon niet worden geladen."
+      fallback
     ) {
       const response =
-        await fetch(url, {
-          method: "GET",
-          credentials: "same-origin",
+        await fetch(
+          url,
+          {
+            credentials:
+              "same-origin",
 
-          headers: {
-            Accept: "application/json"
+            headers: {
+              Accept:
+                "application/json"
+            }
           }
-        });
+        );
 
       let data;
 
@@ -3103,7 +4806,7 @@
           await response.json();
       } catch {
         throw new Error(
-          "De server gaf geen geldige JSON terug."
+          "Server gaf geen geldige JSON terug."
         );
       }
 
@@ -3113,14 +4816,91 @@
       ) {
         throw new Error(
           data.error ||
-          fallbackMessage
+          fallback ||
+          "Data kon niet worden geladen."
         );
       }
 
       return data;
     }
 
-    async function loadHistorySequentially() {
+    async function loadWithings() {
+      try {
+        const data =
+          await fetchJson(
+            "/api/withings-data",
+            "Withings niet verbonden."
+          );
+
+        withingsHistory =
+          data.records ||
+          [];
+
+        $("withingsSourceStatus")
+          .className =
+            "source-pill success";
+
+        setText(
+          "withingsSourceStatus",
+          `Withings · ${withingsHistory.length} metingen`
+        );
+
+        renderWithings();
+      } catch (error) {
+        console.error(
+          error
+        );
+
+        $("withingsSourceStatus")
+          .className =
+            "source-pill error";
+
+        setText(
+          "withingsSourceStatus",
+          "Withings niet verbonden"
+        );
+      }
+    }
+
+    async function loadStrava() {
+      try {
+        const data =
+          await fetchJson(
+            "/api/strava-data",
+            "Strava niet verbonden."
+          );
+
+        stravaHistory =
+          data.records ||
+          [];
+
+        $("stravaSourceStatus")
+          .className =
+            "source-pill success";
+
+        setText(
+          "stravaSourceStatus",
+          `Strava · ${stravaHistory.length} activiteiten`
+        );
+
+        renderStrava();
+      } catch (error) {
+        console.error(
+          error
+        );
+
+        $("stravaSourceStatus")
+          .className =
+            "source-pill error";
+
+        setText(
+          "stravaSourceStatus",
+          "Strava niet verbonden"
+        );
+      }
+    }
+
+    async function loadWhoopHistory() {
       setText(
         "dashboardMessage",
         "Recoveryhistoriek laden…"
@@ -3129,32 +4909,24 @@
       try {
         const recovery =
           await fetchJson(
-            "/api/whoop-history?type=recovery"
+            "/api/whoop-history?type=recovery",
+            "Recoveryhistoriek mislukt."
           );
 
         recoveryHistory =
-          recovery.records || [];
-
-        renderRecoveryCharts();
+          recovery.records ||
+          [];
       } catch (error) {
         console.error(
-          "Recoveryhistoriek mislukt:",
           error
         );
-
-        setText(
-          "dashboardMessage",
-          `Recoveryhistoriek mislukt: ${error.message}`
-        );
-
-        $("dashboardMessage")
-          .classList
-          .add("error");
-
-        return;
       }
 
-      await wait(35000);
+      renderAll();
+
+      await wait(
+        35000
+      );
 
       setText(
         "dashboardMessage",
@@ -3164,30 +4936,24 @@
       try {
         const sleep =
           await fetchJson(
-            "/api/whoop-history?type=sleep"
+            "/api/whoop-history?type=sleep",
+            "Slaaphistoriek mislukt."
           );
 
         sleepHistory =
-          sleep.records || [];
-
-        renderSleepCharts();
+          sleep.records ||
+          [];
       } catch (error) {
         console.error(
-          "Slaaphistoriek mislukt:",
           error
         );
-
-        setText(
-          "dashboardMessage",
-          `Slaaphistoriek mislukt: ${error.message}`
-        );
-
-        $("dashboardMessage")
-          .classList
-          .add("error");
       }
 
-      await wait(35000);
+      renderAll();
+
+      await wait(
+        35000
+      );
 
       setText(
         "dashboardMessage",
@@ -3195,123 +4961,122 @@
       );
 
       try {
-        const cycle =
+        const cycles =
           await fetchJson(
-            "/api/whoop-history?type=cycle"
+            "/api/whoop-history?type=cycle",
+            "Strainhistoriek mislukt."
           );
 
         cycleHistory =
-          cycle.records || [];
-
-        renderStrainChart();
-
-        if (
-          recoveryHistory.length &&
-          sleepHistory.length
-        ) {
-          renderCorrelations();
-        }
+          cycles.records ||
+          [];
       } catch (error) {
         console.error(
-          "Strainhistoriek mislukt:",
           error
         );
-
-        setText(
-          "dashboardMessage",
-          `Strainhistoriek mislukt: ${error.message}`
-        );
-
-        $("dashboardMessage")
-          .classList
-          .add("error");
-
-        return;
       }
+
+      renderAll();
 
       setText(
         "dashboardMessage",
         ""
       );
-
-      $("dashboardMessage")
-        .classList
-        .remove("error");
     }
 
     async function loadEverything() {
-      const button =
+      const refreshButton =
         $("refreshButton");
 
-      if (button) {
-        button.disabled = true;
-      }
+      refreshButton.disabled =
+        true;
 
       $("loadingView")
         .classList
-        .remove("hidden");
-
-      setText(
-        "dashboardMessage",
-        "Alles bijwerken…"
-      );
-
-      $("dashboardMessage")
-        .classList
-        .remove("error");
+        .remove(
+          "hidden"
+        );
 
       try {
         const current =
           await fetchJson(
-            "/api/whoop-data"
+            "/api/whoop-data",
+            "WHOOP niet verbonden."
           );
 
-        renderCurrent(current);
+        renderCurrent(
+          current
+        );
 
-        await loadWithings();
-        await loadStrava();
-        await loadHistorySequentially();
+        $("whoopSourceStatus")
+          .className =
+            "source-pill success";
+
+        setText(
+          "whoopSourceStatus",
+          "WHOOP verbonden"
+        );
+
+        $("connectionStatus")
+          .className =
+            "status success";
+
+        setText(
+          "connectionStatus",
+          "Health Map live"
+        );
       } catch (error) {
-        console.error(error);
+        console.error(
+          error
+        );
 
-        const errorMessage =
-          error?.message ||
-          "Onbekende fout bij het laden van WHOOP.";
+        $("whoopSourceStatus")
+          .className =
+            "source-pill error";
 
-        const normalized =
-          errorMessage.toLowerCase();
+        setText(
+          "whoopSourceStatus",
+          "WHOOP niet verbonden"
+        );
 
-        if (
-          normalized.includes("not connected") ||
-          normalized.includes("authorization")
-        ) {
-          showDisconnected(errorMessage);
-        } else {
-          $("loadingView")
-            .classList
-            .add("hidden");
+        $("connectionStatus")
+          .className =
+            "status error";
 
-          showDashboard();
+        setText(
+          "connectionStatus",
+          "WHOOP-fout"
+        );
 
-          setText(
-            "connectionStatus",
-            "WHOOP-fout"
-          );
-
-          setText(
-            "dashboardMessage",
-            errorMessage
-          );
-
-          $("dashboardMessage")
-            .classList
-            .add("error");
-        }
-      } finally {
-        if (button) {
-          button.disabled = false;
-        }
+        setText(
+          "dashboardMessage",
+          error.message
+        );
       }
+
+      $("loadingView")
+        .classList
+        .add(
+          "hidden"
+        );
+
+      $("dashboardView")
+        .classList
+        .remove(
+          "hidden"
+        );
+
+      await Promise.all([
+        loadWithings(),
+        loadStrava()
+      ]);
+
+      renderAll();
+
+      await loadWhoopHistory();
+
+      refreshButton.disabled =
+        false;
     }
 
     $("globalRanges")
@@ -3319,29 +5084,35 @@
         "click",
         (event) => {
           const button =
-            event.target.closest(
-              ".range-button"
-            );
+            event.target
+              .closest(
+                ".range-button"
+              );
 
           if (!button) {
             return;
           }
 
           selectedRange =
-            button.dataset.range;
+            button.dataset
+              .range;
 
           document
             .querySelectorAll(
-              "#globalRanges .range-button"
+              ".range-button"
             )
-            .forEach((item) => {
-              item.classList.toggle(
-                "active",
-                item === button
-              );
-            });
+            .forEach(
+              (item) =>
+                item
+                  .classList
+                  .toggle(
+                    "active",
+                    item ===
+                      button
+                  )
+            );
 
-          renderAllLoadedHistory();
+          renderAll();
         }
       );
 
@@ -3349,18 +5120,6 @@
       .addEventListener(
         "click",
         loadEverything
-      );
-
-    $("withingsRefreshButton")
-      ?.addEventListener(
-        "click",
-        loadWithings
-      );
-
-    $("stravaRefreshButton")
-      ?.addEventListener(
-        "click",
-        loadStrava
       );
 
     loadEverything();
